@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin language editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "settings_schema": {
     "global": {
@@ -2319,6 +2328,14 @@
               "label": "Heading",
               "default": "Heading"
             }
+          }
+        },
+        "embroidery": {
+          "name": "Embroidery",
+          "settings": {
+            "add_heading": "Add Embroidered Name",
+            "add_character_limit": "Add up to {character_limit} characters",
+            "warning": "Unfortunately we can not accept returns or exchanges on embroidered items."
           }
         }
       },
