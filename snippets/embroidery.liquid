@@ -23,8 +23,6 @@
   assign min_price = 0
   assign character_limit = product.metafields.custom.embroidery_letter_limit | default: 12
 %}
-<h1>store_has_embroidery_opts {{store_has_embroidery_opts}}</h1>
-<h1>product_mtf_embroidery {{product_mtf_embroidery}}</h1>
 
 {% comment %} Fast return if no embroidery options are available {% endcomment %}
 {% if store_has_embroidery_opts == false or product_has_embroidery_opts == false %}{% break %}{% endif %}
