@@ -318,6 +318,14 @@
         }
       }
     },
+    "embroidery": {
+      "name": "Embroidery",
+      "settings": {
+        "embroidery_collection": {
+          "label": "Embroidery collection"
+        }
+      }
+    },
     "cart": {
       "name": "Cart",
       "settings": {
