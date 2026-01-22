@@ -14,7 +14,7 @@
   endif
 
   # Check if product has embroidery options
-  assign product_mtf_embroidery = product.metafields.custom.embroidery_options
+  assign product_mtf_embroidery = product.metafields.custom.embroidery_options.value
   if product_mtf_embroidery.size > 0
     assign product_has_embroidery_opts = true
   endif
@@ -24,7 +24,7 @@
   assign character_limit = product.metafields.custom.embroidery_letter_limit | default: 12
 %}
 <h1>store_has_embroidery_opts {{store_has_embroidery_opts}}</h1>
-<h1>product_has_embroidery_opts {{product_has_embroidery_opts}}</h1>
+<h1>product_mtf_embroidery {{product_mtf_embroidery}}</h1>
 
 {% comment %} Fast return if no embroidery options are available {% endcomment %}
 {% if store_has_embroidery_opts == false or product_has_embroidery_opts == false %}{% break %}{% endif %}
