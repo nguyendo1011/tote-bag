@@ -2342,7 +2342,7 @@
           "name": "Embroidery",
           "settings": {
             "add_heading": "Add Embroidered Name",
-            "add_character_limit": "Add up to {character_limit} characters",
+            "add_character_limit": "Add up to {{ quantity }} characters",
             "warning": "Unfortunately we can not accept returns or exchanges on embroidered items."
           }
         }
