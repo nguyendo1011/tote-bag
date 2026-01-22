@@ -8,7 +8,7 @@
   assign product_has_embroidery_opts = false
 
   # Check if setup collection embroidery and has products
-  assign embroidery_products = settings.embroidery_collection.products
+  assign embroidery_products = settings.embroidery_products
   if embroidery_products.size > 0
     assign store_has_embroidery_opts = true
   endif
@@ -19,23 +19,14 @@
     assign product_has_embroidery_opts = true
   endif
 
-  # Get the character limit
-  assign character_limit = product.metafields.custom.embroidery_letter_limit | default: 12
-
-%}
-
-<h1>settings.embroidery_collection.products: {{ settings.embroidery_collection.products }}</h1>
-{% for item in settings.embroidery_collection.products %}
-  <h1>item: {{ item }}</h1>
-  <h1>item.metafields.custom.embroidery_options: {{ item.metafields.custom.embroidery_options }}</h1>
-  <h1>item.metafields.custom.embroidery_letter_limit: {{ item.metafields.custom.embroidery_letter_limit }}</h1>
-{% endfor %}
-<h1>product.metafields.custom.embroidery_letter_limit: {{ product.metafields.custom.embroidery_letter_limit }}</h1>
-
-{% liquid
-  # Get the init information
+  # Get other information
   assign min_price = 0
+  assign character_limit = product.metafields.custom.embroidery_letter_limit | default: 12
 %}
+
+{% comment %} Fast return if no embroidery options are available {% endcomment %}
+{% if store_has_embroidery_opts == false or product_has_embroidery_opts == false %}{% break %}{% endif %}
+
 
 {% capture options %}
   {% for product in embroidery_products %}
@@ -82,8 +73,6 @@
 <h1>store_has_embroidery_opts: {{ store_has_embroidery_opts }}</h1>
 <h1>product_has_embroidery_opts: {{ product_has_embroidery_opts }}</h1>
 
-{% comment %} Fast return if no embroidery options are available {% endcomment %}
-{% if store_has_embroidery_opts == false or product_has_embroidery_opts == false %}{% break %}{% endif %}
 
 
 
