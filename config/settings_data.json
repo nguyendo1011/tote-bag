@@ -122,6 +122,11 @@
     "predictive_search_show_price": false,
     "currency_code_enabled": true,
     "embroidery_collection": "embroidery",
+    "embroidery_products": [
+      "tote-bag",
+      "tote-bag-green",
+      "tote-bag-blue"
+    ],
     "cart_type": "drawer",
     "show_vendor": false,
     "show_cart_note": false,
