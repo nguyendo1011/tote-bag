@@ -14,13 +14,13 @@
   endif
 
   # Check if product has embroidery options
-  assign product_mtf_embroidery = product.metafields.custom.embroidery_opts
+  assign product_mtf_embroidery = product.metafields.custom.embroidery_options
   if product_mtf_embroidery.embroidery_opts.size > 0
     assign product_has_embroidery_opts = true
   endif
 
   # Get the character limit
-  assign character_limit = product.metafields.custom.embroidery_opts.character_limit
+  assign character_limit = product.metafields.custom.character_limit
 
 %}
 
