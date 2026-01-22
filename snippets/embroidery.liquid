@@ -25,7 +25,11 @@
 %}
 
 <h1>settings.embroidery_collection.products: {{ settings.embroidery_collection.products }}</h1>
-<h1>settings.embroidery_collection.products: {{ settings.embroidery_collection.products.count }}</h1>
+{% for item in settings.embroidery_collection.products %}
+  <h1>item: {{ item }}</h1>
+  <h1>item.metafields.custom.embroidery_options: {{ item.metafields.custom.embroidery_options }}</h1>
+  <h1>item.metafields.custom.embroidery_letter_limit: {{ item.metafields.custom.embroidery_letter_limit }}</h1>
+{% endfor %}
 <h1>product.metafields.custom.embroidery_letter_limit: {{ product.metafields.custom.embroidery_letter_limit }}</h1>
 
 {% liquid
