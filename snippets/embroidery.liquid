@@ -1,12 +1,83 @@
 {% comment %}
   Embroidery Customization Component
-  Usage: {% render 'embroidery' %}
+  Usage: {% render 'embroidery', product: product %}
 {% endcomment %}
 
-<link rel="stylesheet" href="{{ 'embroidery-accordion.js' | asset_url }}" as="script">
-<script src="{{ 'embroidery-accordion.js' | asset_url }}" defer></script>
+{% liquid
+  assign store_has_embroidery_opts = false
+  assign product_has_embroidery_opts = false
 
-<div class="embroidery-accordion" data-embroidery-accordion data-embroidery-price="5.00">
+  # Check if setup collection embroidery and has products
+  assign embroidery_products = settings.embroidery_collection.products
+  if embroidery_products.size > 0
+    assign store_has_embroidery_opts = true
+  endif
+
+  # Check if product has embroidery options
+  assign product_mtf_embroidery = product.metafields.custom.embroidery_opts
+  if product_mtf_embroidery.embroidery_opts.size > 0
+    assign product_has_embroidery_opts = true
+  endif
+
+  # Get the character limit
+  assign character_limit = product.metafields.custom.embroidery_opts.character_limit
+
+%}
+
+{% liquid
+  # Get the init information
+  assign min_price = 0
+%}
+
+{% capture options %}
+  {% for product in embroidery_products %}
+    {% if forloop.first %}
+      <div class="tw-flex tw-flex-col tw-gap-2">
+       <label for="embroidery-name"><input
+        type="text"
+        id="embroidery-name"
+        data-embroidery-name
+        maxlength="{{ character_limit }}"
+        placeholder="e.g., John Smith"
+        class="tw-w-full tw-px-4 tw-py-2 tw-text-base tw-border tw-border-gray-400 tw-rounded-[4px]"
+      >
+      <p>{{ "products.product.embroidery.add_character_limit" | t: character_limit: character_limit }}
+        <span class="tw-text-gray-500 tw-font-normal ml-auto">
+        (<span data-name-length>0</span>/<span data-name-max>12</span>)
+      </span></p>
+     </label>
+       </div>
+    {% endif %}
+    <div class="tw-flex tw-flex-col tw-gap-2">
+      {{ product.options_by_name }}
+      {{ product.options_with_values }}
+      {% for option in product.options_with_values %}
+        {{ option }}
+        {% for value in option.values %}
+          {{ value }}
+        {% endfor %}
+      {% endfor %}
+      {% for variant in product.variants %}
+        {% if variant.available %}
+          {% assign variant_price = variant.price %}
+          {% if min_price < variant_price %}
+            {% assign min_price = variant_price %}
+          {% endif %}
+  
+         
+        {% endif %}
+      {% endfor %}
+    </div>
+    
+  {% endfor %}
+{% endcapture %}
+
+{% comment %} Fast return if no embroidery options are available {% endcomment %}
+{% if store_has_embroidery_opts == false or product_has_embroidery_opts == false %}{% break %}{% endif %}
+
+
+
+<div class="embroidery-accordion" data-accordion>
 
   <!-- Accordion Toggle/Header -->
   <div class="embroidery-toggle" data-embroidery-toggle>
@@ -29,24 +100,7 @@
   <div class="embroidery-body" data-embroidery-body>
     <div class="tw-pl-8 tw-pb-6 tw-border-l-2 tw-border-gray-200 tw-space-y-6">
 
-      <!-- Name Input -->
-      <div>
-        <label for="embroidery-name" class="tw-block tw-text-sm tw-font-medium tw-text-gray-700 tw-mb-2">
-          Enter Name
-          <span class="tw-text-gray-500 tw-font-normal">
-            (<span data-name-length>0</span>/<span data-name-max>12</span>)
-          </span>
-        </label>
-        <input
-          type="text"
-          id="embroidery-name"
-          data-embroidery-name
-          maxlength="12"
-          placeholder="e.g., John Smith"
-          class="tw-w-full tw-px-4 tw-py-2.5 tw-text-base tw-border tw-border-gray-300 tw-rounded-lg focus:tw-ring-2 focus:tw-ring-blue-500 focus:tw-border-blue-500 tw-transition-colors"
-        >
-        <p class="tw-mt-1.5 tw-text-xs tw-text-gray-500">Maximum 12 characters</p>
-      </div>
+      {{ options }}
 
       <!-- Font Selection -->
       <div>
@@ -253,9 +307,12 @@
   <input type="hidden" name="properties[Embroidery Color]" value="Black" data-embroidery-color-value>
 </div>
 
+<script src="{{ 'embroidery-accordion.js' | asset_url }}" defer></script>
+
+
 <script>
   (function() {
-    const container = document.querySelector('[data-embroidery-accordion]');
+    const container = document.querySelector('[data-accordion]');
     if (!container) return;
 
     const nameInput = container.querySelector('[data-embroidery-name]');
