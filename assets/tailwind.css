@@ -618,6 +618,10 @@ video {
   display: grid;
 }
 
+.tw-hidden {
+  display: none;
+}
+
 .tw-h-10 {
   height: 2.5rem;
 }
@@ -644,6 +648,10 @@ video {
 
 .tw-w-full {
   width: 100%;
+}
+
+.tw-flex-1 {
+  flex: 1 1 0%;
 }
 
 .tw--translate-y-2 {
@@ -767,6 +775,11 @@ video {
   padding-bottom: 0.625rem;
 }
 
+.tw-py-4 {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
 .tw-pb-6 {
   padding-bottom: 1.5rem;
 }
@@ -848,6 +861,11 @@ video {
 .tw-text-white {
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity, 1));
+}
+
+.tw-text-gray-800 {
+  --tw-text-opacity: 1;
+  color: rgb(31 41 55 / var(--tw-text-opacity, 1));
 }
 
 .tw-opacity-0 {
