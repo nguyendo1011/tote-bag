@@ -190,7 +190,7 @@
       "duties_and_taxes_included": "Duties and taxes included.",
       "shipping_policy_html": "<a href=\"{{ link }}\">Shipping</a> calculated at checkout.",
       "embroidery": {
-        "add_character_limit": "Add up to {{ quantity }} characters"
+        "add_character_limit": "Add up to {{ character_limit }} characters"
       }
     },
     "modal": {
