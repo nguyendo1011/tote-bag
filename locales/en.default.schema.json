@@ -323,6 +323,9 @@
       "settings": {
         "embroidery_collection": {
           "label": "Embroidery collection"
+        },
+        "embroidery_products": {
+          "label": "Embroidery products"
         }
       }
     },
