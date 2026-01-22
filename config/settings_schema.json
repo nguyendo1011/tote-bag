@@ -1406,6 +1406,11 @@
         "type": "collection",
         "id": "embroidery_collection",
         "label": "t:settings_schema.embroidery.settings.embroidery_collection.label"
+      },
+      {
+        "type": "product_list",
+        "id": "embroidery_products",
+        "label": "t:settings_schema.embroidery.settings.embroidery_products.label"
       }
     ]
   },
