@@ -1400,6 +1400,16 @@
     ]
   },
   {
+    "name": "t:settings_schema.embroidery.name",
+    "settings": [
+      {
+        "type": "collection",
+        "id": "embroidery_collection",
+        "label": "t:settings_schema.embroidery.settings.embroidery_collection.label"
+      }
+    ]
+  },
+  {
     "name": "t:settings_schema.cart.name",
     "settings": [
       {
