@@ -20,11 +20,12 @@
   endif
 
   # Get the character limit
-  assign character_limit = product.metafields.custom.embroidery_letter_limit
+  assign character_limit = product.metafields.custom.embroidery_letter_limit | default: 12
 
 %}
 
 <h1>settings.embroidery_collection.products: {{ settings.embroidery_collection.products }}</h1>
+<h1>settings.embroidery_collection.products: {{ settings.embroidery_collection.products.size }}</h1>
 <h1>product.metafields.custom.embroidery_letter_limit: {{ product.metafields.custom.embroidery_letter_limit }}</h1>
 
 {% liquid
