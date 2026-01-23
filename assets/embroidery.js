@@ -55,8 +55,6 @@ class EmbroideryCustomizer extends Component {
     if (this.checkboxEl) {
       this.checkboxEl.addEventListener('change', this.handleCheckboxChange.bind(this));
     }
-
-    // Dynamic product options are handled in initializeProductOptions
   }
 
   /**
@@ -70,10 +68,6 @@ class EmbroideryCustomizer extends Component {
       this.nameLengthEl.textContent = value.length;
     }
 
-    if (this.nameValueInputEl) {
-      this.nameValueInputEl.value = value;
-    }
-
     this.updatePreview();
   }
 
@@ -81,8 +75,7 @@ class EmbroideryCustomizer extends Component {
    * Handle checkbox state changes
    * @param {Event} event - Change event
    */
-  handleCheckboxChange(event) {
-    const isChecked = event.target.checked;
+  handleCheckboxChange() {
     this.updatePreview();
   }
 
@@ -131,134 +124,25 @@ class EmbroideryCustomizer extends Component {
     this.optionFieldsets.forEach(fieldsetEl => {
       const legendEl = fieldsetEl.querySelector('legend');
       const optionName = legendEl?.textContent.trim();
-      const isColorOption = optionName === 'Color';
       const radioInputEls = [...fieldsetEl.querySelectorAll('input[type="radio"]')];
-      const labelEls = [...fieldsetEl.querySelectorAll('label')];
 
-      console.log('Option:', optionName, 'isColor:', isColorOption, 'radios:', radioInputEls.length, 'labels:', labelEls.length);
+      console.log('Option:', optionName, 'radios:', radioInputEls.length);
 
       // Select first option by default
       if (radioInputEls.length > 0) {
         radioInputEls[0].checked = true;
-        this.updateProductOptionSelection(radioInputEls[0], isColorOption);
       }
 
-      // Bind click handlers
-      this.bindProductOptionHandlers(labelEls, radioInputEls, isColorOption);
-    });
-  }
-
-  /**
-   * Bind event handlers for product options
-   * @param {HTMLElement[]} labelEls - Label elements
-   * @param {HTMLInputElement[]} radioInputEls - Radio input elements
-   * @param {boolean} isColorOption - Whether this is a color option
-   */
-  bindProductOptionHandlers(labelEls, radioInputEls, isColorOption) {
-    labelEls.forEach(labelEl => {
-      const radioEl = labelEl.querySelector('input[type="radio"]');
-
-      const clickHandler = () => {
-        // Allow label click to propagate naturally
-        if (!radioEl) {
-          console.warn('No radio element found in label', labelEl);
-          return;
-        }
-
-        console.log('Clicking option:', radioEl.value, 'isColor:', isColorOption);
-        radioEl.checked = true;
-
-        // Trigger change event manually for better compatibility
-        const changeEvent = new Event('change', { bubbles: true });
-        radioEl.dispatchEvent(changeEvent);
-      };
-
-      // Add click handler to the label itself
-      labelEl.addEventListener('click', clickHandler);
-    });
-
-    radioInputEls.forEach(radioEl => {
-      radioEl.addEventListener('change', () => {
-        if (radioEl.checked) {
-          console.log('Radio changed:', radioEl.value, 'isColor:', isColorOption);
-          this.updateProductOptionSelection(radioEl, isColorOption);
-        }
+      // Add change event listeners to update preview
+      radioInputEls.forEach(radioEl => {
+        radioEl.addEventListener('change', () => {
+          if (radioEl.checked) {
+            console.log('Radio changed:', radioEl.value);
+            this.updatePreview();
+          }
+        });
       });
     });
-  }
-
-  /**
-   * Update visual selection state for product options
-   * @param {HTMLInputElement} selectedRadioEl - Selected radio input
-   * @param {boolean} isColorOption - Whether this is a color option
-   */
-  updateProductOptionSelection(selectedRadioEl, isColorOption) {
-    const fieldsetEl = selectedRadioEl.closest('fieldset[data-option-name]');
-    if (!fieldsetEl) return;
-
-    const allRadioEls = [...fieldsetEl.querySelectorAll('input[type="radio"]')];
-
-    allRadioEls.forEach(radioEl => {
-      const labelEl = radioEl.closest('label');
-      if (!labelEl) return;
-
-      if (isColorOption) {
-        this.updateColorOptionStyle(labelEl, radioEl.checked);
-      } else {
-        this.updateTextOptionStyle(labelEl, radioEl.checked);
-      }
-    });
-
-    // Update preview when color or font option changes
-    this.updatePreview();
-  }
-
-  /**
-   * Update styling for color option
-   * @param {HTMLElement} labelEl - Label element
-   * @param {boolean} isSelected - Whether option is selected
-   */
-  updateColorOptionStyle(labelEl, isSelected) {
-    const colorCircleEl = labelEl.querySelector('span.tw-w-10.tw-h-10');
-    const svgEl = labelEl.querySelector('svg');
-
-    if (!colorCircleEl) return;
-
-    if (isSelected) {
-      // Update color circle - increase border and add ring
-      colorCircleEl.classList.remove('tw-border-2', 'tw-border-transparent', 'tw-ring-1', 'tw-ring-gray-300');
-      colorCircleEl.classList.add('tw-border-4', 'tw-border-blue-600', 'tw-ring-2', 'tw-ring-blue-200');
-
-      // Show checkmark
-      if (svgEl) svgEl.classList.remove('tw-hidden');
-    } else {
-      // Reset color circle to default
-      colorCircleEl.classList.remove('tw-border-4', 'tw-border-blue-600', 'tw-ring-2', 'tw-ring-blue-200');
-      colorCircleEl.classList.add('tw-border-2', 'tw-border-transparent', 'tw-ring-1', 'tw-ring-gray-300');
-
-      // Hide checkmark
-      if (svgEl) svgEl.classList.add('tw-hidden');
-    }
-  }
-
-  /**
-   * Update styling for text option
-   * @param {HTMLElement} labelEl - Label element
-   * @param {boolean} isSelected - Whether option is selected
-   */
-  updateTextOptionStyle(labelEl, isSelected) {
-    const spanEl = labelEl.querySelector('span:not(.tw-text-xs)');
-    if (!spanEl) return;
-
-    if (isSelected) {
-      // Increase border from border-2 to border-3 and change color
-      spanEl.classList.remove('tw-border-2', 'tw-border-gray-300');
-      spanEl.classList.add('tw-border-3', 'tw-border-blue-600', 'tw-ring-2', 'tw-ring-blue-200', 'tw-bg-blue-50');
-    } else {
-      // Reset to default border
-      spanEl.classList.remove('tw-border-3', 'tw-border-blue-600', 'tw-ring-2', 'tw-ring-blue-200', 'tw-bg-blue-50');
-      spanEl.classList.add('tw-border-2', 'tw-border-gray-300');
-    }
   }
 
   /**

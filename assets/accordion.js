@@ -115,16 +115,16 @@ class AccordionElement extends HTMLElement {
 }
 
 // Register the custom element
-customElements.define('accordion-element', AccordionElement);
+customElements.define('c-accordion', AccordionElement);
 
 // Also support generic data-accordion attribute for backward compatibility
 document.addEventListener('DOMContentLoaded', () => {
   // Upgrade elements with data-accordion that aren't custom elements
-  const accordions = document.querySelectorAll('[data-accordion]:not(accordion-element)');
+  const accordions = document.querySelectorAll('[data-accordion]:not(c-accordion)');
   accordions.forEach(element => {
-    // Wrap in accordion-element if not already a custom element
+    // Wrap in c-accordion if not already a custom element
     if (!element.tagName.includes('-')) {
-      console.warn('Consider using <accordion-element> instead of data-accordion attribute');
+      console.warn('Consider using <c-accordion> instead of data-accordion attribute');
     }
   });
 });
