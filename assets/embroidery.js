@@ -158,7 +158,7 @@ class EmbroideryCustomizer extends Component {
     labelEls.forEach(labelEl => {
       const radioEl = labelEl.querySelector('input[type="radio"]');
 
-      const clickHandler = (e) => {
+      const clickHandler = () => {
         // Allow label click to propagate naturally
         if (!radioEl) {
           console.warn('No radio element found in label', labelEl);
