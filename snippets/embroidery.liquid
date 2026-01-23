@@ -30,6 +30,7 @@
 
 {% capture options %}
   {% for embroidery_product in product_embroidery_mtf %}
+
     {% if forloop.first %}
       <div class="tw-flex tw-flex-col tw-gap-2">
        <label for="embroidery-name"><input
@@ -53,6 +54,8 @@
     {% if min_price < embroidery_product_min_price %}
       {% assign min_price = embroidery_product_min_price %}
     {% endif %}
+
+    <h1>embroidery_product: {{ embroidery_product }}</h1>
 
     {% for option in embroidery_product.options_with_values %}
      <h1>option: {{ option.values }}</h1>
