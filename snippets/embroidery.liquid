@@ -14,8 +14,8 @@
   endif
 
   # Check if product has embroidery options
-  assign product_mtf_embroidery = product.metafields.custom.embroidery_options.value
-  if product_mtf_embroidery.size > 0
+  assign product_embroidery_mtf = product.metafields.custom.embroidery_options.value
+  if product_embroidery_mtf.size > 0
     assign product_has_embroidery_opts = true
   endif
 
@@ -29,7 +29,7 @@
 
 
 {% capture options %}
-  {% for product in embroidery_products %}
+  {% for embroidery_product in product_embroidery_mtf %}
     {% if forloop.first %}
       <div class="tw-flex tw-flex-col tw-gap-2">
        <label for="embroidery-name"><input
@@ -47,7 +47,7 @@
      </label>
        </div>
     {% endif %}
-    {% for option in product.options_with_values %}
+    {% for option in embroidery_product.options_with_values %}
       {% comment %} {% for variant in product.variants %}
         {% if variant.available %}
           {% assign variant_price = variant.price %}
