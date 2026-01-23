@@ -291,4 +291,4 @@ class EmbroideryCustomizer extends Component {
 }
 
 // Register custom element
-customElements.define('embroidery-customizer', EmbroideryCustomizer);
+customElements.define('c-embroidery', EmbroideryCustomizer);
