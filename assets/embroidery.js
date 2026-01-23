@@ -129,12 +129,17 @@ class EmbroideryCustomizer extends Component {
    * Initialize dynamic product options (colors, sizes, etc.)
    */
   initializeProductOptions() {
+    console.log('Initializing product options, found containers:', this.optionContainerEls.length);
+
     this.optionContainerEls.forEach(containerEl => {
       const parentDivEl = containerEl.closest('.tw-flex.tw-flex-col');
       const headingEl = parentDivEl?.querySelector('.tw-block.tw-text-sm.tw-font-medium');
-      const isColorOption = headingEl?.textContent.trim() === 'Color';
+      const optionName = headingEl?.textContent.trim();
+      const isColorOption = optionName === 'Color';
       const radioInputEls = [...containerEl.querySelectorAll('input[type="radio"]')];
       const labelEls = [...containerEl.querySelectorAll('label')];
+
+      console.log('Option:', optionName, 'isColor:', isColorOption, 'radios:', radioInputEls.length, 'labels:', labelEls.length);
 
       // Select first option by default
       if (radioInputEls.length > 0) {
