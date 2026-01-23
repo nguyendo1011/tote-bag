@@ -60,8 +60,8 @@
 
       {% assign skip_options = skip_options | append: option.name | append: ',' %}
 
-      <fieldset class="tw-flex tw-flex-col tw-gap-3" data-option-name="{{ option.name | handleize }}" data-product-id="{{ product.id }}">
-        <legend class="tw-block tw-text-sm tw-font-medium tw-text-gray-700 tw-mb-2">
+      <fieldset class="s-swatch" data-option-name="{{ option.name | handleize }}" data-product-id="{{ product.id }}">
+        <legend class="s-swatch__legend">
           {{ option.name }}
         </legend>
 
