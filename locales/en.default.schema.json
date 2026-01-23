@@ -2341,14 +2341,7 @@
             }
           }
         },
-        "embroidery": {
-          "name": "Embroidery",
-          "settings": {
-            "add_heading": "Add Embroidered Name",
-            "add_character_limit": "Add up to {{ character_limit }} characters",
-            "warning": "Unfortunately we can not accept returns or exchanges on embroidered items."
-          }
-        }
+
       },
       "settings": {
         "header": {
