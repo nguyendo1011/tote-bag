@@ -56,15 +56,7 @@ class EmbroideryCustomizer extends Component {
       this.checkboxEl.addEventListener('change', this.handleCheckboxChange.bind(this));
     }
 
-    // Font buttons
-    this.fontButtonEls.forEach(buttonEl => {
-      buttonEl.addEventListener('click', () => this.handleFontClick(buttonEl));
-    });
-
-    // Color buttons
-    this.colorButtonEls.forEach(buttonEl => {
-      buttonEl.addEventListener('click', () => this.handleColorClick(buttonEl));
-    });
+    // Dynamic product options are handled in initializeProductOptions
   }
 
   /**
