@@ -73,10 +73,10 @@
               {% if current_variant %}
                 {% assign color_hex = current_variant.metafields.custom.color_hex.value | default: '#000000' %}
               {% endif %}
-              <label for="embroidery-{{ product.id }}-{{ option.name | handleize }}-{{ value | handleize }}" class="tw-flex tw-flex-col tw-items-center tw-gap-1 tw-cursor-pointer">
+              <label for="embroidery-{{ product.id }}-{{ option.name | handleize }}" class="tw-flex tw-flex-col tw-items-center tw-gap-1 tw-cursor-pointer">
                 <input
                   type="radio"
-                  id="embroidery-{{ product.id }}-{{ option.name | handleize }}-{{ value | handleize }}"
+                  id="embroidery-{{ product.id }}-{{ option.name | handleize }}"
                   name="embroidery-{{ product.id }}-{{ option.name | handleize }}"
                   value="{{ value }}"
                   {% if current_variant %}data-variant-id="{{ current_variant.id }}"{% endif %}
@@ -97,10 +97,10 @@
                 <span class="tw-text-xs tw-text-gray-600">{{ value }}</span>
               </label>
             {% else %}
-              <label for="embroidery-{{ product.id }}-{{ option.name | handleize }}-{{ value | handleize }}" class="tw-cursor-pointer">
+              <label for="embroidery-{{ product.id }}-{{ option.name | handleize }}" class="tw-cursor-pointer">
                 <input
                   type="radio"
-                  id="embroidery-{{ product.id }}-{{ option.name | handleize }}-{{ value | handleize }}"
+                  id="embroidery-{{ product.id }}-{{ option.name | handleize }}"
                   name="embroidery-{{ product.id }}-{{ option.name | handleize }}"
                   value="{{ value }}"
                   {% if current_variant %}data-variant-id="{{ current_variant.id }}"{% endif %}
