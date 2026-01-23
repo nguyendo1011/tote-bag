@@ -190,7 +190,12 @@
       "duties_and_taxes_included": "Duties and taxes included.",
       "shipping_policy_html": "<a href=\"{{ link }}\">Shipping</a> calculated at checkout.",
       "embroidery": {
-        "add_character_limit": "Add up to {{ character_limit }} characters"
+        "name": "Embroidery",
+        "settings": {
+          "add_heading": "Add Embroidered Name",
+          "add_character_limit": "Add up to {{ character_limit }} characters",
+          "warning": "Unfortunately we can not accept returns or exchanges on embroidered items."
+        }
       }
     },
     "modal": {
