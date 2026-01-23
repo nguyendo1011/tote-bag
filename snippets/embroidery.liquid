@@ -67,13 +67,11 @@
 
         <div class="tw-flex tw-flex-wrap tw-gap-3" data-option-name="{{ option.name | handleize }}" data-product-id="{{ product.id }}">
           {% for value in option.values %}
-            {% assign current_variant = embroidery_product.product.variants | where: option.name, value | first %}
-            <h1>color_pattern: {{ shop.metaobjects['shopify--color-pattern'][150922526851] }}</h1>
             {% if option.name == 'Color' %}
-              {% assign color_hex = '#000000' %}
-              {% if current_variant %}
-                {% assign color_hex = current_variant.metafields.custom.color_hex.value | default: color_hex %}
-              {% endif %}
+              {% assign color_pattern = value | handleize %}
+
+              <h1>color_pattern: {{ shop.metaobjects['shopify--color-pattern'][color_pattern] }}</h1>
+  
               <label for="embroidery-{{ product.id }}-{{ option.name | handleize }}" class="tw-flex tw-flex-col tw-items-center tw-gap-1 tw-cursor-pointer">
                 <input
                   type="radio"
