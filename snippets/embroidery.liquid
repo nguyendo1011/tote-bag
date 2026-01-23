@@ -55,6 +55,7 @@
     {% endif %}
 
     {% for option in embroidery_product.options_with_values %}
+      {{ option | json }}
       <div class="tw-flex tw-flex-col tw-gap-3">
         <label class="tw-block tw-text-sm tw-font-medium tw-text-gray-700">
           {{ option.name }}
