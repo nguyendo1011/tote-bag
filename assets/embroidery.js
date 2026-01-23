@@ -30,8 +30,8 @@ class EmbroideryCustomizer extends Component {
     this.previewContainerEl = this.querySelector('[data-preview-container]');
     this.previewTextEl = this.querySelector('[data-preview-text]');
 
-    // Dynamic product options (colors, fonts, etc. from metafields)
-    this.optionContainerEls = [...this.querySelectorAll('[data-option-name]')];
+    // Dynamic product options (colors, fonts, etc. from metafields) - using fieldsets
+    this.optionFieldsets = [...this.querySelectorAll('fieldset[data-option-name]')];
   }
 
   /**
@@ -129,15 +129,14 @@ class EmbroideryCustomizer extends Component {
    * Initialize dynamic product options (colors, sizes, etc.)
    */
   initializeProductOptions() {
-    console.log('Initializing product options, found containers:', this.optionContainerEls.length);
+    console.log('Initializing product options, found fieldsets:', this.optionFieldsets.length);
 
-    this.optionContainerEls.forEach(containerEl => {
-      const parentDivEl = containerEl.closest('.tw-flex.tw-flex-col');
-      const headingEl = parentDivEl?.querySelector('.tw-block.tw-text-sm.tw-font-medium');
-      const optionName = headingEl?.textContent.trim();
+    this.optionFieldsets.forEach(fieldsetEl => {
+      const legendEl = fieldsetEl.querySelector('legend');
+      const optionName = legendEl?.textContent.trim();
       const isColorOption = optionName === 'Color';
-      const radioInputEls = [...containerEl.querySelectorAll('input[type="radio"]')];
-      const labelEls = [...containerEl.querySelectorAll('label')];
+      const radioInputEls = [...fieldsetEl.querySelectorAll('input[type="radio"]')];
+      const labelEls = [...fieldsetEl.querySelectorAll('label')];
 
       console.log('Option:', optionName, 'isColor:', isColorOption, 'radios:', radioInputEls.length, 'labels:', labelEls.length);
 
@@ -161,13 +160,9 @@ class EmbroideryCustomizer extends Component {
   bindProductOptionHandlers(labelEls, radioInputEls, isColorOption) {
     labelEls.forEach(labelEl => {
       const radioEl = labelEl.querySelector('input[type="radio"]');
-      const buttonEl = labelEl.querySelector('button');
-      const spanEl = labelEl.querySelector('span:not(.tw-text-xs)');
 
       const clickHandler = (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-
+        // Allow label click to propagate naturally
         if (!radioEl) {
           console.warn('No radio element found in label', labelEl);
           return;
@@ -181,11 +176,8 @@ class EmbroideryCustomizer extends Component {
         radioEl.dispatchEvent(changeEvent);
       };
 
-      if (buttonEl) {
-        buttonEl.addEventListener('click', clickHandler);
-      } else if (spanEl) {
-        spanEl.addEventListener('click', clickHandler);
-      }
+      // Add click handler to the label itself
+      labelEl.addEventListener('click', clickHandler);
     });
 
     radioInputEls.forEach(radioEl => {
@@ -204,10 +196,10 @@ class EmbroideryCustomizer extends Component {
    * @param {boolean} isColorOption - Whether this is a color option
    */
   updateProductOptionSelection(selectedRadioEl, isColorOption) {
-    const containerEl = selectedRadioEl.closest('[data-option-name]');
-    if (!containerEl) return;
+    const fieldsetEl = selectedRadioEl.closest('fieldset[data-option-name]');
+    if (!fieldsetEl) return;
 
-    const allRadioEls = [...containerEl.querySelectorAll('input[type="radio"]')];
+    const allRadioEls = [...fieldsetEl.querySelectorAll('input[type="radio"]')];
 
     allRadioEls.forEach(radioEl => {
       const labelEl = radioEl.closest('label');
@@ -230,18 +222,18 @@ class EmbroideryCustomizer extends Component {
    * @param {boolean} isSelected - Whether option is selected
    */
   updateColorOptionStyle(labelEl, isSelected) {
-    const buttonEl = labelEl.querySelector('button');
+    const colorSpanEl = labelEl.querySelector('span.tw-w-10.tw-h-10');
     const svgEl = labelEl.querySelector('svg');
 
-    if (!buttonEl || !svgEl) return;
+    if (!colorSpanEl || !svgEl) return;
 
     if (isSelected) {
-      buttonEl.classList.remove('tw-ring-1', 'tw-ring-gray-300');
-      buttonEl.classList.add('tw-ring-2', 'tw-ring-offset-2', 'tw-ring-blue-600');
+      colorSpanEl.classList.remove('tw-ring-1', 'tw-ring-gray-300');
+      colorSpanEl.classList.add('tw-ring-2', 'tw-ring-offset-2', 'tw-ring-blue-600');
       svgEl.classList.remove('tw-hidden');
     } else {
-      buttonEl.classList.remove('tw-ring-2', 'tw-ring-offset-2', 'tw-ring-blue-600');
-      buttonEl.classList.add('tw-ring-1', 'tw-ring-gray-300');
+      colorSpanEl.classList.remove('tw-ring-2', 'tw-ring-offset-2', 'tw-ring-blue-600');
+      colorSpanEl.classList.add('tw-ring-1', 'tw-ring-gray-300');
       svgEl.classList.add('tw-hidden');
     }
   }
