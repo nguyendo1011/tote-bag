@@ -29,37 +29,16 @@ class EmbroideryCustomizer extends Component {
     this.nameLengthEl = this.querySelector('[data-name-length]');
     this.previewContainerEl = this.querySelector('[data-preview-container]');
     this.previewTextEl = this.querySelector('[data-preview-text]');
-    this.selectedColorNameEl = this.querySelector('[data-selected-color-name]');
 
-    // Button groups
-    this.fontButtonEls = [...this.querySelectorAll('[data-font-id]')];
-    this.colorButtonEls = [...this.querySelectorAll('[data-color-id]')];
-
-    // Hidden form inputs
-    this.enabledInputEl = this.querySelector('[data-embroidery-enabled]');
-    this.nameValueInputEl = this.querySelector('[data-embroidery-name-value]');
-    this.fontValueInputEl = this.querySelector('[data-embroidery-font-value]');
-    this.colorValueInputEl = this.querySelector('[data-embroidery-color-value]');
-
-    // Dynamic product options
+    // Dynamic product options (colors, fonts, etc. from metafields)
     this.optionContainerEls = [...this.querySelectorAll('[data-option-name]')];
   }
 
   /**
-   * Set default selections for fonts and colors
+   * Set default selections for dynamic options
    */
   initializeDefaultSelections() {
-    // Select first font by default
-    if (this.fontButtonEls.length > 0) {
-      this.selectFont(this.fontButtonEls[0]);
-    }
-
-    // Select first color by default
-    if (this.colorButtonEls.length > 0) {
-      this.selectColor(this.colorButtonEls[0]);
-    }
-
-    // Initialize product options
+    // Initialize product options (fonts, colors, etc. from metafields)
     this.initializeProductOptions();
   }
 
