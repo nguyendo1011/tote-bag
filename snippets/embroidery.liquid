@@ -24,6 +24,16 @@
   assign character_limit = product.metafields.custom.embroidery_letter_limit | default: 12
 %}
 
+{% comment %} Debug output {% endcomment %}
+<div style="background: yellow; padding: 10px; margin: 10px;">
+  <h3>Embroidery Debug Info:</h3>
+  <p>store_has_embroidery_opts: {{ store_has_embroidery_opts }}</p>
+  <p>product_has_embroidery_opts: {{ product_has_embroidery_opts }}</p>
+  <p>embroidery_products: {{ embroidery_products }}</p>
+  <p>product_embroidery_mtf: {{ product_embroidery_mtf }}</p>
+  <p>product_embroidery_mtf.size: {{ product_embroidery_mtf.size }}</p>
+</div>
+
 {% comment %} Fast return if no embroidery options are available {% endcomment %}
 {% if store_has_embroidery_opts == false or product_has_embroidery_opts == false %}{% break %}{% endif %}
 
