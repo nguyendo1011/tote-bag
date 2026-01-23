@@ -47,15 +47,12 @@
      </label>
        </div>
     {% endif %}
-   {% for variant in product.variants %}
-      {% if variant.available %}
-        {% assign variant_price = variant.price %}
-        {% if min_price < variant_price %}
-          {% assign min_price = variant_price %}
-        {% endif %}
-      {% endif %}
-    {% endfor %}
-    <h1>embroidery_product {{ embroidery_product }}</h1>
+
+
+    {% assign embroidery_product_min_price = embroidery_product.min_price %}
+    {% if min_price < embroidery_product_min_price %}
+      {% assign min_price = embroidery_product_min_price %}
+    {% endif %}
 
     {% for option in embroidery_product.options_with_values %}
       <div class="tw-flex tw-flex-col tw-gap-3">
