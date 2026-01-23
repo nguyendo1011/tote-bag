@@ -100,8 +100,28 @@ class EmbroideryCustomizer extends Component {
     }
 
     this.previewTextEl.textContent = name;
-    this.previewTextEl.style.fontFamily = this.selectedFont.family;
-    this.previewTextEl.style.color = this.selectedColor.hex;
+
+    // Get selected color from dynamic options
+    const selectedColorOption = this.querySelector('input[type="radio"][data-option-name="color"]:checked');
+    if (selectedColorOption) {
+      const colorButton = selectedColorOption.closest('label')?.querySelector('button');
+      if (colorButton) {
+        const colorHex = colorButton.style.backgroundColor;
+        if (colorHex) {
+          this.previewTextEl.style.color = colorHex;
+        }
+      }
+    }
+
+    // Get selected font from dynamic options
+    const selectedFontOption = this.querySelector('input[type="radio"][data-option-name="font"]:checked');
+    if (selectedFontOption) {
+      const fontFamily = selectedFontOption.dataset.fontFamily;
+      if (fontFamily) {
+        this.previewTextEl.style.fontFamily = fontFamily;
+      }
+    }
+
     this.previewContainerEl.classList.remove('tw-hidden');
   }
 
@@ -184,6 +204,9 @@ class EmbroideryCustomizer extends Component {
         this.updateTextOptionStyle(labelEl, radioEl.checked);
       }
     });
+
+    // Update preview when color or font option changes
+    this.updatePreview();
   }
 
   /**
