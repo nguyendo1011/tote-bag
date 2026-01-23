@@ -40,7 +40,7 @@
         placeholder="e.g., John Smith"
         class="tw-w-full tw-px-4 tw-py-2 tw-text-base tw-border tw-border-gray-400 tw-rounded-[4px]"
       >
-      <p>{{ "products.product.embroidery.add_character_limit" | t: character_limit: character_limit }}
+      <p>{{ "products.product.embroidery.settings.add_character_limit" | t: character_limit: character_limit }}
         <span class="tw-text-gray-500 tw-font-normal ml-auto">
         (<span data-name-length>0</span>/<span data-name-max>12</span>)
       </span></p>
@@ -57,8 +57,6 @@
     {% endfor %}
 
     {% for option in embroidery_product.options_with_values %}
-
-      <h1>option: {{ option.name }}</h1>
       <div class="tw-flex tw-flex-col tw-gap-3">
         <label class="tw-block tw-text-sm tw-font-medium tw-text-gray-700">
           {{ option.name }}

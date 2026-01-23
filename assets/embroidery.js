@@ -1,195 +1,392 @@
-// Embroidery Component
-// Handles embroidery customization options, font selection, color selection, and dynamic product options
+/**
+ * Embroidery Customization Component
+ * Handles name input, font selection, color selection, and dynamic product options
+ */
 
-(function() {
-  const container = document.querySelector('[data-accordion]');
-  if (!container) return;
-
-  const nameInput = container.querySelector('[data-embroidery-name]');
-  const nameLength = container.querySelector('[data-name-length]');
-  const fontButtons = container.querySelectorAll('[data-font-id]');
-  const colorButtons = container.querySelectorAll('[data-color-id]');
-  const previewContainer = container.querySelector('[data-preview-container]');
-  const previewText = container.querySelector('[data-preview-text]');
-  const selectedColorName = container.querySelector('[data-selected-color-name]');
-  const checkbox = container.querySelector('[data-embroidery-checkbox]');
-
-  const enabledInput = container.querySelector('[data-embroidery-enabled]');
-  const nameValueInput = container.querySelector('[data-embroidery-name-value]');
-  const fontValueInput = container.querySelector('[data-embroidery-font-value]');
-  const colorValueInput = container.querySelector('[data-embroidery-color-value]');
-
-  let selectedFont = { id: 'classic', name: 'Classic', family: 'Georgia, serif' };
-  let selectedColor = { id: 'black', name: 'Black', hex: '#000000' };
-
-  if (fontButtons[0]) {
-    fontButtons[0].classList.add('tw-border-blue-600', 'tw-ring-2', 'tw-ring-blue-200');
-    fontButtons[0].innerHTML += '<div class="tw-absolute tw-top-2 tw-right-2 tw-w-5 tw-h-5 tw-bg-blue-600 tw-rounded-full tw-flex tw-items-center tw-justify-center"><svg class="tw-w-3 tw-h-3 tw-text-white" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg></div>';
-  }
-  if (colorButtons[0]) {
-    colorButtons[0].classList.remove('tw-ring-1', 'tw-ring-gray-300');
-    colorButtons[0].classList.add('tw-ring-2', 'tw-ring-offset-2', 'tw-ring-blue-600');
-    colorButtons[0].querySelector('svg').classList.remove('tw-hidden');
+class EmbroideryCustomizer extends HTMLElement {
+  constructor() {
+    super();
+    this.selectedFont = { id: 'classic', name: 'Classic', family: 'Georgia, serif' };
+    this.selectedColor = { id: 'black', name: 'Black', hex: '#000000' };
   }
 
-  if (nameInput) {
-    nameInput.addEventListener('input', (e) => {
-      const value = e.target.value;
-      if (nameLength) nameLength.textContent = value.length;
-      if (nameValueInput) nameValueInput.value = value;
-      updatePreview();
+  connectedCallback() {
+    this.initializeElements();
+    this.initializeDefaultSelections();
+    this.bindEventListeners();
+  }
+
+  /**
+   * Initialize all DOM element references
+   */
+  initializeElements() {
+    // Input elements
+    this.nameInputEl = this.querySelector('[data-embroidery-name]');
+    this.checkboxEl = this.querySelector('[data-embroidery-checkbox]');
+
+    // Display elements
+    this.nameLengthEl = this.querySelector('[data-name-length]');
+    this.previewContainerEl = this.querySelector('[data-preview-container]');
+    this.previewTextEl = this.querySelector('[data-preview-text]');
+    this.selectedColorNameEl = this.querySelector('[data-selected-color-name]');
+
+    // Button groups
+    this.fontButtonEls = [...this.querySelectorAll('[data-font-id]')];
+    this.colorButtonEls = [...this.querySelectorAll('[data-color-id]')];
+
+    // Hidden form inputs
+    this.enabledInputEl = this.querySelector('[data-embroidery-enabled]');
+    this.nameValueInputEl = this.querySelector('[data-embroidery-name-value]');
+    this.fontValueInputEl = this.querySelector('[data-embroidery-font-value]');
+    this.colorValueInputEl = this.querySelector('[data-embroidery-color-value]');
+
+    // Dynamic product options
+    this.optionContainerEls = [...this.querySelectorAll('[data-option-name]')];
+  }
+
+  /**
+   * Set default selections for fonts and colors
+   */
+  initializeDefaultSelections() {
+    // Select first font by default
+    if (this.fontButtonEls.length > 0) {
+      this.selectFont(this.fontButtonEls[0]);
+    }
+
+    // Select first color by default
+    if (this.colorButtonEls.length > 0) {
+      this.selectColor(this.colorButtonEls[0]);
+    }
+
+    // Initialize product options
+    this.initializeProductOptions();
+  }
+
+  /**
+   * Bind all event listeners
+   */
+  bindEventListeners() {
+    // Name input
+    if (this.nameInputEl) {
+      this.nameInputEl.addEventListener('input', this.handleNameInput.bind(this));
+    }
+
+    // Checkbox toggle
+    if (this.checkboxEl) {
+      this.checkboxEl.addEventListener('change', this.handleCheckboxChange.bind(this));
+    }
+
+    // Font buttons
+    this.fontButtonEls.forEach(buttonEl => {
+      buttonEl.addEventListener('click', () => this.handleFontClick(buttonEl));
+    });
+
+    // Color buttons
+    this.colorButtonEls.forEach(buttonEl => {
+      buttonEl.addEventListener('click', () => this.handleColorClick(buttonEl));
     });
   }
 
-  fontButtons.forEach(btn => {
-    btn.addEventListener('click', () => {
-      fontButtons.forEach(b => {
-        b.classList.remove('tw-border-blue-600', 'tw-ring-2', 'tw-ring-blue-200');
-        b.classList.add('tw-border-gray-300');
-        const checkmark = b.querySelector('.tw-absolute');
-        if (checkmark) checkmark.remove();
-      });
+  /**
+   * Handle name input changes
+   * @param {Event} event - Input event
+   */
+  handleNameInput(event) {
+    const value = event.target.value;
 
-      btn.classList.remove('tw-border-gray-300');
-      btn.classList.add('tw-border-blue-600', 'tw-ring-2', 'tw-ring-blue-200');
-      btn.innerHTML += '<div class="tw-absolute tw-top-2 tw-right-2 tw-w-5 tw-h-5 tw-bg-blue-600 tw-rounded-full tw-flex tw-items-center tw-justify-center"><svg class="tw-w-3 tw-h-3 tw-text-white" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg></div>';
+    if (this.nameLengthEl) {
+      this.nameLengthEl.textContent = value.length;
+    }
 
-      selectedFont = {
-        id: btn.dataset.fontId,
-        name: btn.dataset.fontName,
-        family: btn.dataset.fontFamily
-      };
+    if (this.nameValueInputEl) {
+      this.nameValueInputEl.value = value;
+    }
 
-      if (fontValueInput) fontValueInput.value = selectedFont.name;
-      updatePreview();
-    });
-  });
-
-  colorButtons.forEach(btn => {
-    btn.addEventListener('click', () => {
-      colorButtons.forEach(b => {
-        b.classList.remove('tw-ring-2', 'tw-ring-offset-2', 'tw-ring-blue-600');
-        b.classList.add('tw-ring-1', 'tw-ring-gray-300');
-        b.querySelector('svg').classList.add('tw-hidden');
-      });
-
-      btn.classList.remove('tw-ring-1', 'tw-ring-gray-300');
-      btn.classList.add('tw-ring-2', 'tw-ring-offset-2', 'tw-ring-blue-600');
-      btn.querySelector('svg').classList.remove('tw-hidden');
-
-      selectedColor = {
-        id: btn.dataset.colorId,
-        name: btn.dataset.colorName,
-        hex: btn.dataset.colorHex
-      };
-
-      if (selectedColorName) selectedColorName.textContent = selectedColor.name;
-      if (colorValueInput) colorValueInput.value = selectedColor.name;
-      updatePreview();
-    });
-  });
-
-  if (checkbox) {
-    checkbox.addEventListener('change', (e) => {
-      if (enabledInput) enabledInput.value = e.target.checked ? 'Yes' : 'No';
-    });
+    this.updatePreview();
   }
 
-  function updatePreview() {
-    if (!previewText || !previewContainer) return;
+  /**
+   * Handle checkbox state changes
+   * @param {Event} event - Change event
+   */
+  handleCheckboxChange(event) {
+    if (!this.enabledInputEl) return;
 
-    const name = nameInput ? nameInput.value : '';
+    this.enabledInputEl.value = event.target.checked ? 'Yes' : 'No';
+  }
 
-    if (name.length > 0) {
-      previewText.textContent = name;
-      previewText.style.fontFamily = selectedFont.family;
-      previewText.style.color = selectedColor.hex;
-      previewContainer.classList.remove('tw-hidden');
-    } else {
-      previewContainer.classList.add('tw-hidden');
+  /**
+   * Handle font button click
+   * @param {HTMLElement} buttonEl - Clicked button element
+   */
+  handleFontClick(buttonEl) {
+    this.selectFont(buttonEl);
+    this.updatePreview();
+  }
+
+  /**
+   * Handle color button click
+   * @param {HTMLElement} buttonEl - Clicked button element
+   */
+  handleColorClick(buttonEl) {
+    this.selectColor(buttonEl);
+    this.updatePreview();
+  }
+
+  /**
+   * Select a font and update UI
+   * @param {HTMLElement} buttonEl - Font button to select
+   */
+  selectFont(buttonEl) {
+    // Remove selection from all fonts
+    this.fontButtonEls.forEach(btn => {
+      btn.classList.remove('tw-border-blue-600', 'tw-ring-2', 'tw-ring-blue-200');
+      btn.classList.add('tw-border-gray-300');
+
+      const checkmarkEl = btn.querySelector('.tw-absolute');
+      if (checkmarkEl) checkmarkEl.remove();
+    });
+
+    // Add selection to clicked font
+    buttonEl.classList.remove('tw-border-gray-300');
+    buttonEl.classList.add('tw-border-blue-600', 'tw-ring-2', 'tw-ring-blue-200');
+    buttonEl.innerHTML += this.getCheckmarkHTML();
+
+    // Update selected font data
+    this.selectedFont = {
+      id: buttonEl.dataset.fontId,
+      name: buttonEl.dataset.fontName,
+      family: buttonEl.dataset.fontFamily
+    };
+
+    if (this.fontValueInputEl) {
+      this.fontValueInputEl.value = this.selectedFont.name;
     }
   }
 
-  const optionContainers = container.querySelectorAll('[data-option-name]');
-  optionContainers.forEach(optionContainer => {
-    const parentDiv = optionContainer.closest('.tw-flex.tw-flex-col');
-    const labelElement = parentDiv?.querySelector('label.tw-block');
-    const isColorOption = labelElement?.textContent.trim() === 'Color';
-    const radioInputs = optionContainer.querySelectorAll('input[type="radio"]');
-    const labels = optionContainer.querySelectorAll('label');
+  /**
+   * Select a color and update UI
+   * @param {HTMLElement} buttonEl - Color button to select
+   */
+  selectColor(buttonEl) {
+    // Remove selection from all colors
+    this.colorButtonEls.forEach(btn => {
+      btn.classList.remove('tw-ring-2', 'tw-ring-offset-2', 'tw-ring-blue-600');
+      btn.classList.add('tw-ring-1', 'tw-ring-gray-300');
 
-    if (radioInputs[0]) {
-      radioInputs[0].checked = true;
-      updateOptionSelection(radioInputs[0], isColorOption);
+      const svgEl = btn.querySelector('svg');
+      if (svgEl) svgEl.classList.add('tw-hidden');
+    });
+
+    // Add selection to clicked color
+    buttonEl.classList.remove('tw-ring-1', 'tw-ring-gray-300');
+    buttonEl.classList.add('tw-ring-2', 'tw-ring-offset-2', 'tw-ring-blue-600');
+
+    const svgEl = buttonEl.querySelector('svg');
+    if (svgEl) svgEl.classList.remove('tw-hidden');
+
+    // Update selected color data
+    this.selectedColor = {
+      id: buttonEl.dataset.colorId,
+      name: buttonEl.dataset.colorName,
+      hex: buttonEl.dataset.colorHex
+    };
+
+    if (this.selectedColorNameEl) {
+      this.selectedColorNameEl.textContent = this.selectedColor.name;
     }
 
-    labels.forEach(label => {
-      const radio = label.querySelector('input[type="radio"]');
-      const button = label.querySelector('button');
-      const span = label.querySelector('span:not(.tw-text-xs)');
+    if (this.colorValueInputEl) {
+      this.colorValueInputEl.value = this.selectedColor.name;
+    }
+  }
 
-      if (button) {
-        button.addEventListener('click', (e) => {
-          e.preventDefault();
-          if (radio) {
-            radio.checked = true;
-            updateOptionSelection(radio, isColorOption);
-          }
-        });
-      } else if (span) {
-        span.addEventListener('click', (e) => {
-          e.preventDefault();
-          if (radio) {
-            radio.checked = true;
-            updateOptionSelection(radio, isColorOption);
-          }
-        });
+  /**
+   * Update preview display with current selections
+   */
+  updatePreview() {
+    if (!this.previewTextEl || !this.previewContainerEl) return;
+
+    const name = this.nameInputEl ? this.nameInputEl.value : '';
+
+    if (name.length === 0) {
+      this.previewContainerEl.classList.add('tw-hidden');
+      return;
+    }
+
+    this.previewTextEl.textContent = name;
+    this.previewTextEl.style.fontFamily = this.selectedFont.family;
+    this.previewTextEl.style.color = this.selectedColor.hex;
+    this.previewContainerEl.classList.remove('tw-hidden');
+  }
+
+  /**
+   * Initialize dynamic product options (colors, sizes, etc.)
+   */
+  initializeProductOptions() {
+    this.optionContainerEls.forEach(containerEl => {
+      const parentDivEl = containerEl.closest('.tw-flex.tw-flex-col');
+      const labelEl = parentDivEl?.querySelector('label.tw-block');
+      const isColorOption = labelEl?.textContent.trim() === 'Color';
+      const radioInputEls = [...containerEl.querySelectorAll('input[type="radio"]')];
+      const labelEls = [...containerEl.querySelectorAll('label')];
+
+      // Select first option by default
+      if (radioInputEls.length > 0) {
+        radioInputEls[0].checked = true;
+        this.updateProductOptionSelection(radioInputEls[0], isColorOption);
+      }
+
+      // Bind click handlers
+      this.bindProductOptionHandlers(labelEls, radioInputEls, isColorOption);
+    });
+  }
+
+  /**
+   * Bind event handlers for product options
+   * @param {HTMLElement[]} labelEls - Label elements
+   * @param {HTMLInputElement[]} radioInputEls - Radio input elements
+   * @param {boolean} isColorOption - Whether this is a color option
+   */
+  bindProductOptionHandlers(labelEls, radioInputEls, isColorOption) {
+    labelEls.forEach(labelEl => {
+      const radioEl = labelEl.querySelector('input[type="radio"]');
+      const buttonEl = labelEl.querySelector('button');
+      const spanEl = labelEl.querySelector('span:not(.tw-text-xs)');
+
+      const clickHandler = (e) => {
+        e.preventDefault();
+        if (!radioEl) return;
+
+        radioEl.checked = true;
+        this.updateProductOptionSelection(radioEl, isColorOption);
+      };
+
+      if (buttonEl) {
+        buttonEl.addEventListener('click', clickHandler);
+      } else if (spanEl) {
+        spanEl.addEventListener('click', clickHandler);
       }
     });
 
-    radioInputs.forEach(radio => {
-      radio.addEventListener('change', () => {
-        if (radio.checked) {
-          updateOptionSelection(radio, isColorOption);
+    radioInputEls.forEach(radioEl => {
+      radioEl.addEventListener('change', () => {
+        if (radioEl.checked) {
+          this.updateProductOptionSelection(radioEl, isColorOption);
         }
       });
     });
-  });
+  }
 
-  function updateOptionSelection(selectedRadio, isColorOption) {
-    const optionContainer = selectedRadio.closest('[data-option-name]');
-    const allRadios = optionContainer.querySelectorAll('input[type="radio"]');
+  /**
+   * Update visual selection state for product options
+   * @param {HTMLInputElement} selectedRadioEl - Selected radio input
+   * @param {boolean} isColorOption - Whether this is a color option
+   */
+  updateProductOptionSelection(selectedRadioEl, isColorOption) {
+    const containerEl = selectedRadioEl.closest('[data-option-name]');
+    if (!containerEl) return;
 
-    allRadios.forEach(radio => {
-      const label = radio.closest('label');
-      if (!label) return;
+    const allRadioEls = [...containerEl.querySelectorAll('input[type="radio"]')];
+
+    allRadioEls.forEach(radioEl => {
+      const labelEl = radioEl.closest('label');
+      if (!labelEl) return;
 
       if (isColorOption) {
-        const button = label.querySelector('button');
-        const svg = label.querySelector('svg');
-        if (button && svg) {
-          if (radio.checked) {
-            button.classList.remove('tw-ring-1', 'tw-ring-gray-300');
-            button.classList.add('tw-ring-2', 'tw-ring-offset-2', 'tw-ring-blue-600');
-            svg.classList.remove('tw-hidden');
-          } else {
-            button.classList.remove('tw-ring-2', 'tw-ring-offset-2', 'tw-ring-blue-600');
-            button.classList.add('tw-ring-1', 'tw-ring-gray-300');
-            svg.classList.add('tw-hidden');
-          }
-        }
+        this.updateColorOptionStyle(labelEl, radioEl.checked);
       } else {
-        const span = label.querySelector('span:not(.tw-text-xs)');
-        if (span) {
-          if (radio.checked) {
-            span.classList.remove('tw-border-gray-300');
-            span.classList.add('tw-border-blue-600', 'tw-ring-2', 'tw-ring-blue-200');
-          } else {
-            span.classList.remove('tw-border-blue-600', 'tw-ring-2', 'tw-ring-blue-200');
-            span.classList.add('tw-border-gray-300');
-          }
-        }
+        this.updateTextOptionStyle(labelEl, radioEl.checked);
       }
     });
+  }
+
+  /**
+   * Update styling for color option
+   * @param {HTMLElement} labelEl - Label element
+   * @param {boolean} isSelected - Whether option is selected
+   */
+  updateColorOptionStyle(labelEl, isSelected) {
+    const buttonEl = labelEl.querySelector('button');
+    const svgEl = labelEl.querySelector('svg');
+
+    if (!buttonEl || !svgEl) return;
+
+    if (isSelected) {
+      buttonEl.classList.remove('tw-ring-1', 'tw-ring-gray-300');
+      buttonEl.classList.add('tw-ring-2', 'tw-ring-offset-2', 'tw-ring-blue-600');
+      svgEl.classList.remove('tw-hidden');
+    } else {
+      buttonEl.classList.remove('tw-ring-2', 'tw-ring-offset-2', 'tw-ring-blue-600');
+      buttonEl.classList.add('tw-ring-1', 'tw-ring-gray-300');
+      svgEl.classList.add('tw-hidden');
+    }
+  }
+
+  /**
+   * Update styling for text option
+   * @param {HTMLElement} labelEl - Label element
+   * @param {boolean} isSelected - Whether option is selected
+   */
+  updateTextOptionStyle(labelEl, isSelected) {
+    const spanEl = labelEl.querySelector('span:not(.tw-text-xs)');
+    if (!spanEl) return;
+
+    if (isSelected) {
+      spanEl.classList.remove('tw-border-gray-300');
+      spanEl.classList.add('tw-border-blue-600', 'tw-ring-2', 'tw-ring-blue-200');
+    } else {
+      spanEl.classList.remove('tw-border-blue-600', 'tw-ring-2', 'tw-ring-blue-200');
+      spanEl.classList.add('tw-border-gray-300');
+    }
+  }
+
+  /**
+   * Get checkmark icon HTML
+   * @returns {string} Checkmark SVG HTML
+   */
+  getCheckmarkHTML() {
+    return '<div class="tw-absolute tw-top-2 tw-right-2 tw-w-5 tw-h-5 tw-bg-blue-600 tw-rounded-full tw-flex tw-items-center tw-justify-center"><svg class="tw-w-3 tw-h-3 tw-text-white" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg></div>';
+  }
+}
+
+// Register custom element
+customElements.define('embroidery-customizer', EmbroideryCustomizer);
+
+// Initialize on accordion elements (backward compatibility)
+(() => {
+  const initializeEmbroideryCustomizers = () => {
+    const accordionEls = document.querySelectorAll('accordion-element');
+
+    accordionEls.forEach(accordionEl => {
+      // Check if it's an embroidery accordion
+      if (!accordionEl.classList.contains('embroidery-accordion')) return;
+
+      // Check if already initialized
+      if (accordionEl.hasAttribute('data-embroidery-initialized')) return;
+
+      // Mark as initialized
+      accordionEl.setAttribute('data-embroidery-initialized', 'true');
+
+      // Wrap in embroidery-customizer if not already
+      if (accordionEl.tagName !== 'EMBROIDERY-CUSTOMIZER') {
+        const customizerEl = document.createElement('embroidery-customizer');
+        customizerEl.innerHTML = accordionEl.innerHTML;
+        accordionEl.innerHTML = '';
+        accordionEl.appendChild(customizerEl);
+      }
+    });
+  };
+
+  // Initialize on load
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeEmbroideryCustomizers);
+  } else {
+    initializeEmbroideryCustomizers();
+  }
+
+  // Re-initialize on Shopify theme editor events
+  if (window.Shopify && window.Shopify.designMode) {
+    document.addEventListener('shopify:section:load', initializeEmbroideryCustomizers);
   }
 })();
