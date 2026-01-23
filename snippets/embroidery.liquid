@@ -60,7 +60,7 @@
         </span>
 
         <div class="tw-flex tw-flex-wrap tw-gap-3" data-option-name="{{ option.name | handleize }}" data-product-id="{{ product.id }}">
-    {% for option in embroidery_product.product.options_with_values %}
+        {% for option in embroidery_product.product.options_with_values %}
           {% for value in option.values %}
             {% assign current_variant = null %}
             {% if option.name == 'Color' %}
@@ -107,7 +107,7 @@
               </label>
             {% endif %}
           {% endfor %}
-    {% endfor %}
+        {% endfor %}
 
         </div>
       </div>
