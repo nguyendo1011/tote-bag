@@ -71,7 +71,7 @@
               {% assign color_pattern = value | handleize %}
               {% assign color_value = shop.metaobjects['shopify--color-pattern'][color_pattern].color %}
 
-              <label class="tw-flex tw-flex-col tw-items-center tw-gap-1 tw-cursor-pointer">
+              <label class="tw-flex tw-flex-col tw-items-center tw-gap-1 tw-cursor-pointer tw-w-10 tw-h-10 tw-rounded-full tw-transition-all tw-ring-1 tw-ring-gray-300 hover:tw-ring-gray-400 tw-border-2 tw-border-transparent">
                 <input
                   type="radio"
                   name="embroidery-{{ product.id }}-{{ option.name | handleize }}"
@@ -82,13 +82,8 @@
                   class="tw-sr-only"
                   style="background-color: {{ color_value }}"
                 >
-                <span class="tw-w-10 tw-h-10 tw-rounded-full tw-transition-all tw-ring-1 tw-ring-gray-300 hover:tw-ring-gray-400 tw-border-2 tw-border-transparent tw-flex tw-items-center tw-justify-center" style="background-color: {{ color_value }}">
-                  <svg class="tw-w-5 tw-h-5 tw-text-white tw-drop-shadow-lg tw-hidden" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-                  </svg>
-                </span>
-                <span class="tw-text-xs tw-text-gray-600">{{ value }}</span>
               </label>
+              <span class="tw-text-xs tw-text-gray-600">{{ value }}</span>
             {% else %}
               <label class="tw-cursor-pointer">
                 <input
