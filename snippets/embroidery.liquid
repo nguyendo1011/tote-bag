@@ -69,8 +69,9 @@
           {% for value in option.values %}
             {% if option.name == 'Color' %}
               {% assign color_pattern = value | handleize %}
+              {% assign color_hex = shop.metaobjects['shopify--color-pattern'][color_pattern].hex_color %}
 
-              <h1>color_pattern: {{ shop.metaobjects['shopify--color-pattern'][color_pattern] }}</h1>
+              <h1>color_pattern: {{ shop.metaobjects['shopify--color-pattern'][color_pattern] | json }}</h1>
   
               <label for="embroidery-{{ product.id }}-{{ option.name | handleize }}" class="tw-flex tw-flex-col tw-items-center tw-gap-1 tw-cursor-pointer">
                 <input
