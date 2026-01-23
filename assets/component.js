@@ -15,27 +15,31 @@ class Component extends HTMLElement {
    * Waits for DOMContentLoaded if needed
    */
   connectedCallback() {
-    if (document.readyState === 'loading') {
+    // Check if DOM is already ready (interactive or complete)
+    if (document.readyState === 'interactive' || document.readyState === 'complete') {
+      this._isDOMReady = true;
+      // Use setTimeout to ensure DOM is fully parsed
+      setTimeout(() => this.onDOMReady(), 0);
+    } else {
       // DOM is still loading, wait for DOMContentLoaded
       this._initPromise = new Promise((resolve) => {
-        if (document.readyState === 'complete') {
-          this._isDOMReady = true;
-          resolve();
-        } else {
-          document.addEventListener('DOMContentLoaded', () => {
+        const checkReady = () => {
+          if (document.readyState === 'interactive' || document.readyState === 'complete') {
             this._isDOMReady = true;
             resolve();
-          }, { once: true });
-        }
+          }
+        };
+
+        // Check immediately in case state changed
+        checkReady();
+
+        // Listen for DOMContentLoaded
+        document.addEventListener('DOMContentLoaded', checkReady, { once: true });
       });
 
       this._initPromise.then(() => {
-        this.onDOMReady();
+        setTimeout(() => this.onDOMReady(), 0);
       });
-    } else {
-      // DOM is already ready
-      this._isDOMReady = true;
-      this.onDOMReady();
     }
   }
 
