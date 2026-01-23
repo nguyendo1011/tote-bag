@@ -47,26 +47,80 @@
      </label>
        </div>
     {% endif %}
-    <div class="tw-flex tw-flex-col tw-gap-2">
-      {{ product.options_by_name }}
-      {{ product.options_with_values }}
-      {% for option in product.options_with_values %}
-        {{ option }}
-        {% for value in option.values %}
-          {{ value }}
-        {% endfor %}
-      {% endfor %}
+    {% for option in product.options_with_values %}
       {% for variant in product.variants %}
         {% if variant.available %}
           {% assign variant_price = variant.price %}
           {% if min_price < variant_price %}
             {% assign min_price = variant_price %}
           {% endif %}
-  
-         
         {% endif %}
       {% endfor %}
-    </div>
+      <div class="tw-flex tw-flex-col tw-gap-3">
+        <label class="tw-block tw-text-sm tw-font-medium tw-text-gray-700">
+          {{ option.name }}
+        </label>
+        <div class="tw-flex tw-flex-wrap tw-gap-3" data-option-name="{{ option.name | handleize }}" data-product-id="{{ product.id }}">
+          {% for value in option.values %}
+            {% assign current_variant = null %}
+            {% for variant in product.variants %}
+              {% if variant.available and current_variant == null %}
+                {% if option.position == 1 and variant.option1 == value %}
+                  {% assign current_variant = variant %}
+                {% elsif option.position == 2 and variant.option2 == value %}
+                  {% assign current_variant = variant %}
+                {% elsif option.position == 3 and variant.option3 == value %}
+                  {% assign current_variant = variant %}
+                {% endif %}
+              {% endif %}
+            {% endfor %}
+            {% if option.name == 'Color' %}
+              {% assign color_hex = '#000000' %}
+              {% if current_variant %}
+                {% assign color_hex = current_variant.metafields.custom.color_hex.value | default: '#000000' %}
+              {% endif %}
+              <label class="tw-flex tw-flex-col tw-items-center tw-gap-1 tw-cursor-pointer">
+                <input
+                  type="radio"
+                  name="embroidery-{{ product.id }}-{{ option.name | handleize }}"
+                  value="{{ value }}"
+                  {% if current_variant %}data-variant-id="{{ current_variant.id }}"{% endif %}
+                  data-option-name="{{ option.name | handleize }}"
+                  data-product-id="{{ product.id }}"
+                  class="tw-sr-only"
+                >
+                <button
+                  type="button"
+                  class="tw-relative tw-w-10 tw-h-10 tw-rounded-full tw-transition-all tw-ring-1 tw-ring-gray-300 hover:tw-ring-gray-400 tw-border-2 tw-border-transparent"
+                  style="background-color: {{ color_hex }}"
+                  data-option-value="{{ value }}"
+                >
+                  <svg class="tw-w-5 tw-h-5 tw-text-white tw-drop-shadow-lg tw-hidden tw-absolute tw-inset-0 tw-m-auto" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                  </svg>
+                </button>
+                <span class="tw-text-xs tw-text-gray-600">{{ value }}</span>
+              </label>
+            {% else %}
+              <label class="tw-cursor-pointer">
+                <input
+                  type="radio"
+                  name="embroidery-{{ product.id }}-{{ option.name | handleize }}"
+                  value="{{ value }}"
+                  {% if current_variant %}data-variant-id="{{ current_variant.id }}"{% endif %}
+                  data-option-name="{{ option.name | handleize }}"
+                  data-product-id="{{ product.id }}"
+                  class="tw-sr-only"
+                >
+                <span class="tw-inline-block tw-px-4 tw-py-2 tw-text-sm tw-font-medium tw-text-center tw-border-2 tw-border-gray-300 hover:tw-border-gray-400 tw-rounded-lg tw-transition-all tw-bg-white">
+                  {{ value }}
+                </span>
+              </label>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+    {% endfor %}
     
   {% endfor %}
 {% endcapture %}
@@ -427,6 +481,95 @@
       } else {
         previewContainer.classList.add('tw-hidden');
       }
+    }
+
+    // Handle dynamic product option selections
+    const optionContainers = container.querySelectorAll('[data-option-name]');
+    optionContainers.forEach(optionContainer => {
+      const optionName = optionContainer.dataset.optionName;
+      const productId = optionContainer.dataset.productId;
+      const parentDiv = optionContainer.closest('.tw-flex.tw-flex-col');
+      const labelElement = parentDiv?.querySelector('label.tw-block');
+      const isColorOption = labelElement?.textContent.trim() === 'Color';
+      const radioInputs = optionContainer.querySelectorAll('input[type="radio"]');
+      const labels = optionContainer.querySelectorAll('label');
+
+      // Set first option as selected by default
+      if (radioInputs[0]) {
+        radioInputs[0].checked = true;
+        updateOptionSelection(radioInputs[0], isColorOption);
+      }
+
+      // Handle label/button clicks
+      labels.forEach(label => {
+        const radio = label.querySelector('input[type="radio"]');
+        const button = label.querySelector('button');
+        const span = label.querySelector('span:not(.tw-text-xs)');
+
+        if (button) {
+          button.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (radio) {
+              radio.checked = true;
+              updateOptionSelection(radio, isColorOption);
+            }
+          });
+        } else if (span) {
+          span.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (radio) {
+              radio.checked = true;
+              updateOptionSelection(radio, isColorOption);
+            }
+          });
+        }
+      });
+
+      // Handle direct radio input changes
+      radioInputs.forEach(radio => {
+        radio.addEventListener('change', () => {
+          if (radio.checked) {
+            updateOptionSelection(radio, isColorOption);
+          }
+        });
+      });
+    });
+
+    function updateOptionSelection(selectedRadio, isColorOption) {
+      const optionContainer = selectedRadio.closest('[data-option-name]');
+      const allRadios = optionContainer.querySelectorAll('input[type="radio"]');
+
+      allRadios.forEach(radio => {
+        const label = radio.closest('label');
+        if (!label) return;
+
+        if (isColorOption) {
+          const button = label.querySelector('button');
+          const svg = label.querySelector('svg');
+          if (button && svg) {
+            if (radio.checked) {
+              button.classList.remove('tw-ring-1', 'tw-ring-gray-300');
+              button.classList.add('tw-ring-2', 'tw-ring-offset-2', 'tw-ring-blue-600');
+              svg.classList.remove('tw-hidden');
+            } else {
+              button.classList.remove('tw-ring-2', 'tw-ring-offset-2', 'tw-ring-blue-600');
+              button.classList.add('tw-ring-1', 'tw-ring-gray-300');
+              svg.classList.add('tw-hidden');
+            }
+          }
+        } else {
+          const span = label.querySelector('span:not(.tw-text-xs)');
+          if (span) {
+            if (radio.checked) {
+              span.classList.remove('tw-border-gray-300');
+              span.classList.add('tw-border-blue-600', 'tw-ring-2', 'tw-ring-blue-200');
+            } else {
+              span.classList.remove('tw-border-blue-600', 'tw-ring-2', 'tw-ring-blue-200');
+              span.classList.add('tw-border-gray-300');
+            }
+          }
+        }
+      });
     }
   })();
 </script>
