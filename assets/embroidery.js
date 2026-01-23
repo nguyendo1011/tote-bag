@@ -104,12 +104,9 @@ class EmbroideryCustomizer extends Component {
     // Get selected color from dynamic options
     const selectedColorOption = this.querySelector('input[type="radio"][data-option-name="color"]:checked');
     if (selectedColorOption) {
-      const colorButton = selectedColorOption.closest('label')?.querySelector('button');
-      if (colorButton) {
-        const colorHex = colorButton.style.backgroundColor;
-        if (colorHex) {
-          this.previewTextEl.style.color = colorHex;
-        }
+      const colorHex = selectedColorOption.style.backgroundColor;
+      if (colorHex) {
+        this.previewTextEl.style.color = colorHex;
       }
     }
 
