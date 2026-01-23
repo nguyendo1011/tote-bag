@@ -48,14 +48,15 @@
        </div>
     {% endif %}
     {% for option in product.options_with_values %}
-      {% for variant in product.variants %}
+      {% comment %} {% for variant in product.variants %}
         {% if variant.available %}
           {% assign variant_price = variant.price %}
           {% if min_price < variant_price %}
             {% assign min_price = variant_price %}
           {% endif %}
         {% endif %}
-      {% endfor %}
+      {% endfor %} {% endcomment %}
+      <h1>option: {{ option }}</h1>
       <div class="tw-flex tw-flex-col tw-gap-3">
         <label class="tw-block tw-text-sm tw-font-medium tw-text-gray-700">
           {{ option.name }}
