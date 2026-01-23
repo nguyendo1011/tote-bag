@@ -219,19 +219,14 @@ class EmbroideryCustomizer extends Component {
    * @param {boolean} isSelected - Whether option is selected
    */
   updateColorOptionStyle(labelEl, isSelected) {
-    const colorSpanEl = labelEl.querySelector('span.tw-w-10.tw-h-10');
-    const svgEl = labelEl.querySelector('svg');
-
-    if (!colorSpanEl || !svgEl) return;
-
     if (isSelected) {
-      colorSpanEl.classList.remove('tw-ring-1', 'tw-ring-gray-300');
-      colorSpanEl.classList.add('tw-ring-2', 'tw-ring-offset-2', 'tw-ring-blue-600');
-      svgEl.classList.remove('tw-hidden');
+      // Update label border - increase from border-2 to border-4 and change color
+      labelEl.classList.remove('tw-border-2', 'tw-border-transparent', 'tw-ring-1', 'tw-ring-gray-300');
+      labelEl.classList.add('tw-border-4', 'tw-border-blue-600', 'tw-ring-2', 'tw-ring-blue-200');
     } else {
-      colorSpanEl.classList.remove('tw-ring-2', 'tw-ring-offset-2', 'tw-ring-blue-600');
-      colorSpanEl.classList.add('tw-ring-1', 'tw-ring-gray-300');
-      svgEl.classList.add('tw-hidden');
+      // Reset label border to default
+      labelEl.classList.remove('tw-border-4', 'tw-border-blue-600', 'tw-ring-2', 'tw-ring-blue-200');
+      labelEl.classList.add('tw-border-2', 'tw-border-transparent', 'tw-ring-1', 'tw-ring-gray-300');
     }
   }
 
@@ -245,11 +240,13 @@ class EmbroideryCustomizer extends Component {
     if (!spanEl) return;
 
     if (isSelected) {
-      spanEl.classList.remove('tw-border-gray-300');
-      spanEl.classList.add('tw-border-blue-600', 'tw-ring-2', 'tw-ring-blue-200');
+      // Increase border from border-2 to border-3 and change color
+      spanEl.classList.remove('tw-border-2', 'tw-border-gray-300');
+      spanEl.classList.add('tw-border-3', 'tw-border-blue-600', 'tw-ring-2', 'tw-ring-blue-200', 'tw-bg-blue-50');
     } else {
-      spanEl.classList.remove('tw-border-blue-600', 'tw-ring-2', 'tw-ring-blue-200');
-      spanEl.classList.add('tw-border-gray-300');
+      // Reset to default border
+      spanEl.classList.remove('tw-border-3', 'tw-border-blue-600', 'tw-ring-2', 'tw-ring-blue-200', 'tw-bg-blue-50');
+      spanEl.classList.add('tw-border-2', 'tw-border-gray-300');
     }
   }
 
