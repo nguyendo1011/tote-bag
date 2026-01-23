@@ -1,0 +1,9 @@
+node_modules
+app/*
+config/*
+templates/*.liquid
+templates/*.json
+
+.DS_Store
+.env
+config.yml

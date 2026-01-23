@@ -300,6 +300,80 @@ function throttle(fn, delay) {
   };
 }
 
+// Smooth slide animations
+function slideDown(element, duration = 400) {
+  if (!element) return;
+
+  element.style.removeProperty('display');
+  let display = window.getComputedStyle(element).display;
+  if (display === 'none') display = 'block';
+  element.style.display = display;
+
+  const height = element.scrollHeight;
+  element.style.overflow = 'hidden';
+  element.style.height = 0;
+  element.style.paddingTop = 0;
+  element.style.paddingBottom = 0;
+  element.style.marginTop = 0;
+  element.style.marginBottom = 0;
+  element.offsetHeight; // Force reflow
+  element.style.transitionProperty = 'height, margin, padding';
+  element.style.transitionDuration = duration + 'ms';
+  element.style.transitionTimingFunction = 'ease';
+  element.style.height = height + 'px';
+  element.style.removeProperty('padding-top');
+  element.style.removeProperty('padding-bottom');
+  element.style.removeProperty('margin-top');
+  element.style.removeProperty('margin-bottom');
+
+  window.setTimeout(() => {
+    element.style.removeProperty('height');
+    element.style.removeProperty('overflow');
+    element.style.removeProperty('transition-duration');
+    element.style.removeProperty('transition-property');
+    element.style.removeProperty('transition-timing-function');
+  }, duration);
+}
+
+function slideUp(element, duration = 400) {
+  if (!element) return;
+
+  element.style.transitionProperty = 'height, margin, padding';
+  element.style.transitionDuration = duration + 'ms';
+  element.style.transitionTimingFunction = 'ease';
+  element.style.height = element.scrollHeight + 'px';
+  element.offsetHeight; // Force reflow
+  element.style.overflow = 'hidden';
+  element.style.height = 0;
+  element.style.paddingTop = 0;
+  element.style.paddingBottom = 0;
+  element.style.marginTop = 0;
+  element.style.marginBottom = 0;
+
+  window.setTimeout(() => {
+    element.style.display = 'none';
+    element.style.removeProperty('height');
+    element.style.removeProperty('padding-top');
+    element.style.removeProperty('padding-bottom');
+    element.style.removeProperty('margin-top');
+    element.style.removeProperty('margin-bottom');
+    element.style.removeProperty('overflow');
+    element.style.removeProperty('transition-duration');
+    element.style.removeProperty('transition-property');
+    element.style.removeProperty('transition-timing-function');
+  }, duration);
+}
+
+function slideToggle(element, duration = 400) {
+  if (!element) return;
+
+  if (window.getComputedStyle(element).display === 'none') {
+    return slideDown(element, duration);
+  } else {
+    return slideUp(element, duration);
+  }
+}
+
 function fetchConfig(type = 'json') {
   return {
     method: 'POST',

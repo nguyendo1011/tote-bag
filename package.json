@@ -1,0 +1,29 @@
+{
+  "name": "tote-bag-theme",
+  "version": "1.0.0",
+  "description": "Shopify theme with Tailwind CSS",
+  "scripts": {
+    "dev": "concurrently \"npm run css:watch\" \"shopify theme dev -e dev\"",
+    "build": "npm run css:build",
+    "css:build": "tailwindcss -i ./src/input.css -o ./assets/tailwind.css --minify",
+    "css:watch": "tailwindcss -i ./src/input.css -o ./assets/tailwind.css --watch",
+    "deploy": "npm run css:build && shopify theme push -e dev",
+    "pull": "shopify theme pull -e dev",
+    "push": "shopify theme push -e dev",
+    "share": "shopify theme share -e dev"
+  },
+  "keywords": [
+    "shopify",
+    "theme",
+    "tailwindcss"
+  ],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@shopify/cli": "^3.59.0",
+    "autoprefixer": "^10.4.17",
+    "concurrently": "^8.2.2",
+    "postcss": "^8.4.35",
+    "tailwindcss": "^3.4.1"
+  }
+}
