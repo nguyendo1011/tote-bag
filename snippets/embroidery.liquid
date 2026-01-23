@@ -127,11 +127,6 @@
     
   {% endfor %}
 {% endcapture %}
-<h1>store_has_embroidery_opts: {{ store_has_embroidery_opts }}</h1>
-<h1>product_has_embroidery_opts: {{ product_has_embroidery_opts }}</h1>
-
-
-
 
 <div class="embroidery-accordion" data-accordion>
 
@@ -144,7 +139,7 @@
         class="tw-w-5 tw-h-5 tw-text-blue-600 tw-bg-gray-100 tw-border-gray-300 tw-rounded focus:tw-ring-blue-500 focus:tw-ring-2 tw-transition-colors tw-cursor-pointer"
       >
       <span class="tw-ml-3 tw-text-base tw-font-medium tw-text-gray-900 tw-flex-1">
-        {{ "t:sections.main-product.blocks.embroidery.settings.add_heading" }}
+        {{ 'products.product.embroidery.settings.add_heading' | t }}
       </span>
       <span class="tw-text-sm tw-text-gray-600" data-embroidery-price>
         +{{ min_price | money }}
