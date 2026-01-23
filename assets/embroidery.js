@@ -10,9 +10,11 @@ class EmbroideryCustomizer extends Component {
   }
 
   onDOMReady() {
+    console.log('EmbroideryCustomizer: DOM Ready, initializing...');
     this.initializeElements();
     this.initializeDefaultSelections();
     this.bindEventListeners();
+    console.log('EmbroideryCustomizer: Initialization complete');
   }
 
   /**
@@ -159,10 +161,19 @@ class EmbroideryCustomizer extends Component {
 
       const clickHandler = (e) => {
         e.preventDefault();
-        if (!radioEl) return;
+        e.stopPropagation();
 
+        if (!radioEl) {
+          console.warn('No radio element found in label', labelEl);
+          return;
+        }
+
+        console.log('Clicking option:', radioEl.value, 'isColor:', isColorOption);
         radioEl.checked = true;
-        this.updateProductOptionSelection(radioEl, isColorOption);
+
+        // Trigger change event manually for better compatibility
+        const changeEvent = new Event('change', { bubbles: true });
+        radioEl.dispatchEvent(changeEvent);
       };
 
       if (buttonEl) {
@@ -175,6 +186,7 @@ class EmbroideryCustomizer extends Component {
     radioInputEls.forEach(radioEl => {
       radioEl.addEventListener('change', () => {
         if (radioEl.checked) {
+          console.log('Radio changed:', radioEl.value, 'isColor:', isColorOption);
           this.updateProductOptionSelection(radioEl, isColorOption);
         }
       });
