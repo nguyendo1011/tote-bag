@@ -71,7 +71,7 @@
               {% assign color_pattern = value | handleize %}
               {% assign color_value = shop.metaobjects['shopify--color-pattern'][color_pattern].color %}
 
-              <label class="tw-flex tw-flex-col tw-items-center tw-gap-1 tw-cursor-pointer tw-w-10 tw-h-10">
+              <label class="tw-flex tw-flex-col tw-items-center tw-gap-1 tw-cursor-pointer">
                 <input
                   type="radio"
                   name="embroidery-{{ product.id }}-{{ option.name | handleize }}"
@@ -81,7 +81,11 @@
                   data-product-id="{{ product.id }}"
                   class="tw-sr-only"
                 >
-
+                <span
+                  class="tw-relative tw-w-10 tw-h-10 tw-rounded-full tw-transition-all tw-ring-1 tw-ring-gray-300 hover:tw-ring-gray-400 tw-border-2 tw-border-transparent"
+                  style="background-color: {{ color_value }}"
+                >
+                </span>
                 <span class="tw-text-xs tw-text-gray-600">{{ value }}</span>
               </label>
             {% else %}
