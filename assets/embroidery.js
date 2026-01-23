@@ -129,8 +129,8 @@ class EmbroideryCustomizer extends Component {
   initializeProductOptions() {
     this.optionContainerEls.forEach(containerEl => {
       const parentDivEl = containerEl.closest('.tw-flex.tw-flex-col');
-      const labelEl = parentDivEl?.querySelector('label.tw-block');
-      const isColorOption = labelEl?.textContent.trim() === 'Color';
+      const headingEl = parentDivEl?.querySelector('.tw-block.tw-text-sm.tw-font-medium');
+      const isColorOption = headingEl?.textContent.trim() === 'Color';
       const radioInputEls = [...containerEl.querySelectorAll('input[type="radio"]')];
       const labelEls = [...containerEl.querySelectorAll('label')];
 
