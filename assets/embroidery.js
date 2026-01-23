@@ -255,6 +255,42 @@ class EmbroideryCustomizer extends Component {
       spanEl.classList.add('tw-border-gray-300');
     }
   }
+
+  /**
+   * Get selected value from a specific fieldset
+   * @param {string} optionName - The handleized option name (e.g., 'color', 'font')
+   * @returns {string|null} The selected value or null if none selected
+   */
+  getSelectedValue(optionName) {
+    const fieldsetEl = this.querySelector(`fieldset[data-option-name="${optionName}"]`);
+    if (!fieldsetEl) {
+      console.warn(`Fieldset not found for option: ${optionName}`);
+      return null;
+    }
+
+    const selectedRadioEl = fieldsetEl.querySelector('input[type="radio"]:checked');
+    return selectedRadioEl ? selectedRadioEl.value : null;
+  }
+
+  /**
+   * Get all selected values from all fieldsets
+   * @returns {Object} Object with option names as keys and selected values
+   */
+  getAllSelectedValues() {
+    const selectedValues = {};
+
+    this.optionFieldsets.forEach(fieldsetEl => {
+      const optionName = fieldsetEl.dataset.optionName;
+      const selectedRadioEl = fieldsetEl.querySelector('input[type="radio"]:checked');
+
+      if (selectedRadioEl) {
+        selectedValues[optionName] = selectedRadioEl.value;
+      }
+    });
+
+    console.log('All selected values:', selectedValues);
+    return selectedValues;
+  }
 }
 
 // Register custom element
