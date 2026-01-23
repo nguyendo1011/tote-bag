@@ -1,16 +1,17 @@
 /**
  * Embroidery Customization Component
  * Handles name input, font selection, color selection, and dynamic product options
+ * Extends Component base class for DOMContentLoaded handling
  */
 
-class EmbroideryCustomizer extends HTMLElement {
+class EmbroideryCustomizer extends Component {
   constructor() {
     super();
     this.selectedFont = { id: 'classic', name: 'Classic', family: 'Georgia, serif' };
     this.selectedColor = { id: 'black', name: 'Black', hex: '#000000' };
   }
 
-  connectedCallback() {
+  onDOMReady() {
     this.initializeElements();
     this.initializeDefaultSelections();
     this.bindEventListeners();

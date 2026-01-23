@@ -1,14 +1,15 @@
 // Modern Accordion Custom Element
 // Uses global slideDown, slideUp, and throttle functions from global.js
+// Extends Component base class for DOMContentLoaded handling
 
-class AccordionElement extends HTMLElement {
+class AccordionElement extends Component {
   constructor() {
     super();
     this.isOpen = false;
     this.throttledToggle = null;
   }
 
-  connectedCallback() {
+  onDOMReady() {
     // Find child elements
     this.toggle = this.querySelector('[data-accordion-toggle]');
     this.body = this.querySelector('[data-accordion-body]');
