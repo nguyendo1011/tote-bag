@@ -460,7 +460,7 @@ class EmbroideryCustomizer extends Component {
     });
 
     properties['Embroidery Name'] = embroiderySelected;
-    properties['_Addons'] = this.productId;
+    properties['Addons'] = this.productId;
 
     // Store in window for product-form to use
     window.embroideryAddons = {

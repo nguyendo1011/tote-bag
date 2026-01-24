@@ -72,9 +72,16 @@ if (!customElements.get('product-form')) {
               return;
             }
 
-            // Clean up embroidery addons after successful add
-            if (window.embroideryAddons) {
-              delete window.embroideryAddons;
+            // After main product is added, add embroidery addon if exists
+            if (window.embroideryAddons?.item) {
+              this.addEmbroideryAddon(window.embroideryAddons.item)
+                .then(() => {
+                  // Clean up after adding
+                  delete window.embroideryAddons;
+                })
+                .catch((error) => {
+                  console.error('Failed to add embroidery addon:', error);
+                });
             }
 
             const startMarker = CartPerformance.createStartingMarker('add:wait-for-subscribers');
