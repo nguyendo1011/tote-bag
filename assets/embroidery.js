@@ -114,8 +114,12 @@ class EmbroideryCustomizer extends Component {
     const selectedFontOption = this.querySelector('input[type="radio"][data-option-name="font"]:checked');
     if (selectedFontOption) {
       const fontFamily = selectedFontOption.dataset.fontFamily;
+      const fontColor = selectedFontOption.dataset.fontColor;
       if (fontFamily) {
         this.previewTextEl.style.fontFamily = fontFamily;
+      }
+      if (fontColor) {
+        this.previewTextEl.style.color = fontColor;
       }
     }
   }
