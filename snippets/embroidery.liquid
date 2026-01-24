@@ -130,9 +130,9 @@
   {% endfor %}
 {% endcapture %}
 
-<c-embroidery class="tw-group/{{ position }}" data-position="{{ position }}" data-variant-id="{{ product.selected_or_first_available_variant.id }}">
-  <c-accordion class="tw-flex tw-flex-col tw-text-[#1E1E1E] tw-p-[1.6rem] tw-gap-[2.4rem] md:tw-gap-[1.6rem]
-  tw-rounded tw-bg-[#F5F5F5] tw-text-sm md:tw-text-base tw-leading-[1.6] max-w-[65rem] group-[data-position='drawer']:tw-p-[1.2rem] group-[data-position='drawer']:tw-text-sm">
+<c-embroidery class="embroidery-{{ position }}" data-position="{{ position }}" data-variant-id="{{ product.selected_or_first_available_variant.id }}">
+  <c-accordion class="tw-flex tw-flex-col tw-text-[#1E1E1E] {% if position == 'drawer' %}tw-p-[1.2rem] tw-text-sm{% else %}tw-p-[1.6rem] tw-gap-[2.4rem] md:tw-gap-[1.6rem] tw-text-sm md:tw-text-base{% endif %}
+  tw-rounded tw-bg-[#F5F5F5] tw-leading-[1.6] max-w-[65rem]">
     <!-- Accordion Toggle/Header -->
     <div class="embroidery-toggle" data-accordion-toggle >
       <label class="tw-flex tw-items-center tw-cursor-pointer">
