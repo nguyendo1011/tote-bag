@@ -35,6 +35,7 @@
     <script src="{{ 'details-modal.js' | asset_url }}" defer="defer"></script>
     <script src="{{ 'search-form.js' | asset_url }}" defer="defer"></script>
     <script src="{{ 'component.js' | asset_url }}" defer="defer"></script>
+    <script src="{{ 'accordion.js' | asset_url }}" defer="defer"></script>
 
     {%- if settings.animations_reveal_on_scroll -%}
       <script src="{{ 'animations.js' | asset_url }}" defer="defer"></script>
@@ -294,13 +295,15 @@
     {%- endif -%}
 
     <!-- Embroidery font families -->
-    {%- if settings.embroidery_font_families != blank -%}
+    {%- if settings.embroidery_products.size > 0 and settings.embroidery_base_product != blank and settings.embroidery_font_families != blank -%}
       <link rel="preconnect" href="https://fonts.googleapis.com">
       <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
       {% assign embroidery_font_families = settings.embroidery_font_families | split: '|' %}
       {% for font_family in embroidery_font_families %}
         {{ font_family }}
       {% endfor %}
+
+      <script src="{{ 'embroidery.js' | asset_url }}" defer="defer"></script>
     {%- endif -%}
     <!-- End embroidery font families -->
 
