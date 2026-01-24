@@ -121,6 +121,7 @@
 
                       {% comment %} We dont want to render embroidery items in the cart drawer {% endcomment %}
                       {% if item.product.tags contains 'Embroidery' %} {% continue %} {% endif %}
+
                       <tr
                         id="CartDrawer-Item-{{ item.index | plus: 1 }}"
                         class="cart-item{% if item.parent_relationship.parent != null %} cart-item__nested-line{% endif %}"
@@ -463,6 +464,8 @@
                             </div>
                           </quantity-popover>
                         </td>
+
+                        {% render 'embroidery', product: item.product, position: 'drawer' %}
                       </tr>
                     {%- endfor -%}
                   </tbody>
