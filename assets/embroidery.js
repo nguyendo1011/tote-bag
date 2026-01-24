@@ -300,16 +300,14 @@ class EmbroideryCustomizer extends Component {
     this.els.previewText.textContent = name;
 
     // Apply selected color
-    const colorOption = this.getSelectedOption('color');
-    if (colorOption?.dataset.fontColor) {
-      this.els.previewText.style.color = colorOption.dataset.fontColor;
-    }
+    this.els.optionFieldsets.forEach(fieldset => {
+      const selectedInput = fieldset.querySelector(EmbroideryCustomizer.SELECTORS.CHECKED_RADIO);
+      if (!selectedInput) return;
+      const optionValue = selectedInput.dataset.optionValue;
+      if (!optionValue) return;
 
-    // Apply selected font
-    const fontOption = this.getSelectedOption('font');
-    if (fontOption?.dataset.fontFamily) {
-      this.els.previewText.style.fontFamily = fontOption.dataset.fontFamily;
-    }
+      this.els.previewText.style[optionName] = optionValue;
+    });
   }
 
   // ==================== Public API ====================
