@@ -310,61 +310,6 @@ class EmbroideryCustomizer extends Component {
     });
   }
 
-  // ==================== Public API ====================
-
-  /**
-   * Reset component to initial state
-   */
-  reset() {
-    if (this.els.nameInput) {
-      this.els.nameInput.value = '';
-    }
-
-    if (this.els.checkbox) {
-      this.els.checkbox.checked = false;
-    }
-
-    this.els.optionFieldsets.forEach(fieldset => {
-      const firstInput = fieldset.querySelector(EmbroideryCustomizer.SELECTORS.RADIO_INPUT);
-      if (firstInput) {
-        firstInput.checked = true;
-      }
-    });
-
-    this.updateCharacterCount(0);
-    this.updatePreview();
-
-    if (this.productId) {
-      sessionStorage.removeItem(`embroidery_${this.productId}`);
-    }
-  }
-
-  /**
-   * Validate current configuration
-   * @returns {Object} Validation result
-   */
-  validate() {
-    const state = this.getState();
-    const errors = [];
-
-    if (state.enabled) {
-      if (!state.name || state.name.trim().length === 0) {
-        errors.push('Name is required');
-      }
-
-      const requiredOptions = ['font', 'color'];
-      requiredOptions.forEach(optionName => {
-        if (!state.options[optionName]) {
-          errors.push(`${optionName} selection is required`);
-        }
-      });
-    }
-
-    return {
-      valid: errors.length === 0,
-      errors
-    };
-  }
 }
 
 // Register custom element
