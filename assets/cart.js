@@ -155,7 +155,7 @@ class CartItems extends HTMLElement {
     this.enableLoading(line);
 
     console.log("updateQuantity::", {
-      event.target,
+      target: event.target,
       line,
       eventTarget,
       quantity
