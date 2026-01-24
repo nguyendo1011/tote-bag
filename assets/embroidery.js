@@ -114,11 +114,6 @@ class EmbroideryCustomizer extends Component {
     this.els.optionFieldsets.forEach(fieldset => {
       fieldset.addEventListener('change', this.handleOptionChange.bind(this));
     });
-
-    this.addEventListener('change', (event) => {
-      console.log('event::', event.target);
-    });
-   
   }
 
   // ==================== Event Handlers ====================
