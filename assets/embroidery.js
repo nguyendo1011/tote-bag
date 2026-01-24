@@ -85,7 +85,10 @@ class EmbroideryCustomizer extends Component {
       checkbox: this.els.checkbox,
       nameInput: this.els.nameInput,
       priceDisplay: this.els.priceDisplay,
-      accordion: this.els.accordion
+      accordion: this.els.accordion,
+      accordionTagName: this.els.accordion?.tagName,
+      checkboxHasDataAttr: this.els.checkbox?.hasAttribute('data-embroidery-checkbox'),
+      checkboxHasAccordionTrigger: this.els.checkbox?.hasAttribute('data-accordion-trigger')
     });
 
     // Get base price from data attribute (price is in cents)
@@ -125,14 +128,24 @@ class EmbroideryCustomizer extends Component {
     // Listen to accordion toggle event instead of checkbox directly
     // This avoids conflicts with accordion.js which also listens to the checkbox
     if (this.els.accordion) {
-      console.log('Setting up accordion:toggle listener');
-      this.els.accordion.addEventListener('accordion:toggle', this.handleAccordionToggle.bind(this));
+      console.log('Setting up accordion:toggle listener on:', this.els.accordion);
+      this.els.accordion.addEventListener('accordion:toggle', (e) => {
+        console.log('accordion:toggle event received!', e.detail);
+        this.handleAccordionToggle(e);
+      });
+    } else {
+      console.warn('No accordion element found!');
     }
 
     // Also listen to checkbox for cases where accordion doesn't handle it
     if (this.els.checkbox) {
       console.log('Setting up checkbox listener on:', this.els.checkbox);
-      this.els.checkbox.addEventListener('change', this.handleCheckboxChange.bind(this));
+      this.els.checkbox.addEventListener('change', (e) => {
+        console.log('Checkbox change event received!', e.target.checked);
+        this.handleCheckboxChange(e);
+      });
+    } else {
+      console.warn('No checkbox element found!');
     }
 
     this.els.optionFieldsets.forEach(fieldset => {
