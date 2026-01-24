@@ -43,25 +43,28 @@
   {% for embroidery_product in product_embroidery_mtf %}
 
     {% if forloop.first and skip_options == '' %}
-      <div class="tw-flex tw-flex-col tw-gap-2">
-       <span for="embroidery-name"><input
-        type="text"
-        id="embroidery-name"
-        data-embroidery-name
-        maxlength="{{ character_limit }}"
-        placeholder="e.g., John Smith"
-        class="tw-w-full tw-px-4 tw-py-2 tw-text-base tw-border tw-border-gray-400 tw-rounded-[4px]"
-      >
-      <p>{{ "products.product.embroidery.settings.add_character_limit" | t: character_limit: character_limit }}
-        <span class="tw-text-gray-500 tw-font-normal ml-auto">
-        (<span data-name-length>0</span>/<span data-name-max>12</span>)
-      </span></p>
-     </span>
-       </div>
+      {% capture heading_text %}
+        <div class="tw-flex tw-flex-col tw-gap-2">
+        <span for="embroidery-name">
+          <input
+            type="text"
+            id="embroidery-name"
+            data-embroidery-name
+            maxlength="{{ character_limit }}"
+            placeholder="e.g., John Smith"
+            class="tw-w-full tw-px-4 tw-py-2 tw-text-base tw-border tw-border-gray-400 tw-rounded-[4px]"
+          >
+            <p>{{ "products.product.embroidery.settings.add_character_limit" | t: character_limit: character_limit }}
+              <span class="tw-text-gray-500 tw-font-normal ml-auto">
+              (<span data-name-length>0</span>/<span data-name-max>12</span>)
+            </span></p>
+          </span>
+        </div>
+      {% endcapture %}
     {% endif %}
 
     {% assign embroidery_product_min_price = embroidery_product.min_price %}
-    {% if min_price < embroidery_product_min_price %}
+    {% if min_price < embroidery_product_min_price and embroidery_product_min_price > 0 %}
       {% assign min_price = embroidery_product_min_price %}
     {% endif %}
     {% for option in embroidery_product.product.options_with_values %}
@@ -119,7 +122,6 @@
   {% endfor %}
 {% endcapture %}
 <c-accordion class="tw-flex tw-flex-col tw-p-4 tw-gap-6 tw-rounded tw-bg-[#F5F5F5] tw-text-sm md:tw-text-base tw-leading-6">
-
   <!-- Accordion Toggle/Header -->
   <div class="embroidery-toggle" data-accordion-toggle>
     <label class="tw-flex tw-items-center tw-cursor-pointer">
@@ -130,25 +132,32 @@
         data-embroidery-checkbox
         class="tw-peer tw-sr-only"
       >
-      {% render 'c-icons', icon: 'checked', class: 'peer-checked:tw-block tw-hidden tw-cursor-pointer', width: 20, height: 20 %}
-      {% render 'c-icons', icon: 'unchecked', class: 'peer-checked:tw-hidden tw-block tw-cursor-pointer', width: 20, height: 20 %}
-     
+      {% render 'c-icons',
+        icon: 'checked',
+        class: 'peer-checked:tw-block tw-hidden tw-cursor-pointer',
+        width: 20,
+        height: 20
+      %}
+      {% render 'c-icons',
+        icon: 'unchecked',
+        class: 'peer-checked:tw-hidden tw-block tw-cursor-pointer',
+        width: 20,
+        height: 20
+      %}
+
       <span class="tw-ml-3 tw-text-base tw-font-medium tw-text-gray-900 tw-flex-1">
         {{ 'products.product.embroidery.settings.add_heading' | t }}
       </span>
-      <span class="tw-text-sm tw-text-gray-600" data-embroidery-price>
-        +{{ min_price | money }}
-      </span>
+      <span class="tw-text-sm tw-text-gray-600" data-embroidery-price> +{{ min_price | money }} </span>
     </label>
   </div>
 
   <!-- Accordion Body (Collapsible Content) -->
   <div class="embroidery-body" data-accordion-body>
-    <c-embroidery class="tw-block" >
-      <div class="">
-
+    <c-embroidery class="tw-block">
+      {{ heading_text }}
+      <div class="tw-flex tw-gap-[4rem]">
         {{ options }}
-
         <!-- Preview Text -->
         <div class="tw-relative tw-p-6 tw-bg-gray-50 tw-rounded-lg tw-border tw-border-gray-200 h-[140px]">
           {% render 'c-image', image: product.featured_media, loading: 'lazy', fetch_priority: 'low' %}
@@ -156,9 +165,8 @@
             class="tw-text-2xl tw-font-medium tw-text-center tw-absolute tw-left-1/2 tw-top-1/2 tw-transform -tw-translate-x-1/2 tw-translate-y-1/2"
             data-preview-text
           ></p>
+        </div>
       </div>
-
-    </div>
     </c-embroidery>
   </div>
 </c-accordion>
