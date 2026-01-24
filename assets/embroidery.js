@@ -74,7 +74,6 @@ class EmbroideryCustomizer extends Component {
       addButton: productForm?.querySelector(SELECTORS.ADD_BUTTON),
       accordion: accordion
     };
-    // Get base price from data attribute (price is in cents)
     if (this.els.priceDisplay?.dataset.additionalPrice) {
       this.basePrice = parseInt(this.els.priceDisplay.dataset.additionalPrice, 10);
     }
@@ -111,13 +110,9 @@ class EmbroideryCustomizer extends Component {
     // Listen to accordion toggle event instead of checkbox directly
     // This avoids conflicts with accordion.js which also listens to the checkbox
     if (this.els.accordion) {
-      console.log('Setting up accordion:toggle listener on:', this.els.accordion);
       this.els.accordion.addEventListener('accordion:toggle', (e) => {
-        console.log('accordion:toggle event received!', e.detail);
         this.handleAccordionToggle(e);
       });
-    } else {
-      console.warn('No accordion element found!');
     }
 
     // Also listen to checkbox for cases where accordion doesn't handle it
@@ -127,8 +122,6 @@ class EmbroideryCustomizer extends Component {
         console.log('Checkbox change event received!', e.target.checked);
         this.handleCheckboxChange(e);
       });
-    } else {
-      console.warn('No checkbox element found!');
     }
 
     this.els.optionFieldsets.forEach(fieldset => {
