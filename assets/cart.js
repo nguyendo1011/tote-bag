@@ -19,11 +19,6 @@ class CartItems extends HTMLElement {
       document.getElementById('shopping-cart-line-item-status') || document.getElementById('CartDrawer-LineItemStatus');
 
     const debouncedOnChange = debounce((event) => {
-      console.log("event.target.closest('c-embroidery')", event.target.closest('c-embroidery'));
-      // Skip if the event is embroidery
-      if (event.target.closest('c-embroidery')) {
-        return;
-      }
       this.onChange(event);
     }, ON_CHANGE_DEBOUNCE_TIMER);
 
@@ -89,7 +84,11 @@ class CartItems extends HTMLElement {
   }
 
   onChange(event) {
-  
+    console.log("event.target.closest('c-embroidery')", event.target);
+    // Skip if the event is embroidery
+    if (event.target.closest('c-embroidery')) {
+      return;
+    }
 
     this.validateQuantity(event);
   }
