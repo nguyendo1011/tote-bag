@@ -293,6 +293,13 @@
       >
     {%- endif -%}
 
+    {%- if settings.embroidery_font_families != blank -%}
+      {% assign embroidery_font_families = settings.embroidery_font_families | split: '|' %}
+      {% for font_family in embroidery_font_families %}
+        {{ font_family }}
+      {% endfor %}
+    {%- endif -%}
+
     <script>
       if (Shopify.designMode) {
         document.documentElement.classList.add('shopify-design-mode');
