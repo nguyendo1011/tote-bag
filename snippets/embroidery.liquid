@@ -79,6 +79,15 @@
 
         <div class="c-swatch__item">
           {% for value in option.values %}
+            {% comment %} Find variant price for this option value {% endcomment %}
+            {% assign variant_price = 0 %}
+            {% for variant in embroidery_product.product.variants %}
+              {% if variant.option1 == value or variant.option2 == value or variant.option3 == value %}
+                {% assign variant_price = variant.price %}
+                {% break %}
+              {% endif %}
+            {% endfor %}
+
             {% if option.name == 'Color' %}
               {% assign color_pattern = value | handleize %}
               {% assign color_value = shop.metaobjects['shopify--color-pattern'][color_pattern].color %}
@@ -91,7 +100,7 @@
                   value="{{ value }}"
                   data-option-name="{{ option.name | handleize }}"
                   data-option-value="{{ color_value }}"
-                  data-option-price="{{ option.price }}"
+                  data-option-price="{{ variant_price }}"
                   data-product-id="{{ product.id }}"
                   class="tw-sr-only peer"
                 >
@@ -100,7 +109,7 @@
               </label>
 
             {% else %}
-          
+
               <label for="embroidery-{{ product.id }}-{{ option.name | handleize }}-{{ value | handleize }}" class="c-swatch__label">
                 <input
                   type="radio"
@@ -109,7 +118,7 @@
                   value="{{ value }}"
                   data-option-name="{{ option.name | handleize }}"
                   data-option-value="{{ value }}"
-                  data-option-price="{{ option.price }}"
+                  data-option-price="{{ variant_price }}"
                   data-product-id="{{ product.id }}"
                   class="tw-sr-only peer"
 
