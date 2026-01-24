@@ -496,7 +496,7 @@ class EmbroideryCustomizer extends Component {
       items.push({
         id: variantId,
         quantity: quantity,
-        parentId: this.productId,
+        parent_id: this.productId,
         properties: {
           '_Addons': this.productId,
         }
