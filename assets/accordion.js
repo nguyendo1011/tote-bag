@@ -23,8 +23,13 @@ class AccordionElement extends HTMLElement {
   }
 
   init() {
-    // Hide body initially
-    this.body.style.display = 'none';
+    // Check initial state from data-open attribute
+    const initialState = this.getAttribute('data-open') === 'true';
+
+    // Set initial display based on data-open
+    if (!initialState) {
+      this.body.style.display = 'none';
+    }
 
     // Create throttled toggle function
     this.throttledToggle = throttle((shouldOpen) => {
@@ -33,6 +38,9 @@ class AccordionElement extends HTMLElement {
 
     // Handle checkbox trigger if present
     if (this.trigger) {
+      // Sync checkbox with data-open attribute
+      this.trigger.checked = initialState;
+
       this.trigger.addEventListener('change', (e) => {
         this.throttledToggle(e.target.checked);
       });
@@ -55,14 +63,17 @@ class AccordionElement extends HTMLElement {
       }
     });
 
-    // Check if should start open
-    if (this.hasAttribute('open') || (this.trigger && this.trigger.checked)) {
+    // Apply initial state
+    if (initialState) {
       this.onToggle(true);
     }
   }
 
   onToggle(shouldOpen) {
     this.isOpen = shouldOpen;
+
+    // Update data-open attribute
+    this.setAttribute('data-open', shouldOpen ? 'true' : 'false');
 
     if (shouldOpen) {
       this.onOpen();
