@@ -55,11 +55,8 @@ class EmbroideryCustomizer extends Component {
   cacheElements() {
     const { SELECTORS } = EmbroideryCustomizer;
 
-    // Find accordion parent to get base price
-    const accordion = this.closest(SELECTORS.ACCORDION);
-
     // Find product form and add button
-    const productForm = this.closest(SELECTORS.PRODUCT_FORM);
+    const productForm = document.querySelector(SELECTORS.PRODUCT_FORM);
 
     // Input elements
     this.els = {
