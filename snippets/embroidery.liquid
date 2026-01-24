@@ -67,6 +67,10 @@
       {% assign min_price = embroidery_product_min_price %}
     {% endif %}
     {% for option in embroidery_product.product.options_with_values %}
+      {% if option.name contains 'Color' or option.name contains 'Color' %}
+        <!-- Color Swatch Start -->
+      {% endif %}
+
       {% if skip_options contains option.name %}
         {% continue %}
       {% endif %}
@@ -118,6 +122,10 @@
           {% endfor %}
         </div>
       </fieldset>
+
+      {% if option.name contains 'Color' or option.name contains 'Color' %}
+        <!-- Color Swatch End -->
+      {% endif %}
     {% endfor %}
   {% endfor %}
 {% endcapture %}
@@ -159,7 +167,13 @@
       <div class="tw-flex tw-gap-[4rem] tw-flex-wrap">
         <div class="tw-flex tw-flex-col tw-gap-[2.4rem]">
 
-          {{ options }}
+          {% capture color_swatch %}
+            {{ options | split: '<!-- Color Swatch End -->' | first | split: '<!-- Color Swatch Start -->' | last }}
+          {% endcapture %}
+
+          {{color_swatch}}
+          {{ options | replace: color_swatch, '' }}
+
         </div>
         <div class="tw-relative tw-w-[22.8rem] tw-h-[22.8rem]">
           {% render 'c-image', image: product.featured_media, loading: 'lazy', fetch_priority: 'low' %}
