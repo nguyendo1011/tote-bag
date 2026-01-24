@@ -539,6 +539,7 @@ class EmbroideryCustomizer extends Component {
    * Validate embroidery and update add button state
    */
   validateAndUpdateButton() {
+    console.log('validateAndUpdateButton::', this.els.addButton);
     if (!this.els.addButton) return;
 
     const isValid = this.isEmbroideryValid();
