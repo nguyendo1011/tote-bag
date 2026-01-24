@@ -327,6 +327,10 @@
         "embroidery_additional_price": {
           "label": "Embroidery additional price",
           "info": "The additional base price for optional embroidered products"
+        },
+        "embroidery_font_families": {
+          "label": "Embroidery font families links",
+          "info": "The font families links. Separate by |. Example: https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap|https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap"
         }
       }
     },
