@@ -115,7 +115,7 @@
                   
                 >
                 <span class="text" 
-                {% if option.name contains 'font' %}
+                {% if option.name contains 'font' or option.name contains 'Font' %}
                   style="font-family: {{ value }};"
                 {% endif %}>{{ value }}</span>
               </label>
