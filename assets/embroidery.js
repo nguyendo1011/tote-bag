@@ -234,40 +234,6 @@ class EmbroideryCustomizer extends Component {
   }
 
   /**
-   * Remove embroidery customization from cart (drawer context)
-   * Sets line item properties to null
-   */
-  async removeEmbroideryFromCart() {
-    if (!this.lineItemKey) {
-      console.error('Missing line item key');
-      return;
-    }
-
-    const body = JSON.stringify({
-      id: this.lineItemKey,
-      properties: null,
-      sections: this.getSectionsToRender(),
-      sections_url: window.location.pathname
-    });
-
-    const response = await fetch(`${routes.cart_change_url}`, {
-      ...fetchConfig(),
-      body: body
-    }).then(res => res.json());
-
-    // Check for errors
-    if (response.status || response.errors) {
-      throw new Error(response.description || response.errors || 'Failed to remove embroidery');
-    }
-
-    // Publish cart update event
-    await publish(PUB_SUB_EVENTS.cartUpdate, {
-      source: 'embroidery',
-      cartData: response
-    });
-  }
-
-  /**
    * Get sections to render for cart updates
    * @returns {Array} Array of section IDs
    */
