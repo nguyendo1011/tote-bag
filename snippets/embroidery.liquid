@@ -84,7 +84,6 @@
               {% assign color_pattern = value | handleize %}
               {% assign color_value = shop.metaobjects['shopify--color-pattern'][color_pattern].color %}
 
-              <!-- Color Swatch Start -->
               <label for="embroidery-{{ product.id }}-{{ option.name | handleize }}-{{ value | handleize }}" class="c-swatch__label c-swatch__label--color">
                 <input
                   type="radio"
@@ -99,7 +98,6 @@
                 <span class="circle" style="--color: {{ color_value }}"></span>
                 <span class="text">{{ value }}</span>
               </label>
-              <!-- Color Swatch End -->
 
             {% else %}
           
@@ -160,9 +158,9 @@
       {{ heading_text }}
       <div class="tw-flex tw-gap-[4rem] tw-flex-wrap">
         <div class="tw-flex tw-flex-col tw-gap-[2.4rem]">
+
           {{ options }}
         </div>
-        <!-- Preview Text -->
         <div class="tw-relative tw-w-[22.8rem] tw-h-[22.8rem]">
           {% render 'c-image', image: product.featured_media, loading: 'lazy', fetch_priority: 'low' %}
           <p
