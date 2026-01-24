@@ -146,7 +146,7 @@
 
         <!-- Preview Text -->
         <div class="tw-p-6 tw-bg-gray-50 tw-rounded-lg tw-border tw-border-gray-200 h-[140px]" data-embroidery-preview>
-          {% render 'c-image', object: product.featured_media %}
+          {% render 'c-image', image: product.featured_media, loading: 'lazy', fetch_priority: 'low' %}
           <p
             class="tw-text-2xl tw-font-medium tw-text-center"
             data-preview-text
