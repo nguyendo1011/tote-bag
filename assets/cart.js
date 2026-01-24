@@ -84,6 +84,12 @@ class CartItems extends HTMLElement {
   }
 
   onChange(event) {
+    console.log("event.target", event.target);
+    // Skip if the event is embroidery
+    if (event.target.closest('c-embroidery')) {
+      return;
+    }
+
     this.validateQuantity(event);
   }
 
