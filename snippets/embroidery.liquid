@@ -199,6 +199,19 @@
           </div>
         </div>
         <span class="tw-text-sm">{{ "products.product.embroidery.settings.warning" | t }}</span>
+
+        <button
+          id="ProductSubmitButton-{{ section_id }}"
+          type="submit"
+          name="add"
+          class="product-form__submit button button--full-width button--primary"
+        >
+          <span>
+              {{ 'products.product.add_to_cart' | t }}
+          </span>
+          {%- render 'loading-spinner' -%}
+        </button>
+        
       </div>
     </div>
   </c-accordion>
