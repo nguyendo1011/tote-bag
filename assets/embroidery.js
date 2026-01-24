@@ -472,7 +472,7 @@ class EmbroideryCustomizer extends Component {
     // Build embroidery properties for main product
     const properties = {};
     let embroiderySelected = '';
-    embroiderySelected += name;
+    embroiderySelected += '"' + name + '"';
 
     // Collect addon items from selected options
     this.els.optionFieldsets.forEach(fieldset => {
