@@ -321,11 +321,11 @@
     "embroidery": {
       "name": "Embroidery",
       "settings": {
-        "embroidery_collection": {
-          "label": "Embroidery collection"
-        },
         "embroidery_products": {
           "label": "Embroidery products"
+        },
+        "embroidery_additional_price": {
+          "label": "Embroidery additional price"
         }
       }
     },
