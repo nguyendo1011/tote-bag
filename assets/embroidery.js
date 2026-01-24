@@ -72,7 +72,6 @@ class EmbroideryCustomizer extends Component {
       productForm: productForm,
       addButton: productForm?.querySelector(SELECTORS.ADD_BUTTON)
     };
-    console.log('els::', this.els);
 
     // Get base price from data attribute (price is in cents)
     if (this.els.priceDisplay?.dataset.additionalPrice) {
@@ -422,7 +421,6 @@ class EmbroideryCustomizer extends Component {
    * This will be used by product-form to add embroidery products to cart
    */
   buildEmbroideryAddons() {
-    console.log('buildEmbroideryAddons::', this.els);
     // Clear addons if embroidery is not enabled or not valid
     if (!this.els.checkbox?.checked || !this.isEmbroideryValid()) {
       delete window.embroideryAddons;
@@ -475,8 +473,6 @@ class EmbroideryCustomizer extends Component {
       items: [...items],
       properties: properties
     };
-
-    console.log('window.embroideryAddons:', window.embroideryAddons);
   }
 
   /**
