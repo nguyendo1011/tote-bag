@@ -205,8 +205,10 @@
 <script src="{{ 'accordion.js' | asset_url }}" defer></script>
 <script src="{{ 'embroidery.js' | asset_url }}" defer></script>
 
-<style>
-  .embroidery-toggle.is-open {
-    /* Optional: Add any styles for open state */
-  }
-</style>
+{% if position == 'drawer' %}
+  <style>
+    #CartDrawer-CartItems {
+      
+    }
+  </style>
+{% endif %}
