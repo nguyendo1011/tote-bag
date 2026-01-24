@@ -4,6 +4,7 @@
 {% endcomment %}
 
 {% liquid
+  assign position = position | default: 'pdp'
   assign store_has_embroidery_opts = false
   assign product_has_embroidery_opts = false
 
