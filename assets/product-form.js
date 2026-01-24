@@ -29,6 +29,7 @@ if (!customElements.get('product-form')) {
 
         const config = fetchConfig('javascript');
         config.headers['X-Requested-With'] = 'XMLHttpRequest';
+        const formData = new FormData(this.form);
 
         // Build items array for multi-item add
         const items = this.buildItems();
