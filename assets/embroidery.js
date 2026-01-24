@@ -429,37 +429,33 @@ class EmbroideryCustomizer extends Component {
 
     const name = this.els.nameInput?.value || '';
     const selectedOptions = this.getSelectedOptions();
+    const items = [];
 
     // Get main product quantity from form
     const quantityInput = this.els.productForm?.querySelector('[name="quantity"]');
     const quantity = quantityInput ? parseInt(quantityInput.value, 10) || 1 : 1;
 
-    // Find matching embroidery variant based on selected options
-    const variantId = this.findMatchingVariantId(selectedOptions);
-
-    if (!variantId) {
-      delete window.embroideryAddons;
-      return;
-    }
-
     // Build embroidery properties for main product
-    const properties = {
-      'Embroidery Name': name,
-      '_Embroidery': 'Yes'
-    };
+    const properties = {};
+    let embroiderySelected = '';
+    embroiderySelected += name;
 
-    // Add each selected option to properties
     Object.entries(selectedOptions).forEach(([optionName, value]) => {
-      const capitalizedName = optionName.charAt(0).toUpperCase() + optionName.slice(1);
-      properties[`Embroidery ${capitalizedName}`] = value;
+      embroiderySelected += optionName.charAt(0).toUpperCase() + optionName.slice(1) + ',' + value;
+
+      const hasPrice = selectedInput.dataset.optionPrice;
+      if (hasPrice) {
+        items.push({
+          id: selectedInput.dataset.variantId,
+          quantity: quantity
+        });
+      }
     });
+    properties[`Embroidery Name`] = embroiderySelected;
 
     // Store in window for product-form to use
     window.embroideryAddons = {
-      item: {
-        id: variantId,
-        quantity: quantity
-      },
+      items: [...items],
       properties: properties
     };
   }
