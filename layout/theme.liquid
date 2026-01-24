@@ -296,7 +296,6 @@
     <!-- Embroidery font families -->
     {%- if settings.embroidery_font_families != blank -%}
       {% assign embroidery_font_families = settings.embroidery_font_families | split: '|' %}
-      <h1>Embroidery font families {{ embroidery_font_families }}</h1>
       {% for font_family in embroidery_font_families %}
         {{ font_family }}
       {% endfor %}
