@@ -37,6 +37,11 @@ class EmbroideryCustomizer extends Component {
     this.position = this.dataset.position || EmbroideryCustomizer.POSITIONS.PDP;
     this.productId = this.dataset.variantId;
     this.basePrice = 0; // Will be set from data-additional-price
+
+    // Drawer-specific data (cart line item info)
+    this.lineItemId = this.dataset.lineItemId || null;
+    this.lineItemKey = this.dataset.lineItemKey || null;
+    this.lineItemQuantity = this.dataset.lineItemQuantity || 1;
   }
 
   onDOMReady() {
