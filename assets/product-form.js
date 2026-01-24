@@ -31,7 +31,7 @@ if (!customElements.get('product-form')) {
         config.headers['X-Requested-With'] = 'XMLHttpRequest';
 
         // Build items array for multi-item add
-        const items = this.buildItemsArray();
+        const items = this.buildItems();
 
         // Build request body
         const body = {
@@ -139,7 +139,7 @@ if (!customElements.get('product-form')) {
        * Build items array from form data and embroidery addons
        * @returns {Array} Array of items to add to cart
        */
-      buildItemsArray() {
+      buildItems() {
         const items = [];
         const formData = new FormData(this.form);
 
