@@ -141,7 +141,8 @@ class EmbroideryCustomizer extends Component {
     if (this.isPDP()) {
       this.saveState();
     }
-
+    console.log('handleCheckboxChange::', isChecked);
+    
     // Validate and update button state
     this.validateAndUpdateButton();
 
@@ -538,7 +539,6 @@ class EmbroideryCustomizer extends Component {
    * Validate embroidery and update add button state
    */
   validateAndUpdateButton() {
-    console.log('validateAndUpdateButton::', this.els.addButton);
     if (!this.els.addButton) return;
 
     const isValid = this.isEmbroideryValid();
