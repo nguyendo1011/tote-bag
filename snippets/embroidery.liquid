@@ -124,9 +124,7 @@
         </div>
       </fieldset>
 
-      {% if option.name contains 'Color' or option.name contains 'Color' %}
-        <!-- Color Swatch End -->
-      {% endif %}
+      {% if option.name == 'Color' %}<!-- Color Swatch End -->{% endif %}
     {% endfor %}
   {% endfor %}
 {% endcapture %}
