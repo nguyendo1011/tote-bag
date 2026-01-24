@@ -274,7 +274,7 @@ class EmbroideryCustomizer extends Component {
    */
   getSelectedOption(optionName) {
     return this.querySelector(
-      `input[data-option-name="${optionName}"]:checked`
+      `input[data-option-name="${optionName}"][data-option-value]:checked`
     );
   }
 
