@@ -24,7 +24,6 @@ class AccordionElement extends HTMLElement {
 
   init() {
     // Hide body initially
-    this.body.classList.remove('hidden');
     this.body.style.display = 'none';
 
     // Create throttled toggle function
