@@ -174,14 +174,7 @@ if (!customElements.get('product-form')) {
         // Add embroidery addon items if exists
         if (window.embroideryAddons?.items?.length > 0) {
           window.embroideryAddons.items.forEach(addonItem => {
-            items.push({
-              id: addonItem.id,
-              quantity: addonItem.quantity,
-              properties: {
-                '_embroidery_addon': 'Yes',
-                '_parent_product': window.embroideryAddons.properties['_Addons']
-              }
-            });
+            items.push(addonItem);
           });
         }
 
