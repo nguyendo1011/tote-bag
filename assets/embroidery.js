@@ -290,9 +290,7 @@ class EmbroideryCustomizer extends Component {
     this.updateCharacterCount(value.length);
     this.updatePreview();
 
-    if (this.isPDP()) {
-      this.saveState();
-    }
+    this.saveState();
   }
 
   /**
@@ -306,10 +304,7 @@ class EmbroideryCustomizer extends Component {
       this.els.checkbox.checked = isOpen;
     }
 
-    if (this.isPDP()) {
-      this.saveState();
-    }
-
+    this.saveState();
     this.validateAndUpdateButton();
 
     this.dispatchEvent(new CustomEvent('embroidery:toggle', {
@@ -328,11 +323,7 @@ class EmbroideryCustomizer extends Component {
     const isChecked = this.els.checkbox?.checked;
     console.log('Checkbox changed:', isChecked);
 
-    if (this.isPDP()) {
-      this.saveState();
-    }
-
-    // Validate and update button state
+    this.saveState();
     this.validateAndUpdateButton();
 
     this.dispatchEvent(new CustomEvent('embroidery:toggle', {
@@ -351,10 +342,7 @@ class EmbroideryCustomizer extends Component {
     const selectedInput = fieldset.querySelector(EmbroideryCustomizer.SELECTORS.CHECKED_RADIO);
 
     this.updatePreview();
-
-    if (this.isPDP()) {
-      this.saveState();
-    }
+    this.saveState();
 
     this.dispatchEvent(new CustomEvent('embroidery:option-change', {
       bubbles: true,
