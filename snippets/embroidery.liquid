@@ -23,17 +23,6 @@
   # Get other information
   assign additional_price = settings.embroidery_additional_price | default: 1500
   assign character_limit = product.metafields.custom.embroidery_letter_limit | default: 12
-
-  # Check if accordion should start open (e.g., if cart already has embroidery)
-  # You can add custom logic here to check if product has embroidery added
-  assign accordion_open = false
-  # Example: Check if there's an embroidery item in cart for this product
-  # for item in cart.items
-  #   if item.product.id == product.id and item.properties['Embroidery']
-  #     assign accordion_open = true
-  #     break
-  #   endif
-  # endfor
 %}
 
 {% comment %} Fast return if no embroidery options are available {% endcomment %}
