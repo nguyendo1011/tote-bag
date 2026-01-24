@@ -55,20 +55,14 @@ class EmbroideryCustomizer extends Component {
   cacheElements() {
     const { SELECTORS } = EmbroideryCustomizer;
 
-    // Find accordion parent to access checkbox and price display
-    const accordion = this.closest(SELECTORS.ACCORDION);
-
-    // Find product form and add button
+    const accordion = this.querySelector(SELECTORS.ACCORDION);
     const productForm = document.querySelector(SELECTORS.PRODUCT_FORM);
 
-    // Try to find checkbox in different locations
     let checkbox = this.querySelector(SELECTORS.CHECKBOX);
     if (!checkbox && accordion) {
-      // Fallback: checkbox might be in accordion toggle
       checkbox = accordion.querySelector(SELECTORS.CHECKBOX);
     }
 
-    // Input elements
     this.els = {
       nameInput: this.querySelector(SELECTORS.NAME_INPUT),
       checkbox: checkbox,
@@ -80,17 +74,6 @@ class EmbroideryCustomizer extends Component {
       addButton: productForm?.querySelector(SELECTORS.ADD_BUTTON),
       accordion: accordion
     };
-
-    console.log('Cached elements:', {
-      checkbox: this.els.checkbox,
-      nameInput: this.els.nameInput,
-      priceDisplay: this.els.priceDisplay,
-      accordion: this.els.accordion,
-      accordionTagName: this.els.accordion?.tagName,
-      checkboxHasDataAttr: this.els.checkbox?.hasAttribute('data-embroidery-checkbox'),
-      checkboxHasAccordionTrigger: this.els.checkbox?.hasAttribute('data-accordion-trigger')
-    });
-
     // Get base price from data attribute (price is in cents)
     if (this.els.priceDisplay?.dataset.additionalPrice) {
       this.basePrice = parseInt(this.els.priceDisplay.dataset.additionalPrice, 10);
