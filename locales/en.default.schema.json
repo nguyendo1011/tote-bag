@@ -325,7 +325,8 @@
           "label": "Embroidery products"
         },
         "embroidery_additional_price": {
-          "label": "Embroidery additional price"
+          "label": "Embroidery additional price",
+          "info": "The additional base price for optional embroidered products"
         }
       }
     },
