@@ -209,17 +209,19 @@
         </div>
         <span class="tw-text-sm">{{ "products.product.embroidery.settings.warning" | t }}</span>
 
-        <button
-          id="{{position}}-embroidery-submit-button"
-          type="submit"
-          name="add"
-          class="button button--full-width button--primary"
-        >
-          <span>
-              {{ 'products.product.update' | t }}
-          </span>
-          {%- render 'loading-spinner' -%}
-        </button>
+        {% if position == 'drawer' %}
+          <button
+            id="{{position}}-embroidery-submit-button"
+            type="submit"
+            name="add"
+            class="button button--full-width button--primary"
+          >
+            <span>
+                {{ 'products.product.update' | t }}
+            </span>
+            {%- render 'loading-spinner' -%}
+          </button>
+        {% endif %}
         
       </div>
     </div>
