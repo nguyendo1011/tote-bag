@@ -117,7 +117,7 @@
     {% endfor %}
   {% endfor %}
 {% endcapture %}
-<c-accordion class="embroidery-accordion">
+<c-accordion class="embroidery-accordion" data-open="{{ accordion_open }}">
 
   <!-- Accordion Toggle/Header -->
   <div class="embroidery-toggle" data-accordion-toggle>
@@ -129,8 +129,8 @@
         data-embroidery-checkbox
         class="tw-peer tw-sr-only"
       >
-      {% render 'c-icons', icon: 'checked', class: 'tw-peer-checked:tw-block tw-hidden cursor-pointer', width: 20, height: 20 %}
-      {% render 'c-icons', icon: 'unchecked', class: 'tw-peer-checked:tw-hidden tw-block cursor-pointer', width: 20, height: 20 %}
+      {% render 'c-icons', icon: 'checked', class: 'peer-checked:tw-block tw-hidden tw-cursor-pointer', width: 20, height: 20 %}
+      {% render 'c-icons', icon: 'unchecked', class: 'peer-checked:tw-hidden tw-block tw-cursor-pointer', width: 20, height: 20 %}
      
       <span class="tw-ml-3 tw-text-base tw-font-medium tw-text-gray-900 tw-flex-1">
         {{ 'products.product.embroidery.settings.add_heading' | t }}
