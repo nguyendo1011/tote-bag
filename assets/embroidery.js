@@ -78,7 +78,7 @@ class EmbroideryCustomizer extends Component {
       optionFieldsets: this.querySelectorAll(SELECTORS.OPTION_FIELDSET),
       priceDisplay: accordion?.querySelector(SELECTORS.PRICE_DISPLAY) || this.querySelector(SELECTORS.PRICE_DISPLAY),
       productForm: productForm,
-      addButton: isPDP() ? productForm?.querySelector(SELECTORS.ADD_BUTTON) : isDrawer() ? this.querySelector(SELECTORS.ADD_BUTTON) : null,
+      addButton: this.isPDP() ? productForm?.querySelector(SELECTORS.ADD_BUTTON) : this.isDrawer() ? this.querySelector(SELECTORS.ADD_BUTTON) : null,
       accordion: accordion
     };
     if (this.els.priceDisplay?.dataset.additionalPrice) {
