@@ -73,6 +73,8 @@ class EmbroideryCustomizer extends Component {
       addButton: productForm?.querySelector(SELECTORS.ADD_BUTTON)
     };
 
+    console.log('els::', this.els);
+
     // Get base price from data attribute (price is in cents)
     if (this.els.priceDisplay?.dataset.additionalPrice) {
       this.basePrice = parseInt(this.els.priceDisplay.dataset.additionalPrice, 10);
