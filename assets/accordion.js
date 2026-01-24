@@ -46,7 +46,6 @@ class AccordionElement extends HTMLElement {
       });
     }
 
-    // Handle click on toggle area
     this.toggle.addEventListener('click', (e) => {
       e.preventDefault();
 
