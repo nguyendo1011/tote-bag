@@ -32,6 +32,14 @@ if (!customElements.get('product-form')) {
         delete config.headers['Content-Type'];
 
         const formData = new FormData(this.form);
+
+        // Add embroidery properties to main product if embroidery is enabled
+        if (window.embroideryAddons?.properties) {
+          Object.entries(window.embroideryAddons.properties).forEach(([key, value]) => {
+            formData.append(`properties[${key}]`, value);
+          });
+        }
+
         if (this.cart) {
           formData.append(
             'sections',
@@ -64,6 +72,18 @@ if (!customElements.get('product-form')) {
             } else if (!this.cart) {
               window.location = window.routes.cart_url;
               return;
+            }
+
+            // After main product is added, add embroidery addon if exists
+            if (window.embroideryAddons?.item) {
+              this.addEmbroideryAddon(window.embroideryAddons.item)
+                .then(() => {
+                  // Clean up after adding
+                  delete window.embroideryAddons;
+                })
+                .catch((error) => {
+                  console.error('Failed to add embroidery addon:', error);
+                });
             }
 
             const startMarker = CartPerformance.createStartingMarker('add:wait-for-subscribers');
@@ -132,6 +152,52 @@ if (!customElements.get('product-form')) {
           this.submitButton.removeAttribute('disabled');
           this.submitButtonText.textContent = window.variantStrings.addToCart;
         }
+      }
+
+      /**
+       * Add embroidery addon product to cart
+       * @param {Object} item - Embroidery item with id and quantity
+       * @returns {Promise}
+       */
+      addEmbroideryAddon(item) {
+        const config = fetchConfig('javascript');
+        config.headers['X-Requested-With'] = 'XMLHttpRequest';
+        delete config.headers['Content-Type'];
+
+        const formData = new FormData();
+        formData.append('id', item.id);
+        formData.append('quantity', item.quantity);
+
+        // Mark as embroidery addon in properties
+        formData.append('properties[_embroidery_addon]', 'true');
+
+        if (this.cart) {
+          formData.append(
+            'sections',
+            this.cart.getSectionsToRender().map((section) => section.id)
+          );
+          formData.append('sections_url', window.location.pathname);
+        }
+
+        config.body = formData;
+
+        return fetch(`${routes.cart_add_url}`, config)
+          .then((response) => response.json())
+          .then((response) => {
+            if (response.status) {
+              console.error('Failed to add embroidery addon:', response);
+              return;
+            }
+
+            // Update cart display if cart exists
+            if (this.cart) {
+              publish(PUB_SUB_EVENTS.cartUpdate, {
+                source: 'embroidery-addon',
+                productVariantId: item.id,
+                cartData: response,
+              });
+            }
+          });
       }
 
       get variantIdInput() {
