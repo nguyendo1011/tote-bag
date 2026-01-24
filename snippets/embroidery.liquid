@@ -133,7 +133,15 @@
   {% endfor %}
 {% endcapture %}
 
-<c-embroidery class="embroidery-{{ position }}" data-position="{{ position }}" data-variant-id="{{ product.selected_or_first_available_variant.id }}">
+<c-embroidery 
+  class="embroidery-{{ position }}" 
+  data-position="{{ position }}"
+  {% if position == 'drawer' and line_item %}
+    data-line-item-id="{{ line_item.id }}"
+    data-line-item-key="{{ line_item.key }}"
+  {% endif %}
+    
+  data-variant-id="{{ product.selected_or_first_available_variant.id }}">
   <c-accordion class="tw-flex tw-flex-col tw-text-[#1E1E1E] {% if position == 'drawer' %}tw-p-[1.2rem] tw-text-sm{% else %}tw-p-[1.6rem] tw-gap-[2.4rem] md:tw-gap-[1.6rem] tw-text-sm md:tw-text-base{% endif %}
   tw-rounded tw-bg-[#F5F5F5] tw-leading-[1.6] max-w-[65rem]">
     <!-- Accordion Toggle/Header -->
