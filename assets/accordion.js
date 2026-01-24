@@ -51,7 +51,7 @@ class AccordionElement extends HTMLElement {
       // Don't trigger if clicking directly on checkbox
       if (this.trigger && e.target === this.trigger) return;
 
-      // e.preventDefault();
+      e.preventDefault();
 
       if (this.trigger) {
         // Toggle checkbox state
