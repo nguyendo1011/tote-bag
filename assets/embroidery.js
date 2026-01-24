@@ -8,6 +8,8 @@
  * </c-embroidery>
  */
 
+// Check if already defined to prevent double registration
+if (!customElements.get('c-embroidery')) {
 
 class EmbroideryCustomizer extends Component {
   // Constants
