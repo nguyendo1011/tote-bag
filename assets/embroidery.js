@@ -163,14 +163,22 @@ class EmbroideryCustomizer extends Component {
    * Updates line item properties and adds embroidery addon items
    */
   async addEmbroideryToCart() {
-    if (!this.lineItemKey || !window.embroideryAddons) {
-      console.error('Missing line item key or embroidery addons');
+    if (!this.lineItemKey) {
+      console.error('Missing line item key');
+      return;
+    }
+
+    // Rebuild addons to ensure we have the latest data
+    this.buildItemsAddons();
+
+    if (!window.embroideryAddons) {
+      console.error('Missing embroidery addons');
       return;
     }
 
     const quantity = parseInt(this.lineItemQuantity, 10) || 1;
 
-    // Prepare cart change request (update properties)
+    // Prepare cart change request (update main product properties)
     const changeBody = JSON.stringify({
       id: this.lineItemKey,
       properties: window.embroideryAddons.properties || {},
@@ -178,11 +186,12 @@ class EmbroideryCustomizer extends Component {
       sections_url: window.location.pathname
     });
 
-    // Prepare cart add request (add embroidery addon items)
+    // Prepare cart add request (add all embroidery items: base product + options)
+    // Map items to use parent_line_key instead of parent_id for drawer context
     const addItems = window.embroideryAddons.items?.map(item => ({
       id: item.id,
       quantity: quantity,
-      parent_line_key: this.lineItemKey,
+      parent_line_key: this.lineItemKey
     })) || [];
 
     const addBody = JSON.stringify({
@@ -191,13 +200,15 @@ class EmbroideryCustomizer extends Component {
       sections_url: window.location.pathname
     });
 
-    // Execute both requests in parallel
+    // Execute both requests in parallel using Promise.all
     const [changeResponse, addResponse] = await Promise.all([
+      // 1. Cart change: Update main product (tote bag) properties
       fetch(`${routes.cart_change_url}`, {
         ...fetchConfig(),
         body: changeBody
       }).then(res => res.json()),
 
+      // 2. Cart add: Add all embroidery items (base product + color + font options)
       addItems.length > 0
         ? fetch(`${routes.cart_add_url}`, {
             ...fetchConfig(),
