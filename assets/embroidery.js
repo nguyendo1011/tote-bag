@@ -136,10 +136,39 @@ class EmbroideryCustomizer extends Component {
    * Handle add button click event on Drawer
    * @param {Event} event - Add button click event
    */
-  handleAddButtonClick(event) {
+  async handleAddButtonClick(event) {
     event.preventDefault();
     this.setLoadingState(true);
-    this.buildItemsAddons();
+
+    const response = await fetch(`${routes.cart_url}`, fetchConfig('javascript'))
+      .then((response) => response.json());
+
+    if (response.status) {
+      const cart_items = response.cart.items;
+      const parentProduct = cart_items.find((item) => item.id === this.productId);
+      if (parentProduct) {
+        const quantity = parentProduct.quantity;
+        const key = parentProduct.key;
+        const items = window.embroideryAddons?.items?.map((item) => {
+          return {
+            id: item.id,
+            quantity: quantity,
+            parent_line_key: key
+          }
+        });
+        
+        const body = JSON.stringify({
+          items: items,
+          sections: this.getSectionsToRender().map((section) => section.id),
+          sections_url: window.location.pathname
+        });
+      }
+      this.setLoadingState(false);
+    } else {
+      console.error('Failed to get cart:', response.error);
+      this.setLoadingState(false);
+    }
+
   }
 
   /**
