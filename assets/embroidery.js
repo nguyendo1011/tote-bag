@@ -421,7 +421,7 @@ class EmbroideryCustomizer extends Component {
    * This will be used by product-form to add embroidery products to cart
    */
   buildEmbroideryAddons() {
-    console.log('buildEmbroideryAddons::');
+    console.log('buildEmbroideryAddons::', this.els.checkbox?.checked);
     // Clear addons if embroidery is not enabled or not valid
     if (!this.els.checkbox?.checked || !this.isEmbroideryValid()) {
       delete window.embroideryAddons;
@@ -442,6 +442,7 @@ class EmbroideryCustomizer extends Component {
 
     // Collect addon items from selected options
     this.els.optionFieldsets.forEach(fieldset => {
+      console.log('fieldset::', fieldset);
       const selectedInput = fieldset.querySelector(EmbroideryCustomizer.SELECTORS.CHECKED_RADIO);
       if (!selectedInput) return;
 
