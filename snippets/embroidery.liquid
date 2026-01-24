@@ -69,11 +69,13 @@
 
         <div class="c-swatch__item">
           {% for value in option.values %}
+            {% assign current_variant = blank %}
             {% comment %} Find variant price for this option value {% endcomment %}
             {% assign variant_price = 0 %}
             {% for variant in embroidery_product.product.variants %}
               {% if variant.option1 == value or variant.option2 == value or variant.option3 == value %}
-                {% assign variant_price = variant.price %}
+                {% assign current_variant = variant %}
+                {% assign variant_price = current_variant.price %}
                 {% break %}
               {% endif %}
             {% endfor %}
@@ -91,7 +93,7 @@
                   data-option-name="{{ option.name | handleize }}"
                   data-option-value="{{ color_value }}"
                   data-option-price="{{ variant_price }}"
-                  data-product-id="{{ product.id }}"
+                  data-variant-id="{{ current_variant.id }}"
                   class="tw-sr-only peer"
                 >
                 <span class="circle" style="--color: {{ color_value }}"></span>
@@ -109,7 +111,7 @@
                   data-option-name="{{ option.name | handleize }}"
                   data-option-value="{{ value }}"
                   data-option-price="{{ variant_price }}"
-                  data-product-id="{{ product.id }}"
+                  data-variant-id="{{ current_variant.id }}"
                   class="tw-sr-only peer"
 
                   
