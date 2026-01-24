@@ -276,6 +276,11 @@
                           if item.variant.quantity_price_breaks.size > 0
                             assign has_vol_pricing = true
                           endif
+
+                          assign has_embroidery = false
+                          if item.product.tags contains 'Embroidery'
+                            assign has_embroidery = true
+                          endif
                         -%}
                         <td
                           class="cart-item__quantity {% if has_qty_rules or has_vol_pricing %} cart-item__quantity--info{% endif %}"
@@ -325,6 +330,9 @@
                                     data-index="{{ item.index | plus: 1 }}"
                                     {% if item.instructions and item.instructions.can_update_quantity == false %}
                                       disabled
+                                    {% endif %}
+                                    {% if has_embroidery %}
+                                      data-embroidery
                                     {% endif %}
                                   >
                                   <button
