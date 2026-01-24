@@ -141,75 +141,143 @@ class EmbroideryCustomizer extends Component {
    * Handle add button click event on Drawer
    * @param {Event} event - Add button click event
    */
-   handleAddButtonClick(event) {
+  async handleAddButtonClick(event) {
     event.preventDefault();
     this.setLoadingState(true);
 
-    const isAdd = this.els.checkbox?.checked;
+    const isEnabled = this.els.checkbox?.checked;
 
-    if (isAdd) { 
-      this.addCart();
-    } else {
-      this.removeCart();
+    try {
+      if (isEnabled) {
+        await this.addEmbroideryToCart();
+      } else {
+        await this.removeEmbroideryFromCart();
+      }
+    } catch (error) {
+      console.error('Failed to update cart:', error);
+      publish(PUB_SUB_EVENTS.cartError, {
+        source: 'embroidery',
+        error: error.message
+      });
+    } finally {
+      this.setLoadingState(false);
+    }
+  }
+
+  /**
+   * Add embroidery customization to cart (drawer context)
+   * Updates line item properties and adds embroidery addon items
+   */
+  async addEmbroideryToCart() {
+    if (!this.lineItemKey || !window.embroideryAddons) {
+      console.error('Missing line item key or embroidery addons');
+      return;
     }
 
-    // }
+    const quantity = parseInt(this.lineItemQuantity, 10) || 1;
 
-    // const response = await fetch(`${routes.cart_url}`, fetchConfig('javascript'))
-    //   .then((response) => response.json());
+    // Prepare cart change request (update properties)
+    const changeBody = JSON.stringify({
+      id: this.lineItemKey,
+      properties: window.embroideryAddons.properties || {},
+      sections: this.getSectionsToRender(),
+      sections_url: window.location.pathname
+    });
 
-    // if (response.status) {
-    //   const cart_items = response.cart.items;
-    //   const parentProduct = cart_items.find((item) => item.id === this.productId);
-    //   if (parentProduct) {
-    //     const quantity = parentProduct.quantity;
-    //     const key = parentProduct.key;
-    //     const items = window.embroideryAddons?.items?.map((item) => {
-    //       return {
-    //         id: item.id,
-    //         quantity: quantity,
-    //         parent_line_key: key
-    //       }
-    //     });
-    //     const config = fetchConfig('javascript');
-    //     const body = JSON.stringify({
-    //       items: items,
-    //       sections_url: window.location.pathname
-    //     });
-    //     console.log('body', body);
+    // Prepare cart add request (add embroidery addon items)
+    const addItems = window.embroideryAddons.items?.map(item => ({
+      id: item.id,
+      quantity: quantity,
+      parent_line_key: this.lineItemKey
+    })) || [];
 
-    //     config.headers['Content-Type'] = 'application/json';
-    //     config.body = body;
+    const addBody = JSON.stringify({
+      items: addItems,
+      sections: this.getSectionsToRender(),
+      sections_url: window.location.pathname
+    });
 
-    //     fetch(`${routes.cart_add_url}`, config)
-    //     .then((response) => response.json())
-    //     .then((response) => {
-    //       publish(PUB_SUB_EVENTS.cartUpdate, {
-    //         source: 'embroidery',
-    //         cartData: response,
-    //       }).then(() => {
-    //         this.setLoadingState(false);
-    //       });
-    //     })
-    //     .catch((error) => {
-    //       console.error('Failed to update cart:', error);
-    //       this.setLoadingState(false);
-    //     });
-    //   }
-    // } else {
-    //   console.error('Failed to get cart:', response.error);
-    //   this.setLoadingState(false);
-    // }
+    // Execute both requests in parallel
+    const [changeResponse, addResponse] = await Promise.all([
+      fetch(`${routes.cart_change_url}`, {
+        ...fetchConfig(),
+        body: changeBody
+      }).then(res => res.json()),
+
+      addItems.length > 0
+        ? fetch(`${routes.cart_add_url}`, {
+            ...fetchConfig(),
+            body: addBody
+          }).then(res => res.json())
+        : Promise.resolve(null)
+    ]);
+
+    // Check for errors
+    if (changeResponse.status || changeResponse.errors) {
+      throw new Error(changeResponse.description || changeResponse.errors || 'Failed to update properties');
+    }
+
+    if (addResponse && (addResponse.status || addResponse.errors)) {
+      throw new Error(addResponse.description || addResponse.errors || 'Failed to add embroidery items');
+    }
+
+    // Publish cart update event
+    await publish(PUB_SUB_EVENTS.cartUpdate, {
+      source: 'embroidery',
+      cartData: addResponse || changeResponse
+    });
+
+    // Clean up embroidery addons after successful add
+    delete window.embroideryAddons;
   }
 
-  addCart() {
-    // const response = await fetch(`${routes.cart_url}`, fetchConfig('javascript'))
-    //   .then((response) => response.json());
+  /**
+   * Remove embroidery customization from cart (drawer context)
+   * Sets line item properties to null
+   */
+  async removeEmbroideryFromCart() {
+    if (!this.lineItemKey) {
+      console.error('Missing line item key');
+      return;
+    }
+
+    const body = JSON.stringify({
+      id: this.lineItemKey,
+      properties: null,
+      sections: this.getSectionsToRender(),
+      sections_url: window.location.pathname
+    });
+
+    const response = await fetch(`${routes.cart_change_url}`, {
+      ...fetchConfig(),
+      body: body
+    }).then(res => res.json());
+
+    // Check for errors
+    if (response.status || response.errors) {
+      throw new Error(response.description || response.errors || 'Failed to remove embroidery');
+    }
+
+    // Publish cart update event
+    await publish(PUB_SUB_EVENTS.cartUpdate, {
+      source: 'embroidery',
+      cartData: response
+    });
   }
 
-  removeCart() {
-    // const response = await fetch(`${routes.cart}`, fetchConfig('javascript'))
-    //   .then((response) => response.json());
+  /**
+   * Get sections to render for cart updates
+   * @returns {Array} Array of section IDs
+   */
+  getSectionsToRender() {
+    // Get sections from cart drawer if available
+    const cartDrawer = document.querySelector('cart-drawer');
+    if (cartDrawer && typeof cartDrawer.getSectionsToRender === 'function') {
+      return cartDrawer.getSectionsToRender().map(section => section.id);
+    }
+
+    // Fallback to common sections
+    return ['cart-drawer', 'cart-icon-bubble'];
   }
 
   /**
