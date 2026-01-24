@@ -324,9 +324,9 @@
         "embroidery_products": {
           "label": "Embroidery products"
         },
-        "embroidery_additional_price": {
-          "label": "Embroidery additional price",
-          "info": "The additional base price for optional embroidered products"
+        "embroidery_base_product": {
+          "label": "Embroidery base product",
+          "info": "The base product for optional embroidered products"
         },
         "embroidery_font_families": {
           "label": "Embroidery font families links",
