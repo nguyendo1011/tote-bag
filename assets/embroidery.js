@@ -455,6 +455,7 @@ class EmbroideryCustomizer extends Component {
 
     // Store in window for product-form to use
     window.embroideryAddons = {
+      mainProductId: this.productId,
       items: [...items],
       properties: properties
     };
