@@ -10,8 +10,8 @@ class EmbroideryCustomizer extends Component {
   }
 
   onDOMReady() {
-    this.initConfig();
     this.initializeElements();
+    this.initConfig();
     this.initializeDefaultSelections();
     this.bindEventListeners();
   }
