@@ -157,7 +157,9 @@
     <c-embroidery class="tw-flex tw-flex-col tw-gap-6">
       {{ heading_text }}
       <div class="tw-flex tw-gap-[4rem]">
-        {{ options }}
+        <div class="tw-flex tw-flex-col tw-gap-[2.4rem]">
+          {{ options }}
+        </div>
         <!-- Preview Text -->
         <div class="tw-relative tw-p-6 tw-bg-gray-50 tw-rounded-lg tw-border tw-border-gray-200 h-[140px]">
           {% render 'c-image', image: product.featured_media, loading: 'lazy', fetch_priority: 'low' %}
