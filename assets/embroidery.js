@@ -9,6 +9,8 @@
  * </c-embroidery>
  */
 
+if (customElements.get('c-embroidery')) return;
+
 class EmbroideryCustomizer extends Component {
   // Constants
   static POSITIONS = {
