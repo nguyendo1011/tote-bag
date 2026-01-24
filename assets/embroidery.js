@@ -460,7 +460,10 @@ class EmbroideryCustomizer extends Component {
       // Add valid addon item
       items.push({
         id: variantId,
-        quantity: quantity
+        quantity: quantity,
+        properties: {
+          '_Addons': this.productId,
+        }
       });
     });
 
