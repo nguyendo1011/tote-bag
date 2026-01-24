@@ -25,7 +25,9 @@ class EmbroideryCustomizer extends Component {
     RADIO_INPUT: 'input[type="radio"]',
     CHECKED_RADIO: 'input[type="radio"]:checked',
     PRICE_DISPLAY: '[data-embroidery-price]',
-    ACCORDION: 'c-accordion'
+    ACCORDION: 'c-accordion',
+    PRODUCT_FORM: 'product-form',
+    ADD_BUTTON: 'button[name="add"]'
   };
 
   constructor() {
@@ -56,6 +58,9 @@ class EmbroideryCustomizer extends Component {
     // Find accordion parent to get base price
     const accordion = this.closest(SELECTORS.ACCORDION);
 
+    // Find product form and add button
+    const productForm = this.closest(SELECTORS.PRODUCT_FORM);
+
     // Input elements
     this.els = {
       nameInput: this.querySelector(SELECTORS.NAME_INPUT),
@@ -63,7 +68,9 @@ class EmbroideryCustomizer extends Component {
       nameLength: this.querySelector(SELECTORS.NAME_LENGTH),
       previewText: this.querySelector(SELECTORS.PREVIEW_TEXT),
       optionFieldsets: this.querySelectorAll(SELECTORS.OPTION_FIELDSET),
-      priceDisplay: accordion?.querySelector(SELECTORS.PRICE_DISPLAY)
+      priceDisplay: accordion?.querySelector(SELECTORS.PRICE_DISPLAY),
+      productForm: productForm,
+      addButton: productForm?.querySelector(SELECTORS.ADD_BUTTON)
     };
 
     // Get base price from data attribute (price is in cents)
@@ -135,6 +142,9 @@ class EmbroideryCustomizer extends Component {
     if (this.isPDP()) {
       this.saveState();
     }
+
+    // Validate and update button state
+    this.validateAndUpdateButton();
 
     this.dispatchEvent(new CustomEvent('embroidery:toggle', {
       bubbles: true,
@@ -325,6 +335,7 @@ class EmbroideryCustomizer extends Component {
     });
 
     this.updatePrice();
+    this.validateAndUpdateButton();
   }
 
   /**
@@ -397,6 +408,53 @@ class EmbroideryCustomizer extends Component {
       font: 'font-family'
     };
     return mapping[key] || key;
+  }
+
+  // ==================== Validation ====================
+
+  /**
+   * Check if embroidery customization is valid
+   * @returns {boolean} True if all requirements are met
+   */
+  isEmbroideryValid() {
+    // If checkbox is not checked, embroidery is not required
+    if (!this.els.checkbox?.checked) {
+      return true;
+    }
+
+    // Check if name is entered
+    const hasName = this.els.nameInput?.value.trim().length > 0;
+    if (!hasName) {
+      return false;
+    }
+
+    // Check if all fieldsets have a selected option
+    let allOptionsSelected = true;
+    this.els.optionFieldsets.forEach(fieldset => {
+      const hasSelection = fieldset.querySelector(EmbroideryCustomizer.SELECTORS.CHECKED_RADIO);
+      if (!hasSelection) {
+        allOptionsSelected = false;
+      }
+    });
+
+    return allOptionsSelected;
+  }
+
+  /**
+   * Validate embroidery and update add button state
+   */
+  validateAndUpdateButton() {
+    if (!this.els.addButton) return;
+
+    const isValid = this.isEmbroideryValid();
+
+    if (isValid) {
+      this.els.addButton.removeAttribute('disabled');
+      this.els.addButton.classList.remove('disabled');
+    } else {
+      this.els.addButton.setAttribute('disabled', 'disabled');
+      this.els.addButton.classList.add('disabled');
+    }
   }
 }
 
