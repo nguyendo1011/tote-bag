@@ -48,9 +48,6 @@ class AccordionElement extends HTMLElement {
 
     // Handle click on toggle area
     this.toggle.addEventListener('click', (e) => {
-      // Don't trigger if clicking directly on checkbox
-      if (this.trigger && e.target === this.trigger) return;
-
       e.preventDefault();
 
       if (this.trigger) {
