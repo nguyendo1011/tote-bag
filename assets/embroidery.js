@@ -120,12 +120,6 @@ class EmbroideryCustomizer extends Component {
       });
     }
 
-    if (this.els.checkbox) {
-      this.els.checkbox.addEventListener('change', (e) => {
-        this.handleCheckboxChange(e);
-      });
-    }
-
     this.els.optionFieldsets.forEach(fieldset => {
       fieldset.addEventListener('change', this.handleOptionChange.bind(this));
     });
@@ -303,6 +297,8 @@ class EmbroideryCustomizer extends Component {
     if (this.els.checkbox) {
       this.els.checkbox.checked = isOpen;
     }
+
+    if (!isOpen) delete window.embroideryAddons;
 
     this.saveState();
     this.validateAndUpdateButton();
