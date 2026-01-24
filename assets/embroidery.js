@@ -463,7 +463,7 @@ class EmbroideryCustomizer extends Component {
     });
 
     properties['Embroidery Name'] = embroiderySelected;
-    properties['Addons'] = this.productId;
+    properties['_Addons'] = this.productId;
 
     // Store in window for product-form to use
     window.embroideryAddons = {
@@ -477,10 +477,9 @@ class EmbroideryCustomizer extends Component {
 
   /**
    * Find matching variant ID based on selected options
-   * @param {Object} selectedOptions - Selected options object
    * @returns {string|null} Variant ID or null if not found
    */
-  findMatchingVariantId(selectedOptions) {
+  findMatchingVariantId() {
     // Get all radio inputs to find variant data
     const selectedInputs = [];
     this.els.optionFieldsets.forEach(fieldset => {

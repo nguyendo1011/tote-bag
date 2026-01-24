@@ -180,7 +180,8 @@ if (!customElements.get('product-form')) {
               id: addonItem.id,
               quantity: addonItem.quantity,
               properties: {
-                'Addons': window.embroideryAddons.properties['Addons'],
+                '_embroidery_addon': 'Yes',
+                '_parent_product': window.embroideryAddons.properties['_Addons']
               }
             });
           });
