@@ -136,6 +136,8 @@ class EmbroideryCustomizer extends Component {
    * @param {Event} event - Add button click event
    */
   async handleAddButtonClick(event = null) {
+    console.log("handleAddButtonClick::", event);
+    
     if (event) event.preventDefault();
     this.setLoadingState(true);
 
