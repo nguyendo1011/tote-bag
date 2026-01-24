@@ -48,6 +48,8 @@ if (!customElements.get('product-form')) {
         config.headers['Content-Type'] = 'application/json';
         config.body = JSON.stringify(body);
 
+        console.log('config.body:', config.body);
+
         fetch(`${routes.cart_add_url}`, config)
           .then((response) => response.json())
           .then((response) => {
