@@ -147,9 +147,7 @@ class EmbroideryCustomizer extends Component {
    */
   handleAccordionToggle(event) {
     const isOpen = event.detail.isOpen;
-    console.log('Accordion toggled:', isOpen);
 
-    // Sync checkbox state
     if (this.els.checkbox) {
       this.els.checkbox.checked = isOpen;
     }
@@ -158,7 +156,6 @@ class EmbroideryCustomizer extends Component {
       this.saveState();
     }
 
-    // Validate and update button state
     this.validateAndUpdateButton();
 
     this.dispatchEvent(new CustomEvent('embroidery:toggle', {

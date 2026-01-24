@@ -45,16 +45,13 @@ class AccordionElement extends HTMLElement {
       e.preventDefault();
 
       if (this.trigger) {
-        // Toggle checkbox state
         this.trigger.checked = !this.trigger.checked;
         this.throttledToggle(this.trigger.checked);
       } else {
-        // Toggle without checkbox
         this.throttledToggle(!this.isOpen);
       }
     });
 
-    // Apply initial state
     if (initialState) {
       this.onToggle(true);
     }
@@ -69,7 +66,6 @@ class AccordionElement extends HTMLElement {
       this.onClose();
     }
 
-    // Dispatch custom event
     this.dispatchEvent(new CustomEvent('accordion:toggle', {
       bubbles: true,
       detail: { isOpen: this.isOpen }
@@ -113,22 +109,4 @@ class AccordionElement extends HTMLElement {
   }
 }
 
-// Register the custom element
 customElements.define('c-accordion', AccordionElement);
-
-// Also support generic data-accordion attribute for backward compatibility
-document.addEventListener('DOMContentLoaded', () => {
-  const accordions = document.querySelectorAll('[data-accordion]:not(c-accordion)');
-  accordions.forEach(element => {
-    if (!element.tagName.includes('-')) {
-      console.warn('Consider using <c-accordion> instead of data-accordion attribute');
-    }
-  });
-});
-
-// Shopify theme editor support
-if (window.Shopify && window.Shopify.designMode) {
-  document.addEventListener('shopify:section:load', () => {
-    console.log('Shopify section loaded: Accordions auto-initialized');
-  });
-}
