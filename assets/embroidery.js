@@ -103,6 +103,8 @@ class EmbroideryCustomizer extends Component {
    * Setup all event listeners
    */
   setupEventListeners() {
+    console.log('els::', this.els);
+    
     if (this.els.nameInput) {
       this.els.nameInput.addEventListener('input', this.handleNameInput.bind(this));
     }
