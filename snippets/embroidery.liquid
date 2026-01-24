@@ -52,7 +52,7 @@
     {% if forloop.first and skip_options == '' %}
       {% capture heading_text %}
         <div class="tw-flex tw-flex-col tw-gap-2">
-          <p>{{ "products.product.embroidery.settings.add_character_limit" | t: character_limit: character_limit }}
+          <p class="tw-flex tw-items-center">{{ "products.product.embroidery.settings.add_character_limit" | t: character_limit: character_limit }}
             <span class="tw-inline-block tw-text-gray-500 tw-font-normal tw-ml-auto">
             (<span data-name-length>0</span>/<span data-name-max>12</span>)
           </span></p>
