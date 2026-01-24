@@ -4,7 +4,7 @@
 class AccordionElement extends HTMLElement {
   constructor() {
     super();
-    this.isOpen = false;
+    this.isOpen = this.hasAttribute('open') ? true : false;
     this.throttledToggle = null;
   }
 
