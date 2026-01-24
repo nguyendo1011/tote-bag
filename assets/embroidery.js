@@ -189,6 +189,9 @@ class EmbroideryCustomizer extends Component {
     if (!state.name && this.els.nameLength) {
       this.els.nameLength.textContent = '0';
     }
+
+    // Initial validation of add button
+    this.validateAndUpdateButton();
   }
 
   /**
