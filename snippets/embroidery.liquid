@@ -132,7 +132,7 @@
 {% endcapture %}
 <c-accordion class="tw-flex tw-flex-col tw-text-[#1E1E1E] tw-p-[1.6rem] tw-gap-[2.4rem] md:tw-gap-[1.6rem] tw-rounded tw-bg-[#F5F5F5] tw-text-sm md:tw-text-base tw-leading-[1.6] max-w-[65rem]">
   <!-- Accordion Toggle/Header -->
-  <c-embroidery class="embroidery-toggle" data-accordion-toggle data-position="{{ position }}" data-product-id="{{ product.id }}">
+  <c-embroidery class="embroidery-toggle" data-accordion-toggle data-position="{{ position }}" data-variant-id="{{ product.selected_or_first_available_variant.id }}">
     <label class="tw-flex tw-items-center tw-cursor-pointer">
       <input
         id="embroidery-trigger"
