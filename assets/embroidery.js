@@ -136,55 +136,75 @@ class EmbroideryCustomizer extends Component {
    * Handle add button click event on Drawer
    * @param {Event} event - Add button click event
    */
-  async handleAddButtonClick(event) {
+   handleAddButtonClick(event) {
     event.preventDefault();
     this.setLoadingState(true);
 
-    const response = await fetch(`${routes.cart_url}`, fetchConfig('javascript'))
-      .then((response) => response.json());
+    const isAdd = this.els.checkbox?.checked;
 
-    if (response.status) {
-      const cart_items = response.cart.items;
-      const parentProduct = cart_items.find((item) => item.id === this.productId);
-      if (parentProduct) {
-        const quantity = parentProduct.quantity;
-        const key = parentProduct.key;
-        const items = window.embroideryAddons?.items?.map((item) => {
-          return {
-            id: item.id,
-            quantity: quantity,
-            parent_line_key: key
-          }
-        });
-        const config = fetchConfig('javascript');
-        const body = JSON.stringify({
-          items: items,
-          sections_url: window.location.pathname
-        });
-        console.log('body', body);
-
-        config.headers['Content-Type'] = 'application/json';
-        config.body = body;
-
-        fetch(`${routes.cart_add_url}`, config)
-        .then((response) => response.json())
-        .then((response) => {
-          publish(PUB_SUB_EVENTS.cartUpdate, {
-            source: 'embroidery',
-            cartData: response,
-          }).then(() => {
-            this.setLoadingState(false);
-          });
-        })
-        .catch((error) => {
-          console.error('Failed to update cart:', error);
-          this.setLoadingState(false);
-        });
-      }
+    if (isAdd) { 
+      this.addCart();
     } else {
-      console.error('Failed to get cart:', response.error);
-      this.setLoadingState(false);
+      this.removeCart();
     }
+
+    // }
+
+    // const response = await fetch(`${routes.cart_url}`, fetchConfig('javascript'))
+    //   .then((response) => response.json());
+
+    // if (response.status) {
+    //   const cart_items = response.cart.items;
+    //   const parentProduct = cart_items.find((item) => item.id === this.productId);
+    //   if (parentProduct) {
+    //     const quantity = parentProduct.quantity;
+    //     const key = parentProduct.key;
+    //     const items = window.embroideryAddons?.items?.map((item) => {
+    //       return {
+    //         id: item.id,
+    //         quantity: quantity,
+    //         parent_line_key: key
+    //       }
+    //     });
+    //     const config = fetchConfig('javascript');
+    //     const body = JSON.stringify({
+    //       items: items,
+    //       sections_url: window.location.pathname
+    //     });
+    //     console.log('body', body);
+
+    //     config.headers['Content-Type'] = 'application/json';
+    //     config.body = body;
+
+    //     fetch(`${routes.cart_add_url}`, config)
+    //     .then((response) => response.json())
+    //     .then((response) => {
+    //       publish(PUB_SUB_EVENTS.cartUpdate, {
+    //         source: 'embroidery',
+    //         cartData: response,
+    //       }).then(() => {
+    //         this.setLoadingState(false);
+    //       });
+    //     })
+    //     .catch((error) => {
+    //       console.error('Failed to update cart:', error);
+    //       this.setLoadingState(false);
+    //     });
+    //   }
+    // } else {
+    //   console.error('Failed to get cart:', response.error);
+    //   this.setLoadingState(false);
+    // }
+  }
+
+  addCart() {
+    // const response = await fetch(`${routes.cart_url}`, fetchConfig('javascript'))
+    //   .then((response) => response.json());
+  }
+
+  removeCart() {
+    // const response = await fetch(`${routes.cart}`, fetchConfig('javascript'))
+    //   .then((response) => response.json());
   }
 
   /**
