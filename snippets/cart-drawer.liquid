@@ -118,9 +118,6 @@
 
                   <tbody role="rowgroup">
                     {%- for item in cart.items -%}
-                      {% for tag in item.product.tags %}
-                        <h1>tag:: {{ tag }}</h1>
-                      {% endfor %}
                       {% if item.product.tags contains 'Embroidery' %} {% continue %} {% endif %}
                       <tr
                         id="CartDrawer-Item-{{ item.index | plus: 1 }}"
