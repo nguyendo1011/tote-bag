@@ -122,11 +122,17 @@ class EmbroideryCustomizer extends Component {
       this.els.nameInput.addEventListener('input', this.handleNameInput.bind(this));
     }
 
+    // Listen to accordion toggle event instead of checkbox directly
+    // This avoids conflicts with accordion.js which also listens to the checkbox
+    if (this.els.accordion) {
+      console.log('Setting up accordion:toggle listener');
+      this.els.accordion.addEventListener('accordion:toggle', this.handleAccordionToggle.bind(this));
+    }
+
+    // Also listen to checkbox for cases where accordion doesn't handle it
     if (this.els.checkbox) {
       console.log('Setting up checkbox listener on:', this.els.checkbox);
       this.els.checkbox.addEventListener('change', this.handleCheckboxChange.bind(this));
-    } else {
-      console.warn('Checkbox not found! Cannot setup event listener.');
     }
 
     this.els.optionFieldsets.forEach(fieldset => {
@@ -152,10 +158,40 @@ class EmbroideryCustomizer extends Component {
   }
 
   /**
-   * Handle checkbox state changes
+   * Handle accordion toggle event (dispatched by accordion.js)
+   * @param {CustomEvent} event - Accordion toggle event
    */
-  handleCheckboxChange() {
+  handleAccordionToggle(event) {
+    const isOpen = event.detail.isOpen;
+    console.log('Accordion toggled:', isOpen);
+
+    // Sync checkbox state
+    if (this.els.checkbox) {
+      this.els.checkbox.checked = isOpen;
+    }
+
+    if (this.isPDP()) {
+      this.saveState();
+    }
+
+    // Validate and update button state
+    this.validateAndUpdateButton();
+
+    this.dispatchEvent(new CustomEvent('embroidery:toggle', {
+      bubbles: true,
+      detail: { enabled: isOpen, position: this.position }
+    }));
+  }
+
+  /**
+   * Handle checkbox state changes (fallback if accordion doesn't handle it)
+   */
+  handleCheckboxChange(event) {
+    // Stop propagation to prevent double handling
+    event.stopPropagation();
+
     const isChecked = this.els.checkbox?.checked;
+    console.log('Checkbox changed:', isChecked);
 
     if (this.isPDP()) {
       this.saveState();
