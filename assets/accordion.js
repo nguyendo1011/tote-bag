@@ -130,10 +130,8 @@ customElements.define('c-accordion', AccordionElement);
 
 // Also support generic data-accordion attribute for backward compatibility
 document.addEventListener('DOMContentLoaded', () => {
-  // Upgrade elements with data-accordion that aren't custom elements
   const accordions = document.querySelectorAll('[data-accordion]:not(c-accordion)');
   accordions.forEach(element => {
-    // Wrap in c-accordion if not already a custom element
     if (!element.tagName.includes('-')) {
       console.warn('Consider using <c-accordion> instead of data-accordion attribute');
     }
@@ -143,7 +141,6 @@ document.addEventListener('DOMContentLoaded', () => {
 // Shopify theme editor support
 if (window.Shopify && window.Shopify.designMode) {
   document.addEventListener('shopify:section:load', () => {
-    // Custom elements will automatically initialize when added to DOM
     console.log('Shopify section loaded: Accordions auto-initialized');
   });
 }
