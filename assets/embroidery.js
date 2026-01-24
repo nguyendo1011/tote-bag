@@ -1,13 +1,13 @@
 /**
  * Embroidery Customization Component
  * Handles name input, font selection, color selection, and dynamic product options
- * Supports different contexts: PDP (Product Detail Page) and drawer
  *
  * @example
  * <c-embroidery data-position="pdp" data-product-id="123">
  *   <!-- embroidery options -->
  * </c-embroidery>
  */
+
 
 class EmbroideryCustomizer extends Component {
   // Constants
