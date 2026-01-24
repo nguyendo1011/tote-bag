@@ -39,7 +39,6 @@ class EmbroideryCustomizer extends Component {
 
     // Display elements
     this.nameLengthEl = this.querySelector('[data-name-length]');
-    this.previewContainerEl = this.querySelector('[data-embroidery-preview]');
     this.previewTextEl = this.querySelector('[data-preview-text]');
 
     // Dynamic product options (colors, fonts, etc. from metafields) - using fieldsets
@@ -95,14 +94,10 @@ class EmbroideryCustomizer extends Component {
    * Update preview display with current selections
    */
   updatePreview() {
-    if (!this.previewTextEl || !this.previewContainerEl) return;
+    if (!this.previewTextEl) return;
 
     const name = this.nameInputEl ? this.nameInputEl.value : '';
 
-    if (name.length === 0) {
-      this.previewContainerEl.classList.add('tw-hidden');
-      return;
-    }
 
     this.previewTextEl.textContent = name;
 
@@ -123,8 +118,6 @@ class EmbroideryCustomizer extends Component {
         this.previewTextEl.style.fontFamily = fontFamily;
       }
     }
-
-    this.previewContainerEl.classList.remove('tw-hidden');
   }
 
   /**
