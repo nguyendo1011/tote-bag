@@ -1,4 +1,8 @@
 {%- if cart != empty -%}
+  {% comment %} Get Embroidery Addons {% endcomment %}
+  {% assign embroidery_addons = cart.items | where: 'properties._Addons', item.product.id %}
+
+<h1>embroidery_addons:: {{ embroidery_addons }}</h1>
   {%- for item in cart.items -%}
     <div id="cart-notification-product-{{ item.key }}" class="cart-item">
       {%- if item.image -%}
