@@ -157,7 +157,6 @@ class CartItems extends HTMLElement {
     console.log("updateQuantity::", {
       line,
       eventTarget,
-      line,
       quantity
     });
     
