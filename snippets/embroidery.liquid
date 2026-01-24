@@ -32,13 +32,6 @@
   {% assign skip_options = '' %}
   {% for embroidery_product in product_embroidery_mtf %}
 
-    {% assign font_families = embroidery_product.product.metafields.custom.embroidery_font_families.value %}
-    {% if font_families != blank %} 
-      {% for font_family in font_families %}
-        <link rel="stylesheet" href="{{ font_family }}" rel="stylesheet">
-      {% endfor %}
-    {% endif %}
-
     {% comment %} Capture the heading text {% endcomment %}
     {% if forloop.first and skip_options == '' %}
       {% capture heading_text %}
