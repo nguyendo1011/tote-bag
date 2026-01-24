@@ -188,7 +188,7 @@ class EmbroideryCustomizer extends Component {
     const addItems = window.embroideryAddons.items?.map(item => ({
       id: item.id,
       quantity: quantity,
-      parent_line_key: this.lineItemKey
+      parent_line_key: this.lineItemKey,
     })) || [];
 
     const addBody = JSON.stringify({
