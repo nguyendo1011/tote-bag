@@ -293,6 +293,7 @@
       >
     {%- endif -%}
 
+    <!-- Embroidery font families -->
     {%- if settings.embroidery_font_families != blank -%}
       <link rel="preconnect" href="https://fonts.googleapis.com">
       <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -301,6 +302,7 @@
         {{ font_family }}
       {% endfor %}
     {%- endif -%}
+    <!-- End embroidery font families -->
 
     <script>
       if (Shopify.designMode) {
