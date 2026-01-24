@@ -464,10 +464,10 @@
                             </div>
                           </quantity-popover>
                         </td>
-                      </tr>
 
-                      <tr>
-                        {% render 'embroidery', product: item.product, position: 'drawer' %}
+                        <td class="cart-item__embroidery tw-col-span-3" role="cell" headers="CartDrawer-ColumnEmbroidery">
+                          {% render 'embroidery', product: item.product, position: 'drawer' %}
+                        </td>
                       </tr>
                     {%- endfor -%}
                   </tbody>
