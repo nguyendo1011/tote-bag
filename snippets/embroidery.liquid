@@ -166,21 +166,19 @@
       <div class="tw-flex tw-gap-[4rem] tw-flex-wrap">
         <div class="tw-flex tw-flex-col tw-gap-[2.4rem]">
 
-          {% comment %} Extract color swatch (between markers) {% endcomment %}
-          {% capture color_swatch %}
-            {{ options | split: '<!-- Color Swatch Start -->' | last | split: '<!-- Color Swatch End -->' | first }}
-          {% endcapture %}
+          {% comment %} Extract color swatch (between Color Swatch Start and End markers) {% endcomment %}
+          {% assign color_swatch = options | split: '<!-- Color Swatch Start -->' | last | split: '<!-- Color Swatch End -->' | first %}
 
-          {% comment %} Extract other options (everything after Color Swatch End) {% endcomment %}
-          {% capture other_options %}
-            {{ options | split: '<!-- Color Swatch End -->' | last }}
-          {% endcapture %}
+          {% comment %} Extract options before color swatch {% endcomment %}
+          {% assign before_color = options | split: '<!-- Color Swatch Start -->' | first %}
 
-          {% comment %} Render color swatch first {% endcomment %}
+          {% comment %} Extract options after color swatch {% endcomment %}
+          {% assign after_color = options | split: '<!-- Color Swatch End -->' | last %}
+
+          {% comment %} Render in order: Color swatch first, then other options {% endcomment %}
           {{ color_swatch }}
-
-          {% comment %} Render other options {% endcomment %}
-          {{ other_options }}
+          {{ before_color }}
+          {{ after_color }}
 
         </div>
         <div class="tw-relative tw-w-[22.8rem] tw-h-[22.8rem]">
