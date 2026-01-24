@@ -454,7 +454,8 @@ class EmbroideryCustomizer extends Component {
 
       // Add addon item if it has a variant ID
       const variantId = selectedInput.dataset.variantId;
-      if (variantId) {
+      const variantHasPrice = selectedInput.dataset.optionPrice && parseInt(selectedInput.dataset.optionPrice, 10) > 0;
+      if (variantId && variantHasPrice) {
         items.push({
           id: variantId,
           quantity: quantity
