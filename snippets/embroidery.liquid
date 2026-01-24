@@ -77,7 +77,7 @@
 
       {% assign skip_options = skip_options | append: option.name | append: ',' %}
 
-      {% if option.name == 'Color' %}<!-- Color Swatch Start -->{% endif %}
+      {% if option.name contains 'Color' %}<!-- Color Swatch Start -->{% endif %}
       <fieldset class="c-swatch" data-option-name="{{ option.name | handleize }}" data-product-id="{{ product.id }}">
         <legend class="c-swatch__legend">
           {{ "products.product.embroidery.settings.choose_name" | t: name: option.name }}
@@ -124,7 +124,7 @@
         </div>
       </fieldset>
 
-      {% if option.name == 'Color' %}<!-- Color Swatch End -->{% endif %}
+      {% if option.name contains 'Color' %}<!-- Color Swatch End -->{% endif %}
     {% endfor %}
   {% endfor %}
 {% endcapture %}
@@ -163,7 +163,7 @@
   <div class="embroidery-body" data-accordion-body>
     <c-embroidery class="tw-flex tw-flex-col tw-gap-6">
       {{ heading_text }}
-      <div class="tw-flex tw-gap-[4rem] tw-flex-wrap">
+      <div class="tw-flex tw-gap-[4rem] tw-flex-wrap tw-justify-between">
         <div class="tw-flex tw-flex-col tw-gap-[2.4rem]">
 
           {% comment %} Extract color swatch (between Color Swatch Start and End markers) {% endcomment %}
@@ -181,7 +181,7 @@
           {{ after_color }}
 
         </div>
-        <div class="tw-relative tw-w-[22.8rem] tw-h-[22.8rem]">
+        <div class="tw-relative tw-flex-[22.8rem] tw-shrink-0">
           {% render 'c-image', image: product.featured_media, loading: 'lazy', fetch_priority: 'low' %}
           <p
             class="tw-text-2xl tw-font-medium tw-text-center tw-absolute tw-left-1/2 tw-top-1/2 tw-transform -tw-translate-x-1/2 tw-translate-y-1/2"
