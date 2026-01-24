@@ -23,7 +23,8 @@ class EmbroideryCustomizer extends Component {
     PREVIEW_TEXT: '[data-preview-text]',
     OPTION_FIELDSET: 'fieldset[data-option-name]',
     RADIO_INPUT: 'input[type="radio"]',
-    CHECKED_RADIO: 'input[type="radio"]:checked'
+    CHECKED_RADIO: 'input[type="radio"]:checked',
+    PRICE: '[data-embroidery-price]'
   };
 
   constructor() {
@@ -56,7 +57,8 @@ class EmbroideryCustomizer extends Component {
       checkbox: this.querySelector(SELECTORS.CHECKBOX),
       nameLength: this.querySelector(SELECTORS.NAME_LENGTH),
       previewText: this.querySelector(SELECTORS.PREVIEW_TEXT),
-      optionFieldsets: this.querySelectorAll(SELECTORS.OPTION_FIELDSET)
+      optionFieldsets: this.querySelectorAll(SELECTORS.OPTION_FIELDSET),
+      price: this.querySelector(SELECTORS.PRICE)
     };
   }
 
