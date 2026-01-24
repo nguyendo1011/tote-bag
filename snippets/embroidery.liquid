@@ -42,6 +42,13 @@
   {% assign skip_options = '' %}
   {% for embroidery_product in product_embroidery_mtf %}
 
+    {% comment %} Get the minimum price for the embroidery product {% endcomment %}
+    {% assign embroidery_product_min_price = embroidery_product.min_price %}
+    {% if min_price < embroidery_product_min_price and embroidery_product_min_price > 0 %}
+      {% assign min_price = embroidery_product_min_price %}
+    {% endif %}
+
+    {% comment %} Capture the heading text {% endcomment %}
     {% if forloop.first and skip_options == '' %}
       {% capture heading_text %}
         <div class="tw-flex tw-flex-col tw-gap-2">
@@ -62,14 +69,7 @@
       {% endcapture %}
     {% endif %}
 
-    {% assign embroidery_product_min_price = embroidery_product.min_price %}
-    {% if min_price < embroidery_product_min_price and embroidery_product_min_price > 0 %}
-      {% assign min_price = embroidery_product_min_price %}
-    {% endif %}
     {% for option in embroidery_product.product.options_with_values %}
-      {% if option.name contains 'Color' or option.name contains 'Color' %}
-        <!-- Color Swatch Start -->
-      {% endif %}
 
       {% if skip_options contains option.name %}
         {% continue %}
@@ -79,7 +79,7 @@
 
       <fieldset class="c-swatch" data-option-name="{{ option.name | handleize }}" data-product-id="{{ product.id }}">
         <legend class="c-swatch__legend">
-          {{ option.name }}
+          {{ "products.product.embroidery.settings.choose_name" | t: name: option.name }}
         </legend>
 
         <div class="c-swatch__item">
@@ -172,7 +172,7 @@
           {% endcapture %}
 
           {{color_swatch}}
-          {{ options | replace: color_swatch, '' }}
+          {{ options | split: '<!-- Color Swatch Start -->' | last}}
 
         </div>
         <div class="tw-relative tw-w-[22.8rem] tw-h-[22.8rem]">
