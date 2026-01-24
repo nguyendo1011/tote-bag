@@ -159,9 +159,24 @@ class EmbroideryCustomizer extends Component {
         
         const body = JSON.stringify({
           items: items,
-          sections: this.getSectionsToRender().map((section) => section.id),
           sections_url: window.location.pathname
         });
+        console.log('body', body);
+
+        // fetch(`${routes.cart_update_url}`, { ...fetchConfig(), ...{ body } })
+        //   .then((response) => response.json())
+        //   .then((response) => {
+        //     publish(PUB_SUB_EVENTS.cartUpdate, {
+        //       source: 'embroidery',
+        //       cartData: response,
+        //     }).then(() => {
+        //       this.setLoadingState(false);
+        //     });
+        //   })
+        //   .catch((error) => {
+        //     console.error('Failed to update cart:', error);
+        //   });
+
       }
       this.setLoadingState(false);
     } else {
