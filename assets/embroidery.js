@@ -11,8 +11,8 @@ class EmbroideryCustomizer extends Component {
 
   onDOMReady() {
     this.initializeElements();
+    this.initializeProductOptions();
     this.initConfig();
-    this.initializeDefaultSelections();
     this.bindEventListeners();
   }
 
@@ -43,14 +43,6 @@ class EmbroideryCustomizer extends Component {
 
     // Dynamic product options (colors, fonts, etc. from metafields) - using fieldsets
     this.optionFieldsets = [...this.querySelectorAll('fieldset[data-option-name]')];
-  }
-
-  /**
-   * Set default selections for dynamic options
-   */
-  initializeDefaultSelections() {
-    // Initialize product options (fonts, colors, etc. from metafields)
-    this.initializeProductOptions();
   }
 
   /**
@@ -98,7 +90,6 @@ class EmbroideryCustomizer extends Component {
 
     const name = this.nameInputEl ? this.nameInputEl.value : '';
 
-
     this.previewTextEl.textContent = name;
 
     // Get selected color from dynamic options
@@ -129,41 +120,8 @@ class EmbroideryCustomizer extends Component {
    */
   initializeProductOptions() {
     this.optionFieldsets.forEach(fieldsetEl => {
-      const legendEl = fieldsetEl.querySelector('legend');
-      const optionName = legendEl?.textContent.trim();
-      const radioInputEls = [...fieldsetEl.querySelectorAll('input[type="radio"]')];
-
-      // Select first option by default
-      if (radioInputEls.length > 0) {
-        radioInputEls[0].checked = true;
-      }
-
-      // Add change event listeners to update preview
-      radioInputEls.forEach(radioEl => {
-        radioEl.addEventListener('change', () => {
-          if (radioEl.checked) {
-            console.log('Radio changed:', radioEl.value);
-            this.updatePreview();
-          }
-        });
-      });
+      fieldsetEl.addEventListener('change', this.updatePreview.bind(this));
     });
-  }
-
-  /**
-   * Get selected value from a specific fieldset
-   * @param {string} optionName - The handleized option name (e.g., 'color', 'font')
-   * @returns {string|null} The selected value or null if none selected
-   */
-  getSelectedValue(optionName) {
-    const fieldsetEl = this.querySelector(`fieldset[data-option-name="${optionName}"]`);
-    if (!fieldsetEl) {
-      console.warn(`Fieldset not found for option: ${optionName}`);
-      return null;
-    }
-
-    const selectedRadioEl = fieldsetEl.querySelector('input[type="radio"]:checked');
-    return selectedRadioEl ? selectedRadioEl.value : null;
   }
 
   /**
