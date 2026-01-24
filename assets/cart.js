@@ -88,8 +88,6 @@ class CartItems extends HTMLElement {
   }
 
   onChange(event) {
-  
-
     this.validateQuantity(event);
   }
 
