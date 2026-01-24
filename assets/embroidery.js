@@ -602,5 +602,7 @@ class EmbroideryCustomizer extends Component {
   }
 }
 
-// Register custom element
-customElements.define('c-embroidery', EmbroideryCustomizer);
+  // Register custom element
+  customElements.define('c-embroidery', EmbroideryCustomizer);
+
+} // End of customElements.get check
