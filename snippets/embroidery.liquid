@@ -82,11 +82,11 @@
               {% assign color_pattern = value | handleize %}
               {% assign color_value = shop.metaobjects['shopify--color-pattern'][color_pattern].color %}
           
-              <label for="embroidery-{{ product.id }}-{{ option.name | handleize }}" class="c-swatch__label c-swatch__label--color">
+              <label for="embroidery-{{ product.id }}-{{ option.name | handleize }}-{{ value | handleize }}" class="c-swatch__label c-swatch__label--color">
                 <input
                   type="radio"
                   id="embroidery-{{ product.id }}-{{ option.name | handleize }}-{{ value | handleize }}"
-                  name="embroidery-{{ product.id }}-{{ option.name | handleize }}-{{ value | handleize }}"
+                  name="embroidery-{{ product.id }}-{{ option.name | handleize }}"
                   value="{{ value }}"
                   data-option-name="{{ option.name | handleize }}"
                   data-option-value="{{ value }}"
@@ -98,11 +98,11 @@
               </label>
             {% else %}
           
-              <label for="embroidery-{{ product.id }}-{{ option.name | handleize }}" class="c-swatch__label">
+              <label for="embroidery-{{ product.id }}-{{ option.name | handleize }}-{{ value | handleize }}" class="c-swatch__label">
                 <input
                   type="radio"
                   id="embroidery-{{ product.id }}-{{ option.name | handleize }}-{{ value | handleize }}"
-                  name="embroidery-{{ product.id }}-{{ option.name | handleize }}-{{ value | handleize }}"
+                  name="embroidery-{{ product.id }}-{{ option.name | handleize }}"
                   value="{{ value }}"
                   data-option-name="{{ option.name | handleize }}"
                   data-product-id="{{ product.id }}"
