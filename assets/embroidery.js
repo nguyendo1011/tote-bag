@@ -124,7 +124,7 @@ class EmbroideryCustomizer extends Component {
     if (this.els.nameInput) {
       this.els.nameInput.addEventListener('input', this.handleNameInput.bind(this));
     }
-
+    console.log('els.accordion::', this.els);
     // Listen to accordion toggle event instead of checkbox directly
     // This avoids conflicts with accordion.js which also listens to the checkbox
     if (this.els.accordion) {
