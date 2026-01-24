@@ -220,15 +220,15 @@ class EmbroideryCustomizer extends Component {
    * Initialize component state
    */
   initializeState() {
-    const state = this.getState();
-    this.updatePreview();
+    // const state = this.getState();
+    // this.updatePreview();
 
-    if (!state.name && this.els.nameLength) {
-      this.els.nameLength.textContent = '0';
-    }
+    // if (!state.name && this.els.nameLength) {
+    //   this.els.nameLength.textContent = '0';
+    // }
 
-    // Initial validation of add button
-    this.validateAndUpdateButton();
+    // // Initial validation of add button
+    // this.validateAndUpdateButton();
   }
 
   /**
@@ -236,48 +236,48 @@ class EmbroideryCustomizer extends Component {
    * @returns {Object} Current embroidery configuration
    */
   getState() {
-    return {
-      name: this.els.nameInput?.value || '',
-      enabled: this.els.checkbox?.checked || false,
-      productId: this.productId,
-      position: this.position,
-      options: this.getSelectedOptions()
-    };
+    // return {
+    //   name: this.els.nameInput?.value || '',
+    //   enabled: this.els.checkbox?.checked || false,
+    //   productId: this.productId,
+    //   position: this.position,
+    //   options: this.getSelectedOptions()
+    // };
   }
 
   /**
    * Save state to sessionStorage (for PDP)
    */
   saveState() {
-    if (!this.productId) return;
+    // if (!this.productId) return;
 
-    const state = this.getState();
-    const key = `embroidery_${this.productId}`;
+    // const state = this.getState();
+    // const key = `embroidery_${this.productId}`;
 
-    try {
-      sessionStorage.setItem(key, JSON.stringify(state));
-    } catch (error) {
-      console.warn('Failed to save embroidery state:', error);
-    }
+    // try {
+    //   sessionStorage.setItem(key, JSON.stringify(state));
+    // } catch (error) {
+    //   console.warn('Failed to save embroidery state:', error);
+    // }
   }
 
   /**
    * Load saved state from sessionStorage (for drawer)
    */
   loadSavedState() {
-    if (!this.productId) return;
+    // if (!this.productId) return;
 
-    const key = `embroidery_${this.productId}`;
+    // const key = `embroidery_${this.productId}`;
 
-    try {
-      const savedState = sessionStorage.getItem(key);
-      if (savedState) {
-        const state = JSON.parse(savedState);
-        this.applyState(state);
-      }
-    } catch (error) {
-      console.warn('Failed to load embroidery state:', error);
-    }
+    // try {
+    //   const savedState = sessionStorage.getItem(key);
+    //   if (savedState) {
+    //     const state = JSON.parse(savedState);
+    //     this.applyState(state);
+    //   }
+    // } catch (error) {
+    //   console.warn('Failed to load embroidery state:', error);
+    // }
   }
 
   /**
@@ -285,27 +285,27 @@ class EmbroideryCustomizer extends Component {
    * @param {Object} state - Saved state object
    */
   applyState(state) {
-    if (state.name && this.els.nameInput) {
-      this.els.nameInput.value = state.name;
-      this.updateCharacterCount(state.name.length);
-    }
+    // if (state.name && this.els.nameInput) {
+    //   this.els.nameInput.value = state.name;
+    //   this.updateCharacterCount(state.name.length);
+    // }
 
-    if (state.enabled !== undefined && this.els.checkbox) {
-      this.els.checkbox.checked = state.enabled;
-    }
+    // if (state.enabled !== undefined && this.els.checkbox) {
+    //   this.els.checkbox.checked = state.enabled;
+    // }
 
-    if (state.options) {
-      Object.entries(state.options).forEach(([optionName, value]) => {
-        const input = this.querySelector(
-          `input[data-option-name="${optionName}"][value="${value}"]`
-        );
-        if (input) {
-          input.checked = true;
-        }
-      });
-    }
+    // if (state.options) {
+    //   Object.entries(state.options).forEach(([optionName, value]) => {
+    //     const input = this.querySelector(
+    //       `input[data-option-name="${optionName}"][value="${value}"]`
+    //     );
+    //     if (input) {
+    //       input.checked = true;
+    //     }
+    //   });
+    // }
 
-    this.updatePreview();
+    // this.updatePreview();
   }
 
   // ==================== Option Helpers ====================
