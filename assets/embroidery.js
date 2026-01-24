@@ -95,7 +95,7 @@ class EmbroideryCustomizer extends Component {
     // Get selected color from dynamic options
     const selectedColorOption = this.querySelector('input[type="radio"][data-option-name="color"]:checked');
     if (selectedColorOption) {
-      const colorHex = selectedColorOption.style.backgroundColor;
+      const colorHex = selectedColorOption.dataset.fontColor;
       if (colorHex) {
         this.previewTextEl.style.color = colorHex;
       }
@@ -105,12 +105,8 @@ class EmbroideryCustomizer extends Component {
     const selectedFontOption = this.querySelector('input[type="radio"][data-option-name="font"]:checked');
     if (selectedFontOption) {
       const fontFamily = selectedFontOption.dataset.fontFamily;
-      const fontColor = selectedFontOption.dataset.fontColor;
       if (fontFamily) {
         this.previewTextEl.style.fontFamily = fontFamily;
-      }
-      if (fontColor) {
-        this.previewTextEl.style.color = fontColor;
       }
     }
   }
