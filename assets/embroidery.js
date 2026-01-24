@@ -339,6 +339,7 @@ class EmbroideryCustomizer extends Component {
 
     this.updatePrice();
     this.validateAndUpdateButton();
+    this.buildEmbroideryAddons();
   }
 
   /**
@@ -411,6 +412,85 @@ class EmbroideryCustomizer extends Component {
       font: 'font-family'
     };
     return mapping[key] || key;
+  }
+
+  // ==================== Embroidery Addons ====================
+
+  /**
+   * Build embroidery addons data and store in window.embroideryAddons
+   * This will be used by product-form to add embroidery products to cart
+   */
+  buildEmbroideryAddons() {
+    // Clear addons if embroidery is not enabled or not valid
+    if (!this.els.checkbox?.checked || !this.isEmbroideryValid()) {
+      delete window.embroideryAddons;
+      return;
+    }
+
+    const name = this.els.nameInput?.value || '';
+    const selectedOptions = this.getSelectedOptions();
+
+    // Get main product quantity from form
+    const quantityInput = this.els.productForm?.querySelector('[name="quantity"]');
+    const quantity = quantityInput ? parseInt(quantityInput.value, 10) || 1 : 1;
+
+    // Find matching embroidery variant based on selected options
+    const variantId = this.findMatchingVariantId(selectedOptions);
+
+    if (!variantId) {
+      delete window.embroideryAddons;
+      return;
+    }
+
+    // Build embroidery properties for main product
+    const properties = {
+      'Embroidery Name': name,
+      '_Embroidery': 'Yes'
+    };
+
+    // Add each selected option to properties
+    Object.entries(selectedOptions).forEach(([optionName, value]) => {
+      const capitalizedName = optionName.charAt(0).toUpperCase() + optionName.slice(1);
+      properties[`Embroidery ${capitalizedName}`] = value;
+    });
+
+    // Store in window for product-form to use
+    window.embroideryAddons = {
+      item: {
+        id: variantId,
+        quantity: quantity
+      },
+      properties: properties
+    };
+  }
+
+  /**
+   * Find matching variant ID based on selected options
+   * @param {Object} selectedOptions - Selected options object
+   * @returns {string|null} Variant ID or null if not found
+   */
+  findMatchingVariantId(selectedOptions) {
+    // Get all radio inputs to find variant data
+    const selectedInputs = [];
+    this.els.optionFieldsets.forEach(fieldset => {
+      const selectedInput = fieldset.querySelector(EmbroideryCustomizer.SELECTORS.CHECKED_RADIO);
+      if (selectedInput) {
+        selectedInputs.push(selectedInput);
+      }
+    });
+
+    // Try to find variant ID from data attributes
+    // Assuming the variant ID is stored somewhere in the selected inputs
+    if (selectedInputs.length > 0) {
+      // Get variant ID from first input's closest fieldset or parent
+      const productId = selectedInputs[0].dataset.productId;
+
+      // For now, return the product ID
+      // You may need to adjust this based on how variant IDs are stored
+      return productId;
+    }
+
+    return null;
   }
 
   // ==================== Validation ====================
