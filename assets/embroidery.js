@@ -313,6 +313,16 @@ class EmbroideryCustomizer extends Component {
 
       this.els.previewText.style[mapName] = optionValue;
     });
+
+    this.updatePrice();
+  }
+
+  /**
+   * Update price display
+   */
+  updatePrice() {
+    if (!this.els.price) return;
+    this.els.price.textContent = this.els.nameInput?.value.length > 0 ? this.els.price.dataset.additionalPrice : 0;
   }
 
   /**
