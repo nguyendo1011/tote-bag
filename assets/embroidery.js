@@ -27,7 +27,7 @@ class EmbroideryCustomizer extends Component {
 
     // Display elements
     this.nameLengthEl = this.querySelector('[data-name-length]');
-    this.previewContainerEl = this.querySelector('[data-preview-container]');
+    this.previewContainerEl = this.querySelector('[data-embroidery-preview]');
     this.previewTextEl = this.querySelector('[data-preview-text]');
 
     // Dynamic product options (colors, fonts, etc. from metafields) - using fieldsets
