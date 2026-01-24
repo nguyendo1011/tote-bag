@@ -72,9 +72,6 @@ class AccordionElement extends HTMLElement {
   onToggle(shouldOpen) {
     this.isOpen = shouldOpen;
 
-    // Update data-open attribute
-    this.setAttribute('data-open', shouldOpen ? 'true' : 'false');
-
     if (shouldOpen) {
       this.onOpen();
     } else {
