@@ -35,7 +35,7 @@
     {% assign font_families = embroidery_product.product.metafields.custom.embroidery_font_families.value %}
     {% if font_families != blank %} 
       {% for font_family in font_families %}
-        <h1>font_family: {{ font_family }}</h1>
+        <link rel="stylesheet" href="{{ font_family }}" rel="stylesheet">
       {% endfor %}
     {% endif %}
 
