@@ -10,12 +10,10 @@ class EmbroideryCustomizer extends Component {
   }
 
   onDOMReady() {
-    console.log('EmbroideryCustomizer: DOM Ready, initializing...');
     this.initConfig();
     this.initializeElements();
     this.initializeDefaultSelections();
     this.bindEventListeners();
-    console.log('EmbroideryCustomizer: Initialization complete');
   }
 
   /**
@@ -133,14 +131,10 @@ class EmbroideryCustomizer extends Component {
    * Initialize dynamic product options (colors, sizes, etc.)
    */
   initializeProductOptions() {
-    console.log('Initializing product options, found fieldsets:', this.optionFieldsets.length);
-
     this.optionFieldsets.forEach(fieldsetEl => {
       const legendEl = fieldsetEl.querySelector('legend');
       const optionName = legendEl?.textContent.trim();
       const radioInputEls = [...fieldsetEl.querySelectorAll('input[type="radio"]')];
-
-      console.log('Option:', optionName, 'radios:', radioInputEls.length);
 
       // Select first option by default
       if (radioInputEls.length > 0) {
