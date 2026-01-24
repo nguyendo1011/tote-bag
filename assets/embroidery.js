@@ -498,6 +498,7 @@ class EmbroideryCustomizer extends Component {
         quantity: quantity,
         properties: {
           '_Addons': this.productId,
+          '_parentId': this.productId,
         }
       });
     });
