@@ -479,18 +479,20 @@ class EmbroideryCustomizer extends Component {
       }
     });
 
-    // Try to find variant ID from data attributes
-    // Assuming the variant ID is stored somewhere in the selected inputs
-    if (selectedInputs.length > 0) {
-      // Get variant ID from first input's closest fieldset or parent
-      const productId = selectedInputs[0].dataset.productId;
+    if (selectedInputs.length === 0) return null;
 
-      // For now, return the product ID
-      // You may need to adjust this based on how variant IDs are stored
-      return productId;
-    }
+    // Build option values array for variant matching
+    const optionValues = Object.values(selectedOptions);
 
-    return null;
+    // TODO: Implement proper variant matching logic
+    // This should find the variant ID that matches all selected options
+    // For now, return the product ID from the first input
+    const productId = selectedInputs[0].dataset.productId;
+
+    // You may need to query the product's variants to find exact match
+    // Example: Find variant where option1 == optionValues[0] && option2 == optionValues[1]
+
+    return productId;
   }
 
   // ==================== Validation ====================
