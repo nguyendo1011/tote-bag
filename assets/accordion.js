@@ -8,6 +8,9 @@
  * </c-accordion>
  */
 
+// Check if already defined to prevent double registration
+if (!customElements.get('c-accordion')) {
+
 class AccordionElement extends HTMLElement {
   constructor() {
     super();
@@ -116,4 +119,6 @@ class AccordionElement extends HTMLElement {
   }
 }
 
-customElements.define('c-accordion', AccordionElement);
+  customElements.define('c-accordion', AccordionElement);
+
+} // End of customElements.get check
