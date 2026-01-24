@@ -132,7 +132,7 @@
 {% endcapture %}
 <c-accordion class="tw-flex tw-flex-col tw-text-[#1E1E1E] tw-p-[1.6rem] tw-gap-[2.4rem] md:tw-gap-[1.6rem] tw-rounded tw-bg-[#F5F5F5] tw-text-sm md:tw-text-base tw-leading-[1.6] max-w-[65rem]">
   <!-- Accordion Toggle/Header -->
-  <div class="embroidery-toggle" data-accordion-toggle>
+  <c-embroidery class="embroidery-toggle" data-accordion-toggle data-position="{{ position }}" data-product-id="{{ product.id }}">
     <label class="tw-flex tw-items-center tw-cursor-pointer">
       <input
         id="embroidery-trigger"
@@ -161,11 +161,11 @@
         +{{ additional_price | money }}
       </span>
     </label>
-  </div>
+  </c-embroidery>
 
   <!-- Accordion Body (Collapsible Content) -->
   <div class="embroidery-body" data-accordion-body style="display: none;">
-    <c-embroidery class="tw-flex tw-flex-col tw-gap-6" data-position="{{ position }}" data-product-id="{{ product.id }}">
+    <div class="tw-flex tw-flex-col tw-gap-6">
       <div class="tw-flex tw-gap-[4rem] tw-flex-wrap tw-justify-between">
         <div class="tw-flex tw-flex-col tw-gap-[2.4rem] tw-flex-[1_1_35rem]">
           {{ heading_text }}
@@ -194,7 +194,7 @@
         </div>
       </div>
       <span class="tw-text-sm">{{ "products.product.embroidery.settings.warning" | t }}</span>
-    </c-embroidery>
+    </div>
   </div>
 </c-accordion>
 
