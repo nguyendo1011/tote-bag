@@ -11,10 +11,24 @@ class EmbroideryCustomizer extends Component {
 
   onDOMReady() {
     console.log('EmbroideryCustomizer: DOM Ready, initializing...');
+    this.initConfig();
     this.initializeElements();
     this.initializeDefaultSelections();
     this.bindEventListeners();
     console.log('EmbroideryCustomizer: Initialization complete');
+  }
+
+  /**
+   * Initialize configuration
+   */
+  initConfig() {
+    this.config = {
+      name: this.nameInputEl.value,
+      checkbox: this.checkboxEl.checked,
+      productId: this.dataset.productId,
+      fontFamily: this.getSelectedValue('font'),
+      color: this.getSelectedValue('color'),
+    };
   }
 
   /**
