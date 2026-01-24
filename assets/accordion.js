@@ -1,3 +1,13 @@
+/**
+ * Accordion Custom Element
+ * @extends HTMLElement
+ * @class AccordionElement
+ * @description Accordion Custom Element
+ * @example
+ * <c-accordion data-accordion-toggle="toggle" data-accordion-body="body" data-accordion-trigger="trigger">
+ * </c-accordion>
+ */
+
 class AccordionElement extends HTMLElement {
   constructor() {
     super();
