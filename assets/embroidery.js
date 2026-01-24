@@ -24,13 +24,15 @@ class EmbroideryCustomizer extends Component {
     OPTION_FIELDSET: 'fieldset[data-option-name]',
     RADIO_INPUT: 'input[type="radio"]',
     CHECKED_RADIO: 'input[type="radio"]:checked',
-    PRICE: '[data-embroidery-price]'
+    PRICE_DISPLAY: '[data-embroidery-price]',
+    ACCORDION: 'c-accordion'
   };
 
   constructor() {
     super();
     this.position = this.dataset.position || EmbroideryCustomizer.POSITIONS.PDP;
     this.productId = this.dataset.productId;
+    this.basePrice = 0; // Will be set from data-additional-price
   }
 
   onDOMReady() {
@@ -51,6 +53,9 @@ class EmbroideryCustomizer extends Component {
   cacheElements() {
     const { SELECTORS } = EmbroideryCustomizer;
 
+    // Find accordion parent to get base price
+    const accordion = this.closest(SELECTORS.ACCORDION);
+
     // Input elements
     this.els = {
       nameInput: this.querySelector(SELECTORS.NAME_INPUT),
@@ -58,8 +63,13 @@ class EmbroideryCustomizer extends Component {
       nameLength: this.querySelector(SELECTORS.NAME_LENGTH),
       previewText: this.querySelector(SELECTORS.PREVIEW_TEXT),
       optionFieldsets: this.querySelectorAll(SELECTORS.OPTION_FIELDSET),
-      price: this.querySelector(SELECTORS.PRICE)
+      priceDisplay: accordion?.querySelector(SELECTORS.PRICE_DISPLAY)
     };
+
+    // Get base price from data attribute (price is in cents)
+    if (this.els.priceDisplay?.dataset.additionalPrice) {
+      this.basePrice = parseInt(this.els.priceDisplay.dataset.additionalPrice, 10);
+    }
   }
 
   // ==================== Position Helpers ====================
@@ -318,11 +328,63 @@ class EmbroideryCustomizer extends Component {
   }
 
   /**
+   * Calculate total price (base + selected options)
+   * @returns {number} Total price in cents
+   */
+  calculateTotalPrice() {
+    // Start with base price (only if name is entered)
+    const hasName = this.els.nameInput?.value.length > 0;
+    if (!hasName) return 0;
+
+    let totalPrice = this.basePrice;
+
+    // Add prices from selected options
+    this.els.optionFieldsets.forEach(fieldset => {
+      const selectedInput = fieldset.querySelector(EmbroideryCustomizer.SELECTORS.CHECKED_RADIO);
+      if (selectedInput?.dataset.optionPrice) {
+        const optionPrice = parseInt(selectedInput.dataset.optionPrice, 10);
+        if (!isNaN(optionPrice)) {
+          totalPrice += optionPrice;
+        }
+      }
+    });
+
+    return totalPrice;
+  }
+
+  /**
    * Update price display
    */
   updatePrice() {
-    if (!this.els.price) return;
-    this.els.price.textContent = this.els.nameInput?.value.length > 0 ? this.els.price.dataset.additionalPrice : 0;
+    if (!this.els.priceDisplay) return;
+
+    const totalPrice = this.calculateTotalPrice();
+
+    // Format price using Shopify money format
+    if (totalPrice > 0) {
+      // Convert cents to dollars for display
+      const formattedPrice = this.formatMoney(totalPrice);
+      this.els.priceDisplay.textContent = `+${formattedPrice}`;
+    } else {
+      this.els.priceDisplay.textContent = '+' + this.formatMoney(this.basePrice);
+    }
+  }
+
+  /**
+   * Format money in cents to currency string
+   * @param {number} cents - Price in cents
+   * @returns {string} Formatted price string
+   */
+  formatMoney(cents) {
+    const dollars = cents / 100;
+
+    // Use Shopify's money format if available
+    if (typeof Shopify !== 'undefined' && Shopify.formatMoney) {
+      return Shopify.formatMoney(cents, Shopify.money_format || '${{amount}}');
+    }
+
+    // Fallback to basic formatting
+    return `$${dollars.toFixed(2)}`;
   }
 
   /**
