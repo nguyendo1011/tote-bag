@@ -54,7 +54,6 @@
     {% endif %}
 
     {% for option in embroidery_product.product.options_with_values %}
-
       {% if skip_options contains option.name %}
         {% continue %}
       {% endif %}
