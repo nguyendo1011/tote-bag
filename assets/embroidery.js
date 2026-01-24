@@ -61,7 +61,7 @@ class EmbroideryCustomizer extends Component {
     // Input elements
     this.els = {
       nameInput: this.querySelector(SELECTORS.NAME_INPUT),
-      checkbox: this.querySelector(SELECTORS.CHECKBOX), // Checkbox is in accordion, not in c-embroidery
+      checkbox: this.querySelector(SELECTORS.CHECKBOX), 
       nameLength: this.querySelector(SELECTORS.NAME_LENGTH),
       previewText: this.querySelector(SELECTORS.PREVIEW_TEXT),
       optionFieldsets: this.querySelectorAll(SELECTORS.OPTION_FIELDSET),
