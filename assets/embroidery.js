@@ -626,33 +626,6 @@ class EmbroideryCustomizer extends Component {
     };
   }
 
-  /**
-   * Find matching variant ID based on selected options
-   * @returns {string|null} Variant ID or null if not found
-   */
-  findMatchingVariantId() {
-    // Get all radio inputs to find variant data
-    const selectedInputs = [];
-    this.els.optionFieldsets.forEach(fieldset => {
-      const selectedInput = fieldset.querySelector(EmbroideryCustomizer.SELECTORS.CHECKED_RADIO);
-      if (selectedInput) {
-        selectedInputs.push(selectedInput);
-      }
-    });
-
-    if (selectedInputs.length === 0) return null;
-
-    // TODO: Implement proper variant matching logic
-    // This should find the variant ID that matches all selected options
-    // For now, return the product ID from the first input
-    const productId = selectedInputs[0].dataset.productId;
-
-    // You may need to query the product's variants to find exact match
-    // Example: Find variant where option1 == optionValues[0] && option2 == optionValues[1]
-
-    return productId;
-  }
-
   // ==================== Validation ====================
 
   /**
