@@ -88,8 +88,10 @@
               {% endif %}
             {% endfor %}
 
-            {% if option.name contains 'font' %}
-              {{ value | font_face: font_display: 'swap' }}
+            {% if option.name contains 'font' or option.name contains 'Font' %}
+              {% style %}
+                {{ value | font_face: font_display: 'swap' }}
+              {% endstyle %}
             {% endif %}
 
             {% if option.name == 'Color' %}
