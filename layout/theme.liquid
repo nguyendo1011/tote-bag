@@ -294,6 +294,8 @@
     {%- endif -%}
 
     {%- if settings.embroidery_font_families != blank -%}
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
       {% assign embroidery_font_families = settings.embroidery_font_families | split: '|' %}
       {% for font_family in embroidery_font_families %}
         {{ font_family }}
