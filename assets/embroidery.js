@@ -142,11 +142,8 @@ class EmbroideryCustomizer extends Component {
     const isEnabled = this.els.checkbox?.checked;
 
     try {
-      if (isEnabled) {
+      if (!isEnabled) return;
         await this.addEmbroideryToCart();
-      } else {
-        await this.removeEmbroideryFromCart();
-      }
     } catch (error) {
       console.error('Failed to update cart:', error);
       publish(PUB_SUB_EVENTS.cartError, {
