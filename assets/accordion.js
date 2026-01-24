@@ -23,22 +23,17 @@ class AccordionElement extends HTMLElement {
   }
 
   init() {
-    // Check initial state from data-open attribute
     const initialState = this.getAttribute('data-open') === 'true';
 
-    // Set initial display based on data-open
     if (!initialState) {
       this.body.style.display = 'none';
     }
 
-    // Create throttled toggle function
     this.throttledToggle = throttle((shouldOpen) => {
       this.onToggle(shouldOpen);
     }, 300);
 
-    // Handle checkbox trigger if present
     if (this.trigger) {
-      // Sync checkbox with data-open attribute
       this.trigger.checked = initialState;
 
       this.trigger.addEventListener('change', (e) => {
