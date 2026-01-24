@@ -118,6 +118,7 @@
 
                   <tbody role="rowgroup">
                     {%- for item in cart.items -%}
+                      {% if item.properties._Addons == blank %} {% continue %} {% endif %}
                       <tr
                         id="CartDrawer-Item-{{ item.index | plus: 1 }}"
                         class="cart-item{% if item.parent_relationship.parent != null %} cart-item__nested-line{% endif %}"
