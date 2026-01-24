@@ -130,73 +130,77 @@
     {% endfor %}
   {% endfor %}
 {% endcapture %}
-<c-accordion class="tw-flex tw-flex-col tw-text-[#1E1E1E] tw-p-[1.6rem] tw-gap-[2.4rem] md:tw-gap-[1.6rem] tw-rounded tw-bg-[#F5F5F5] tw-text-sm md:tw-text-base tw-leading-[1.6] max-w-[65rem]">
-  <!-- Accordion Toggle/Header -->
-  <c-embroidery class="embroidery-toggle" data-accordion-toggle data-position="{{ position }}" data-variant-id="{{ product.selected_or_first_available_variant.id }}">
-    <label class="tw-flex tw-items-center tw-cursor-pointer">
-      <input
-        id="embroidery-trigger"
-        type="checkbox"
-        data-accordion-trigger
-        data-embroidery-checkbox
-        class="tw-peer tw-sr-only"
-      >
-      {% render 'c-icons',
-        icon: 'checked',
-        class: 'peer-checked:tw-block tw-hidden tw-cursor-pointer',
-        width: 20,
-        height: 20
-      %}
-      {% render 'c-icons',
-        icon: 'unchecked',
-        class: 'peer-checked:tw-hidden tw-block tw-cursor-pointer',
-        width: 20,
-        height: 20
-      %}
 
-      <span class="tw-ml-3 tw-text-base tw-font-medium tw-flex-1">
-        {{ 'products.product.embroidery.settings.add_heading' | t }}
-      </span>
-      <span class="tw-text-sm" data-embroidery-price data-additional-price="{{ additional_price }}">
-        +{{ additional_price | money }}
-      </span>
-    </label>
-  </c-embroidery>
-
-  <!-- Accordion Body (Collapsible Content) -->
-  <div class="embroidery-body" data-accordion-body style="display: none;">
-    <div class="tw-flex tw-flex-col tw-gap-6">
-      <div class="tw-flex tw-gap-[4rem] tw-flex-wrap tw-justify-between">
-        <div class="tw-flex tw-flex-col tw-gap-[2.4rem] tw-flex-[1_1_35rem]">
-          {{ heading_text }}
-
-          {% comment %} Extract color swatch (between Color Swatch Start and End markers) {% endcomment %}
-          {% assign color_swatch = options | split: '<!-- Color Swatch Start -->' | last | split: '<!-- Color Swatch End -->' | first %}
-
-          {% comment %} Extract options before color swatch {% endcomment %}
-          {% assign before_color = options | split: '<!-- Color Swatch Start -->' | first %}
-
-          {% comment %} Extract options after color swatch {% endcomment %}
-          {% assign after_color = options | split: '<!-- Color Swatch End -->' | last %}
-
-          {% comment %} Render in order: Color swatch first, then other options {% endcomment %}
-          {{ color_swatch }}
-          {{ before_color }}
-          {{ after_color }}
-
-        </div>
-        <div class="tw-relative tw-max-w-[22.8rem] tw-h-fit">
-          {% render 'c-image', image: product.featured_media, loading: 'lazy', fetch_priority: 'low' %}
-          <p
-            class="tw-text-[66.66%] tw-font-medium tw-text-center tw-absolute tw-left-1/2 tw-top-1/2 tw-transform -tw-translate-x-1/2 tw-translate-y-1/2"
-            data-preview-text
-          ></p>
-        </div>
-      </div>
-      <span class="tw-text-sm">{{ "products.product.embroidery.settings.warning" | t }}</span>
+<c-embroidery data-position="{{ position }}" data-variant-id="{{ product.selected_or_first_available_variant.id }}">
+  <c-accordion class="tw-flex tw-flex-col tw-text-[#1E1E1E] tw-p-[1.6rem] tw-gap-[2.4rem] md:tw-gap-[1.6rem] tw-rounded tw-bg-[#F5F5F5] tw-text-sm md:tw-text-base tw-leading-[1.6] max-w-[65rem]">
+    <!-- Accordion Toggle/Header -->
+    <div class="embroidery-toggle" data-accordion-toggle >
+      <label class="tw-flex tw-items-center tw-cursor-pointer">
+        <input
+          id="embroidery-trigger"
+          type="checkbox"
+          data-accordion-trigger
+          data-embroidery-checkbox
+          class="tw-peer tw-sr-only"
+        >
+        {% render 'c-icons',
+          icon: 'checked',
+          class: 'peer-checked:tw-block tw-hidden tw-cursor-pointer',
+          width: 20,
+          height: 20
+        %}
+        {% render 'c-icons',
+          icon: 'unchecked',
+          class: 'peer-checked:tw-hidden tw-block tw-cursor-pointer',
+          width: 20,
+          height: 20
+        %}
+  
+        <span class="tw-ml-3 tw-text-base tw-font-medium tw-flex-1">
+          {{ 'products.product.embroidery.settings.add_heading' | t }}
+        </span>
+        <span class="tw-text-sm" data-embroidery-price data-additional-price="{{ additional_price }}">
+          +{{ additional_price | money }}
+        </span>
+      </label>
     </div>
-  </div>
-</c-accordion>
+  
+    <!-- Accordion Body (Collapsible Content) -->
+    <div class="embroidery-body" data-accordion-body style="display: none;">
+      <div class="tw-flex tw-flex-col tw-gap-6">
+        <div class="tw-flex tw-gap-[4rem] tw-flex-wrap tw-justify-between">
+          <div class="tw-flex tw-flex-col tw-gap-[2.4rem] tw-flex-[1_1_35rem]">
+            {{ heading_text }}
+  
+            {% comment %} Extract color swatch (between Color Swatch Start and End markers) {% endcomment %}
+            {% assign color_swatch = options | split: '<!-- Color Swatch Start -->' | last | split: '<!-- Color Swatch End -->' | first %}
+  
+            {% comment %} Extract options before color swatch {% endcomment %}
+            {% assign before_color = options | split: '<!-- Color Swatch Start -->' | first %}
+  
+            {% comment %} Extract options after color swatch {% endcomment %}
+            {% assign after_color = options | split: '<!-- Color Swatch End -->' | last %}
+  
+            {% comment %} Render in order: Color swatch first, then other options {% endcomment %}
+            {{ color_swatch }}
+            {{ before_color }}
+            {{ after_color }}
+  
+          </div>
+          <div class="tw-relative tw-max-w-[22.8rem] tw-h-fit">
+            {% render 'c-image', image: product.featured_media, loading: 'lazy', fetch_priority: 'low' %}
+            <p
+              class="tw-text-[66.66%] tw-font-medium tw-text-center tw-absolute tw-left-1/2 tw-top-1/2 tw-transform -tw-translate-x-1/2 tw-translate-y-1/2"
+              data-preview-text
+            ></p>
+          </div>
+        </div>
+        <span class="tw-text-sm">{{ "products.product.embroidery.settings.warning" | t }}</span>
+      </div>
+    </div>
+  </c-accordion>
+</c-embroidery>
+
 
 <script src="{{ 'accordion.js' | asset_url }}" defer></script>
 <script src="{{ 'embroidery.js' | asset_url }}" defer></script>
