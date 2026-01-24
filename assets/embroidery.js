@@ -468,6 +468,8 @@ class EmbroideryCustomizer extends Component {
       items: [...items],
       properties: properties
     };
+
+    console.log('window.embroideryAddons:', window.embroideryAddons);
   }
 
   /**
