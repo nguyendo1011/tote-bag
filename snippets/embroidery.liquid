@@ -74,7 +74,8 @@
               <label for="embroidery-{{ product.id }}-{{ option.name | handleize }}" class="s-swatch__label s-swatch__label--color">
                 <input
                   type="radio"
-                  name="embroidery-{{ product.id }}-{{ option.name | handleize }}"
+                  id="embroidery-{{ product.id }}-{{ option.name | handleize }}-{{ value | handleize }}"
+                  name="embroidery-{{ product.id }}-{{ option.name | handleize }}-{{ value | handleize }}"
                   value="{{ value }}"
                   data-option-name="{{ option.name | handleize }}"
                   data-option-value="{{ value }}"
@@ -89,7 +90,8 @@
               <label for="embroidery-{{ product.id }}-{{ option.name | handleize }}" class="s-swatch__label">
                 <input
                   type="radio"
-                  name="embroidery-{{ product.id }}-{{ option.name | handleize }}"
+                  id="embroidery-{{ product.id }}-{{ option.name | handleize }}-{{ value | handleize }}"
+                  name="embroidery-{{ product.id }}-{{ option.name | handleize }}-{{ value | handleize }}"
                   value="{{ value }}"
                   data-option-name="{{ option.name | handleize }}"
                   data-product-id="{{ product.id }}"
