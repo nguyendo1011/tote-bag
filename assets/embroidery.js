@@ -73,7 +73,7 @@ class EmbroideryCustomizer extends Component {
       optionFieldsets: this.querySelectorAll(SELECTORS.OPTION_FIELDSET),
       priceDisplay: accordion?.querySelector(SELECTORS.PRICE_DISPLAY) || this.querySelector(SELECTORS.PRICE_DISPLAY),
       productForm: productForm,
-      addButton: productForm?.querySelector(SELECTORS.ADD_BUTTON),
+      addButton: isPDP() ? productForm?.querySelector(SELECTORS.ADD_BUTTON) : isDrawer() ? this.querySelector(SELECTORS.ADD_BUTTON) : null,
       accordion: accordion
     };
     if (this.els.priceDisplay?.dataset.additionalPrice) {
@@ -338,6 +338,24 @@ class EmbroideryCustomizer extends Component {
     return this.querySelector(
       `input[data-option-name="${optionName}"][data-option-value]:checked`
     );
+  }
+
+  /**
+   * Toggle loading state of add button
+   * @param {boolean} loading - Loading state
+   */
+  setLoadingState(loading) {
+    if (!this.els.addButton) return;
+    if (isPDP()) return;
+    if (loading) {
+      this.els.addButton.setAttribute('aria-disabled', true);
+      this.els.addButton.classList.add('loading');
+      this.els.addButton.querySelector('.loading__spinner')?.classList.remove('hidden');
+    } else {
+      this.els.addButton.setAttribute('aria-disabled', false);
+      this.els.addButton.classList.remove('loading');
+      this.els.addButton.querySelector('.loading__spinner')?.classList.add('hidden');
+    }
   }
 
   // ==================== Preview Updates ====================
