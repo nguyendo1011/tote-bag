@@ -55,20 +55,38 @@ class EmbroideryCustomizer extends Component {
   cacheElements() {
     const { SELECTORS } = EmbroideryCustomizer;
 
+    // Find accordion parent to access checkbox and price display
+    const accordion = this.closest(SELECTORS.ACCORDION);
+
     // Find product form and add button
     const productForm = document.querySelector(SELECTORS.PRODUCT_FORM);
+
+    // Try to find checkbox in different locations
+    let checkbox = this.querySelector(SELECTORS.CHECKBOX);
+    if (!checkbox && accordion) {
+      // Fallback: checkbox might be in accordion toggle
+      checkbox = accordion.querySelector(SELECTORS.CHECKBOX);
+    }
 
     // Input elements
     this.els = {
       nameInput: this.querySelector(SELECTORS.NAME_INPUT),
-      checkbox: this.querySelector(SELECTORS.CHECKBOX), 
+      checkbox: checkbox,
       nameLength: this.querySelector(SELECTORS.NAME_LENGTH),
       previewText: this.querySelector(SELECTORS.PREVIEW_TEXT),
       optionFieldsets: this.querySelectorAll(SELECTORS.OPTION_FIELDSET),
-      priceDisplay: this.querySelector(SELECTORS.PRICE_DISPLAY),
+      priceDisplay: accordion?.querySelector(SELECTORS.PRICE_DISPLAY) || this.querySelector(SELECTORS.PRICE_DISPLAY),
       productForm: productForm,
-      addButton: productForm?.querySelector(SELECTORS.ADD_BUTTON)
+      addButton: productForm?.querySelector(SELECTORS.ADD_BUTTON),
+      accordion: accordion
     };
+
+    console.log('Cached elements:', {
+      checkbox: this.els.checkbox,
+      nameInput: this.els.nameInput,
+      priceDisplay: this.els.priceDisplay,
+      accordion: this.els.accordion
+    });
 
     // Get base price from data attribute (price is in cents)
     if (this.els.priceDisplay?.dataset.additionalPrice) {
@@ -100,14 +118,15 @@ class EmbroideryCustomizer extends Component {
    * Setup all event listeners
    */
   setupEventListeners() {
-    console.log('els::', this.els);
-    
     if (this.els.nameInput) {
       this.els.nameInput.addEventListener('input', this.handleNameInput.bind(this));
     }
-    
+
     if (this.els.checkbox) {
+      console.log('Setting up checkbox listener on:', this.els.checkbox);
       this.els.checkbox.addEventListener('change', this.handleCheckboxChange.bind(this));
+    } else {
+      console.warn('Checkbox not found! Cannot setup event listener.');
     }
 
     this.els.optionFieldsets.forEach(fieldset => {
