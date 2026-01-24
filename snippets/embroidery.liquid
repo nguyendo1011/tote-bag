@@ -166,9 +166,9 @@
   <!-- Accordion Body (Collapsible Content) -->
   <div class="embroidery-body" data-accordion-body>
     <c-embroidery class="tw-flex tw-flex-col tw-gap-6">
-      {{ heading_text }}
       <div class="tw-flex tw-gap-[4rem] tw-flex-wrap tw-justify-between">
         <div class="tw-flex tw-flex-col tw-gap-[2.4rem]">
+          {{ heading_text }}
 
           {% comment %} Extract color swatch (between Color Swatch Start and End markers) {% endcomment %}
           {% assign color_swatch = options | split: '<!-- Color Swatch Start -->' | last | split: '<!-- Color Swatch End -->' | first %}
