@@ -304,6 +304,7 @@ class EmbroideryCustomizer extends Component {
       const selectedInput = fieldset.querySelector(EmbroideryCustomizer.SELECTORS.CHECKED_RADIO);
       if (!selectedInput) return;
       const optionValue = selectedInput.dataset.optionValue;
+      const optionName = selectedInput.dataset.optionName;
       if (!optionValue) return;
 
       const mapName = this.getMappingCSS(optionName);
