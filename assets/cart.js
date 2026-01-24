@@ -154,13 +154,11 @@ class CartItems extends HTMLElement {
 
     this.enableLoading(line);
 
-    console.log("updateQuantity::", {
-      target: event.target,
-      line,
-      eventTarget,
-      quantity
-    });
-    
+    const hasEmbroidery = event.target.hasAttribute('data-embroidery');
+    if (hasEmbroidery) {
+      this.querySelector('c-embroidery')?.handleAddButtonClick();
+      return;
+    }
 
     const body = JSON.stringify({
       line,

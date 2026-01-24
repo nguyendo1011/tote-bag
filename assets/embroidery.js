@@ -135,8 +135,8 @@ class EmbroideryCustomizer extends Component {
    * Handle add button click event on Drawer
    * @param {Event} event - Add button click event
    */
-  async handleAddButtonClick(event) {
-    event.preventDefault();
+  async handleAddButtonClick(event = null) {
+    if (event) event.preventDefault();
     this.setLoadingState(true);
 
     const isEnabled = this.els.checkbox?.checked;
