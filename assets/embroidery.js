@@ -55,20 +55,17 @@ class EmbroideryCustomizer extends Component {
   cacheElements() {
     const { SELECTORS } = EmbroideryCustomizer;
 
-    // Find accordion parent (checkbox is in accordion, outside c-embroidery)
-    const accordion = this.closest(SELECTORS.ACCORDION);
-
     // Find product form and add button
     const productForm = document.querySelector(SELECTORS.PRODUCT_FORM);
 
     // Input elements
     this.els = {
       nameInput: this.querySelector(SELECTORS.NAME_INPUT),
-      checkbox: accordion?.querySelector(SELECTORS.CHECKBOX), // Checkbox is in accordion, not in c-embroidery
+      checkbox: this.querySelector(SELECTORS.CHECKBOX), // Checkbox is in accordion, not in c-embroidery
       nameLength: this.querySelector(SELECTORS.NAME_LENGTH),
       previewText: this.querySelector(SELECTORS.PREVIEW_TEXT),
       optionFieldsets: this.querySelectorAll(SELECTORS.OPTION_FIELDSET),
-      priceDisplay: accordion?.querySelector(SELECTORS.PRICE_DISPLAY),
+      priceDisplay: this.querySelector(SELECTORS.PRICE_DISPLAY),
       productForm: productForm,
       addButton: productForm?.querySelector(SELECTORS.ADD_BUTTON)
     };
