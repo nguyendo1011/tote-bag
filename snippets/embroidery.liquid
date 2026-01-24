@@ -86,11 +86,11 @@
               {% assign color_pattern = value | handleize %}
               {% assign color_value = shop.metaobjects['shopify--color-pattern'][color_pattern].color %}
 
-              <label for="embroidery-{{ product.id }}-{{ option.name | handleize }}-{{ value | handleize }}" class="c-swatch__label c-swatch__label--color">
+              <label for="{{position}}-embroidery-{{ product.id }}-{{ option.name | handleize }}-{{ value | handleize }}" class="c-swatch__label c-swatch__label--color">
                 <input
                   type="radio"
-                  id="embroidery-{{ product.id }}-{{ option.name | handleize }}-{{ value | handleize }}"
-                  name="embroidery-{{ product.id }}-{{ option.name | handleize }}"
+                  id="{{position}}-embroidery-{{ product.id }}-{{ option.name | handleize }}-{{ value | handleize }}"
+                  name="{{position}}-embroidery-{{ product.id }}-{{ option.name | handleize }}"
                   value="{{ value }}"
                   data-option-name="{{ option.name | handleize }}"
                   data-option-value="{{ color_value }}"
@@ -104,11 +104,11 @@
 
             {% else %}
 
-              <label for="embroidery-{{ product.id }}-{{ option.name | handleize }}-{{ value | handleize }}" class="c-swatch__label">
+              <label for="{{position}}-embroidery-{{ product.id }}-{{ option.name | handleize }}-{{ value | handleize }}" class="c-swatch__label">
                 <input
                   type="radio"
-                  id="embroidery-{{ product.id }}-{{ option.name | handleize }}-{{ value | handleize }}"
-                  name="embroidery-{{ product.id }}-{{ option.name | handleize }}"
+                  id="{{position}}-embroidery-{{ product.id }}-{{ option.name | handleize }}-{{ value | handleize }}"
+                  name="{{position}}-embroidery-{{ product.id }}-{{ option.name | handleize }}"
                   value="{{ value }}"
                   data-option-name="{{ option.name | handleize }}"
                   data-option-value="{{ value }}"
@@ -140,7 +140,7 @@
     <div class="embroidery-toggle" data-accordion-toggle >
       <label class="tw-flex tw-items-center tw-cursor-pointer">
         <input
-          id="embroidery-trigger"
+          id="{{position}}-embroidery-trigger"
           type="checkbox"
           data-accordion-trigger
           data-embroidery-checkbox
