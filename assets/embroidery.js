@@ -474,6 +474,23 @@ class EmbroideryCustomizer extends Component {
     let embroiderySelected = '';
     embroiderySelected += '"' + name + '"';
 
+    // Add base product (name input) as first addon item
+    if (this.els.nameInput) {
+      const baseVariantId = this.els.nameInput.dataset.variantId;
+      const basePrice = this.els.nameInput.dataset.optionPrice;
+
+      if (baseVariantId && basePrice) {
+        const price = parseInt(basePrice, 10);
+        if (!isNaN(price) && price > 0) {
+          items.push({
+            id: baseVariantId,
+            quantity: quantity,
+            parent_id: this.productId
+          });
+        }
+      }
+    }
+
     // Collect addon items from selected options
     this.els.optionFieldsets.forEach(fieldset => {
       const selectedInput = fieldset.querySelector(EmbroideryCustomizer.SELECTORS.CHECKED_RADIO);
@@ -496,7 +513,7 @@ class EmbroideryCustomizer extends Component {
       items.push({
         id: variantId,
         quantity: quantity,
-        parent_id: this.productId,
+        parent_id: this.productId
       });
     });
 
