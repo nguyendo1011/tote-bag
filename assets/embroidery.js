@@ -306,10 +306,23 @@ class EmbroideryCustomizer extends Component {
       const optionValue = selectedInput.dataset.optionValue;
       if (!optionValue) return;
 
-      this.els.previewText.style[optionName] = optionValue;
+      const mapName = this.getMappingCSS(optionName);
+
+      this.els.previewText.style[mapName] = optionValue;
     });
   }
 
+  /**
+   * Mapping of option names to CSS properties
+   * @returns {Object} Mapping of option names to CSS properties
+   */
+  getMappingCSS(key) {
+    const mapping = {
+      color: 'color',
+      font: 'font-family'
+    };
+    return mapping[key] || key;
+  }
 }
 
 // Register custom element
