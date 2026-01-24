@@ -450,7 +450,7 @@ class EmbroideryCustomizer extends Component {
       const optionName = selectedInput.dataset.optionName;
       const value = selectedInput.value;
 
-      embroiderySelected += ' ' + optionName.charAt(0).toUpperCase() + optionName.slice(1) + ': ' + value;
+      embroiderySelected += ', ' + value;
 
       // Add addon item if it has a variant ID
       const variantId = selectedInput.dataset.variantId;
