@@ -156,34 +156,35 @@ class EmbroideryCustomizer extends Component {
             parent_line_key: key
           }
         });
-        
+        const config = fetchConfig('javascript');
         const body = JSON.stringify({
           items: items,
           sections_url: window.location.pathname
         });
         console.log('body', body);
 
-        // fetch(`${routes.cart_update_url}`, { ...fetchConfig(), ...{ body } })
-        //   .then((response) => response.json())
-        //   .then((response) => {
-        //     publish(PUB_SUB_EVENTS.cartUpdate, {
-        //       source: 'embroidery',
-        //       cartData: response,
-        //     }).then(() => {
-        //       this.setLoadingState(false);
-        //     });
-        //   })
-        //   .catch((error) => {
-        //     console.error('Failed to update cart:', error);
-        //   });
+        config.headers['Content-Type'] = 'application/json';
+        config.body = body;
 
+        fetch(`${routes.cart_add_url}`, config)
+        .then((response) => response.json())
+        .then((response) => {
+          publish(PUB_SUB_EVENTS.cartUpdate, {
+            source: 'embroidery',
+            cartData: response,
+          }).then(() => {
+            this.setLoadingState(false);
+          });
+        })
+        .catch((error) => {
+          console.error('Failed to update cart:', error);
+          this.setLoadingState(false);
+        });
       }
-      this.setLoadingState(false);
     } else {
       console.error('Failed to get cart:', response.error);
       this.setLoadingState(false);
     }
-
   }
 
   /**
