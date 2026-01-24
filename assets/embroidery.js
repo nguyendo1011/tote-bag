@@ -451,6 +451,8 @@ class EmbroideryCustomizer extends Component {
   getSelectedOptions() {
     const options = {};
 
+    if (!this.els.checkbox?.checked) return options;
+
     this.els.optionFieldsets.forEach(fieldset => {
       const optionName = fieldset.dataset.optionName;
       const selectedInput = fieldset.querySelector(EmbroideryCustomizer.SELECTORS.CHECKED_RADIO);
