@@ -293,17 +293,12 @@
       >
     {%- endif -%}
 
-    <!-- Embroidery font families -->
     {%- if settings.embroidery_font_families != blank -%}
       {% assign embroidery_font_families = settings.embroidery_font_families | split: '|' %}
       {% for font_family in embroidery_font_families %}
-        {% assign font_family_trimmed = font_family | strip %}
-        {% if font_family_trimmed != blank %}
-          {{ font_family_trimmed }}
-        {% endif %}
+        {{ font_family }}
       {% endfor %}
     {%- endif -%}
-    <!-- End embroidery font families -->
 
     <script>
       if (Shopify.designMode) {
