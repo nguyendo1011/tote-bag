@@ -68,7 +68,7 @@ class EmbroideryCustomizer extends Component {
       nameLength: this.querySelector(SELECTORS.NAME_LENGTH),
       previewText: this.querySelector(SELECTORS.PREVIEW_TEXT),
       optionFieldsets: this.querySelectorAll(SELECTORS.OPTION_FIELDSET),
-      priceDisplay: accordion?.querySelector(SELECTORS.PRICE_DISPLAY),
+      priceDisplay: this.querySelector(SELECTORS.PRICE_DISPLAY),
       productForm: productForm,
       addButton: productForm?.querySelector(SELECTORS.ADD_BUTTON)
     };
