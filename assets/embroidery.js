@@ -428,7 +428,6 @@ class EmbroideryCustomizer extends Component {
     }
 
     const name = this.els.nameInput?.value || '';
-    const selectedOptions = this.getSelectedOptions();
     const items = [];
 
     // Get main product quantity from form
@@ -440,19 +439,28 @@ class EmbroideryCustomizer extends Component {
     let embroiderySelected = '';
     embroiderySelected += name;
 
-    Object.entries(selectedOptions).forEach(([optionName, value]) => {
-      embroiderySelected += optionName.charAt(0).toUpperCase() + optionName.slice(1) + ',' + value;
+    // Collect addon items from selected options
+    this.els.optionFieldsets.forEach(fieldset => {
+      const selectedInput = fieldset.querySelector(EmbroideryCustomizer.SELECTORS.CHECKED_RADIO);
+      if (!selectedInput) return;
 
-      const hasPrice = selectedInput.dataset.optionPrice;
-      if (hasPrice) {
+      const optionName = selectedInput.dataset.optionName;
+      const value = selectedInput.value;
+
+      embroiderySelected += ' ' + optionName.charAt(0).toUpperCase() + optionName.slice(1) + ': ' + value;
+
+      // Add addon item if it has a variant ID
+      const variantId = selectedInput.dataset.variantId;
+      if (variantId) {
         items.push({
-          id: selectedInput.dataset.variantId,
+          id: variantId,
           quantity: quantity
         });
       }
     });
-    properties[`Embroidery Name`] = embroiderySelected;
-    properties[`_Addons`] = this.productId;
+
+    properties['Embroidery Name'] = embroiderySelected;
+    properties['_Addons'] = this.productId;
 
     // Store in window for product-form to use
     window.embroideryAddons = {
@@ -478,9 +486,6 @@ class EmbroideryCustomizer extends Component {
     });
 
     if (selectedInputs.length === 0) return null;
-
-    // Build option values array for variant matching
-    const optionValues = Object.values(selectedOptions);
 
     // TODO: Implement proper variant matching logic
     // This should find the variant ID that matches all selected options
