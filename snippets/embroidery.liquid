@@ -45,7 +45,10 @@
     {% if forloop.first and skip_options == '' %}
       {% capture heading_text %}
         <div class="tw-flex tw-flex-col tw-gap-2">
-        <span for="embroidery-name">
+          <p>{{ "products.product.embroidery.settings.add_character_limit" | t: character_limit: character_limit }}
+            <span class="tw-inline-block tw-text-gray-500 tw-font-normal ml-auto">
+            (<span data-name-length>0</span>/<span data-name-max>12</span>)
+          </span></p>
           <input
             type="text"
             id="embroidery-name"
@@ -54,11 +57,7 @@
             placeholder="e.g., John Smith"
             class="tw-w-full tw-px-4 tw-py-2 tw-text-base tw-border tw-border-gray-400 tw-rounded-[4px]"
           >
-            <p>{{ "products.product.embroidery.settings.add_character_limit" | t: character_limit: character_limit }}
-              <span class="tw-text-gray-500 tw-font-normal ml-auto">
-              (<span data-name-length>0</span>/<span data-name-max>12</span>)
-            </span></p>
-          </span>
+           
         </div>
       {% endcapture %}
     {% endif %}
