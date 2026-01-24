@@ -124,9 +124,23 @@ class EmbroideryCustomizer extends Component {
     this.els.optionFieldsets.forEach(fieldset => {
       fieldset.addEventListener('change', this.handleOptionChange.bind(this));
     });
+
+    if (this.els.addButton && this.isDrawer()) {
+      this.els.addButton.addEventListener('click', this.handleAddButtonClick.bind(this));
+    }
   }
 
   // ==================== Event Handlers ====================
+
+  /**
+   * Handle add button click event on Drawer
+   * @param {Event} event - Add button click event
+   */
+  handleAddButtonClick(event) {
+    event.preventDefault();
+    this.setLoadingState(true);
+    this.buildItemsAddons();
+  }
 
   /**
    * Handle name input changes
@@ -346,7 +360,7 @@ class EmbroideryCustomizer extends Component {
    */
   setLoadingState(loading) {
     if (!this.els.addButton) return;
-    if (isPDP()) return;
+    if (!this.isDrawer()) return;
     if (loading) {
       this.els.addButton.setAttribute('aria-disabled', true);
       this.els.addButton.classList.add('loading');
@@ -394,7 +408,7 @@ class EmbroideryCustomizer extends Component {
 
     this.updatePrice();
     this.validateAndUpdateButton();
-    this.buildEmbroideryAddons();
+    this.buildItemsAddons();
   }
 
   /**
@@ -475,7 +489,7 @@ class EmbroideryCustomizer extends Component {
    * Build embroidery addons data and store in window.embroideryAddons
    * This will be used by product-form to add embroidery products to cart
    */
-  buildEmbroideryAddons() {
+  buildItemsAddons() {
     // Clear addons if embroidery is not enabled or not valid
     if (!this.els.checkbox?.checked || !this.isEmbroideryValid()) {
       delete window.embroideryAddons;
