@@ -443,24 +443,27 @@ class EmbroideryCustomizer extends Component {
 
     // Collect addon items from selected options
     this.els.optionFieldsets.forEach(fieldset => {
-      console.log('fieldset::', fieldset);
       const selectedInput = fieldset.querySelector(EmbroideryCustomizer.SELECTORS.CHECKED_RADIO);
       if (!selectedInput) return;
 
-      const optionName = selectedInput.dataset.optionName;
       const value = selectedInput.value;
-
       embroiderySelected += ', ' + value;
 
-      // Add addon item if it has a variant ID
+      // Add addon item only if it has valid variant ID and price > 0
       const variantId = selectedInput.dataset.variantId;
-      const variantHasPrice = selectedInput.dataset.optionPrice && parseInt(selectedInput.dataset.optionPrice, 10) > 0;
-      if (variantId && variantHasPrice) {
-        items.push({
-          id: variantId,
-          quantity: quantity
-        });
-      }
+      const optionPrice = selectedInput.dataset.optionPrice;
+
+      // Validate: variant ID exists, price exists, and price > 0
+      if (!variantId || !optionPrice) return;
+
+      const price = parseInt(optionPrice, 10);
+      if (isNaN(price) || price <= 0) return;
+
+      // Add valid addon item
+      items.push({
+        id: variantId,
+        quantity: quantity
+      });
     });
 
     properties['Embroidery Name'] = embroiderySelected;
