@@ -105,7 +105,6 @@ class EmbroideryCustomizer extends Component {
     if (this.els.nameInput) {
       this.els.nameInput.addEventListener('input', this.handleNameInput.bind(this));
     }
-    console.log('els.checkbox::', this.els.checkbox);
     
     if (this.els.checkbox) {
       this.els.checkbox.addEventListener('change', this.handleCheckboxChange.bind(this));
