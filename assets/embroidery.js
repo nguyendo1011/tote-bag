@@ -33,7 +33,7 @@ class EmbroideryCustomizer extends Component {
   constructor() {
     super();
     this.position = this.dataset.position || EmbroideryCustomizer.POSITIONS.PDP;
-    this.productId = this.dataset.productId;
+    this.productId = this.dataset.variantId;
     this.basePrice = 0; // Will be set from data-additional-price
   }
 
