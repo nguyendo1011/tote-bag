@@ -4,9 +4,12 @@
   Accepts:
   - image: {Object} Image object
   - image_behavior: {String} Image behavior
+  - fetch_priority: {String} Fetch priority
+  - loading: {String} Loading attribute
+  - alt: {String} Alt attribute
 
   Usage:
-  {% render 'c-image', object: section.settings.image, image: image %}
+  {% render 'c-image', object: section.settings.image, image: image, loading: 'lazy', fetch_priority: 'low', alt: 'Image' %}
 {% enddoc %}
 
 {%- liquid
