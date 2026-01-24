@@ -421,7 +421,7 @@ class EmbroideryCustomizer extends Component {
    * This will be used by product-form to add embroidery products to cart
    */
   buildEmbroideryAddons() {
-    console.log('buildEmbroideryAddons::', this.els.checkbox?.checked);
+    console.log('buildEmbroideryAddons::', this.els);
     // Clear addons if embroidery is not enabled or not valid
     if (!this.els.checkbox?.checked || !this.isEmbroideryValid()) {
       delete window.embroideryAddons;
