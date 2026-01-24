@@ -1,7 +1,3 @@
-// Modern Accordion Custom Element
-// Uses global slideDown, slideUp, and throttle functions from global.js
-if (!customElements.get('c-accordion')) return;
-
 class AccordionElement extends HTMLElement {
   constructor() {
     super();
