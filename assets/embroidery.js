@@ -1,143 +1,371 @@
 /**
  * Embroidery Customization Component
  * Handles name input, font selection, color selection, and dynamic product options
- * Extends Component base class for DOMContentLoaded handling
+ * Supports different contexts: PDP (Product Detail Page) and drawer
+ *
+ * @example
+ * <c-embroidery data-position="pdp" data-product-id="123">
+ *   <!-- embroidery options -->
+ * </c-embroidery>
  */
 
 class EmbroideryCustomizer extends Component {
+  // Constants
+  static POSITIONS = {
+    PDP: 'pdp',
+    DRAWER: 'drawer'
+  };
+
+  static SELECTORS = {
+    NAME_INPUT: '[data-embroidery-name]',
+    CHECKBOX: '[data-embroidery-checkbox]',
+    NAME_LENGTH: '[data-name-length]',
+    PREVIEW_TEXT: '[data-preview-text]',
+    OPTION_FIELDSET: 'fieldset[data-option-name]',
+    RADIO_INPUT: 'input[type="radio"]',
+    CHECKED_RADIO: 'input[type="radio"]:checked'
+  };
+
   constructor() {
     super();
+    this.position = this.dataset.position || EmbroideryCustomizer.POSITIONS.PDP;
+    this.productId = this.dataset.productId;
   }
 
   onDOMReady() {
-    this.initializeElements();
-    this.initializeProductOptions();
-    this.initConfig();
-    this.bindEventListeners();
+    this.cacheElements();
+    this.setupEventListeners();
+    this.initializeState();
+
+    if (this.isDrawer()) {
+      this.loadSavedState();
+    }
   }
 
+  // ==================== Element Caching ====================
+
   /**
-   * Initialize configuration
+   * Cache all required DOM elements
    */
-  initConfig() {
-    this.config = {
-      name: this.nameInputEl.value,
-      checkbox: this.checkboxEl.checked,
-      productId: this.dataset.productId,
-      fontFamily: this.getSelectedValue('font'),
-      color: this.getSelectedValue('color'),
+  cacheElements() {
+    const { SELECTORS } = EmbroideryCustomizer;
+
+    // Input elements
+    this.els = {
+      nameInput: this.querySelector(SELECTORS.NAME_INPUT),
+      checkbox: this.querySelector(SELECTORS.CHECKBOX),
+      nameLength: this.querySelector(SELECTORS.NAME_LENGTH),
+      previewText: this.querySelector(SELECTORS.PREVIEW_TEXT),
+      optionFieldsets: this.querySelectorAll(SELECTORS.OPTION_FIELDSET)
     };
   }
 
+  // ==================== Position Helpers ====================
+
   /**
-   * Initialize all DOM element references
+   * Check if component is in PDP context
+   * @returns {boolean}
    */
-  initializeElements() {
-    // Input elements
-    this.nameInputEl = this.querySelector('[data-embroidery-name]');
-    this.checkboxEl = this.querySelector('[data-embroidery-checkbox]');
-
-    // Display elements
-    this.nameLengthEl = this.querySelector('[data-name-length]');
-    this.previewTextEl = this.querySelector('[data-preview-text]');
-
-    // Dynamic product options (colors, fonts, etc. from metafields) - using fieldsets
-    this.optionFieldsets = [...this.querySelectorAll('fieldset[data-option-name]')];
+  isPDP() {
+    return this.position === EmbroideryCustomizer.POSITIONS.PDP;
   }
 
   /**
-   * Bind all event listeners
+   * Check if component is in drawer context
+   * @returns {boolean}
    */
-  bindEventListeners() {
-    // Name input
-    if (this.nameInputEl) {
-      this.nameInputEl.addEventListener('input', this.handleNameInput.bind(this));
+  isDrawer() {
+    return this.position === EmbroideryCustomizer.POSITIONS.DRAWER;
+  }
+
+  // ==================== Event Listeners ====================
+
+  /**
+   * Setup all event listeners
+   */
+  setupEventListeners() {
+    if (this.els.nameInput) {
+      this.els.nameInput.addEventListener('input', this.handleNameInput.bind(this));
     }
 
-    // Checkbox toggle
-    if (this.checkboxEl) {
-      this.checkboxEl.addEventListener('change', this.handleCheckboxChange.bind(this));
+    if (this.els.checkbox) {
+      this.els.checkbox.addEventListener('change', this.handleCheckboxChange.bind(this));
     }
+
+    this.els.optionFieldsets.forEach(fieldset => {
+      fieldset.addEventListener('change', this.handleOptionChange.bind(this));
+    });
   }
+
+  // ==================== Event Handlers ====================
 
   /**
    * Handle name input changes
-   * @param {Event} event - Input event
+   * @param {Event} event
    */
   handleNameInput(event) {
     const value = event.target.value;
 
-    if (this.nameLengthEl) {
-      this.nameLengthEl.textContent = value.length;
+    this.updateCharacterCount(value.length);
+    this.updatePreview();
+
+    if (this.isPDP()) {
+      this.saveState();
+    }
+  }
+
+  /**
+   * Handle checkbox state changes
+   */
+  handleCheckboxChange() {
+    const isChecked = this.els.checkbox?.checked;
+
+    if (this.isPDP()) {
+      this.saveState();
+    }
+
+    this.dispatchEvent(new CustomEvent('embroidery:toggle', {
+      bubbles: true,
+      detail: { enabled: isChecked, position: this.position }
+    }));
+  }
+
+  /**
+   * Handle option changes (font, color, etc.)
+   * @param {Event} event
+   */
+  handleOptionChange(event) {
+    const fieldset = event.currentTarget;
+    const optionName = fieldset.dataset.optionName;
+    const selectedInput = fieldset.querySelector(EmbroideryCustomizer.SELECTORS.CHECKED_RADIO);
+
+    this.updatePreview();
+
+    if (this.isPDP()) {
+      this.saveState();
+    }
+
+    this.dispatchEvent(new CustomEvent('embroidery:option-change', {
+      bubbles: true,
+      detail: {
+        optionName,
+        value: selectedInput?.value,
+        position: this.position
+      }
+    }));
+  }
+
+  // ==================== State Management ====================
+
+  /**
+   * Initialize component state
+   */
+  initializeState() {
+    const state = this.getState();
+    this.updatePreview();
+
+    if (!state.name && this.els.nameLength) {
+      this.els.nameLength.textContent = '0';
+    }
+  }
+
+  /**
+   * Get current state
+   * @returns {Object} Current embroidery configuration
+   */
+  getState() {
+    return {
+      name: this.els.nameInput?.value || '',
+      enabled: this.els.checkbox?.checked || false,
+      productId: this.productId,
+      position: this.position,
+      options: this.getSelectedOptions()
+    };
+  }
+
+  /**
+   * Save state to sessionStorage (for PDP)
+   */
+  saveState() {
+    if (!this.productId) return;
+
+    const state = this.getState();
+    const key = `embroidery_${this.productId}`;
+
+    try {
+      sessionStorage.setItem(key, JSON.stringify(state));
+    } catch (error) {
+      console.warn('Failed to save embroidery state:', error);
+    }
+  }
+
+  /**
+   * Load saved state from sessionStorage (for drawer)
+   */
+  loadSavedState() {
+    if (!this.productId) return;
+
+    const key = `embroidery_${this.productId}`;
+
+    try {
+      const savedState = sessionStorage.getItem(key);
+      if (savedState) {
+        const state = JSON.parse(savedState);
+        this.applyState(state);
+      }
+    } catch (error) {
+      console.warn('Failed to load embroidery state:', error);
+    }
+  }
+
+  /**
+   * Apply state to component
+   * @param {Object} state - Saved state object
+   */
+  applyState(state) {
+    if (state.name && this.els.nameInput) {
+      this.els.nameInput.value = state.name;
+      this.updateCharacterCount(state.name.length);
+    }
+
+    if (state.enabled !== undefined && this.els.checkbox) {
+      this.els.checkbox.checked = state.enabled;
+    }
+
+    if (state.options) {
+      Object.entries(state.options).forEach(([optionName, value]) => {
+        const input = this.querySelector(
+          `input[data-option-name="${optionName}"][value="${value}"]`
+        );
+        if (input) {
+          input.checked = true;
+        }
+      });
     }
 
     this.updatePreview();
   }
 
+  // ==================== Option Helpers ====================
+
   /**
-   * Handle checkbox state changes
-   * @param {Event} event - Change event
+   * Get all selected options
+   * @returns {Object} Selected options with option names as keys
    */
-  handleCheckboxChange() {
-    this.updatePreview();
+  getSelectedOptions() {
+    const options = {};
+
+    this.els.optionFieldsets.forEach(fieldset => {
+      const optionName = fieldset.dataset.optionName;
+      const selectedInput = fieldset.querySelector(EmbroideryCustomizer.SELECTORS.CHECKED_RADIO);
+
+      if (selectedInput) {
+        options[optionName] = selectedInput.value;
+      }
+    });
+
+    return options;
+  }
+
+  /**
+   * Get selected option by name
+   * @param {string} optionName - Name of the option (e.g., 'font', 'color')
+   * @returns {HTMLInputElement|null} Selected radio input
+   */
+  getSelectedOption(optionName) {
+    return this.querySelector(
+      `input[data-option-name="${optionName}"]:checked`
+    );
+  }
+
+  // ==================== Preview Updates ====================
+
+  /**
+   * Update character count display
+   * @param {number} length - Current character count
+   */
+  updateCharacterCount(length) {
+    if (this.els.nameLength) {
+      this.els.nameLength.textContent = length;
+    }
   }
 
   /**
    * Update preview display with current selections
    */
   updatePreview() {
-    if (!this.previewTextEl) return;
+    if (!this.els.previewText) return;
 
-    const name = this.nameInputEl ? this.nameInputEl.value : '';
+    const name = this.els.nameInput?.value || '';
+    this.els.previewText.textContent = name;
 
-    this.previewTextEl.textContent = name;
-
-    // Get selected color from dynamic options
-    const selectedColorOption = this.querySelector('input[type="radio"][data-option-name="color"]:checked');
-    if (selectedColorOption) {
-      const colorHex = selectedColorOption.dataset.fontColor;
-      if (colorHex) {
-        this.previewTextEl.style.color = colorHex;
-      }
+    // Apply selected color
+    const colorOption = this.getSelectedOption('color');
+    if (colorOption?.dataset.fontColor) {
+      this.els.previewText.style.color = colorOption.dataset.fontColor;
     }
 
-    // Get selected font from dynamic options
-    const selectedFontOption = this.querySelector('input[type="radio"][data-option-name="font"]:checked');
-    if (selectedFontOption) {
-      const fontFamily = selectedFontOption.dataset.fontFamily;
-      if (fontFamily) {
-        this.previewTextEl.style.fontFamily = fontFamily;
+    // Apply selected font
+    const fontOption = this.getSelectedOption('font');
+    if (fontOption?.dataset.fontFamily) {
+      this.els.previewText.style.fontFamily = fontOption.dataset.fontFamily;
+    }
+  }
+
+  // ==================== Public API ====================
+
+  /**
+   * Reset component to initial state
+   */
+  reset() {
+    if (this.els.nameInput) {
+      this.els.nameInput.value = '';
+    }
+
+    if (this.els.checkbox) {
+      this.els.checkbox.checked = false;
+    }
+
+    this.els.optionFieldsets.forEach(fieldset => {
+      const firstInput = fieldset.querySelector(EmbroideryCustomizer.SELECTORS.RADIO_INPUT);
+      if (firstInput) {
+        firstInput.checked = true;
       }
+    });
+
+    this.updateCharacterCount(0);
+    this.updatePreview();
+
+    if (this.productId) {
+      sessionStorage.removeItem(`embroidery_${this.productId}`);
     }
   }
 
   /**
-   * Initialize dynamic product options (colors, sizes, etc.)
+   * Validate current configuration
+   * @returns {Object} Validation result
    */
-  initializeProductOptions() {
-    this.optionFieldsets.forEach(fieldsetEl => {
-      fieldsetEl.addEventListener('change', this.updatePreview.bind(this));
-    });
-  }
+  validate() {
+    const state = this.getState();
+    const errors = [];
 
-  /**
-   * Get all selected values from all fieldsets
-   * @returns {Object} Object with option names as keys and selected values
-   */
-  getAllSelectedValues() {
-    const selectedValues = {};
-
-    this.optionFieldsets.forEach(fieldsetEl => {
-      const optionName = fieldsetEl.dataset.optionName;
-      const selectedRadioEl = fieldsetEl.querySelector('input[type="radio"]:checked');
-
-      if (selectedRadioEl) {
-        selectedValues[optionName] = selectedRadioEl.value;
+    if (state.enabled) {
+      if (!state.name || state.name.trim().length === 0) {
+        errors.push('Name is required');
       }
-    });
 
-    console.log('All selected values:', selectedValues);
-    return selectedValues;
+      const requiredOptions = ['font', 'color'];
+      requiredOptions.forEach(optionName => {
+        if (!state.options[optionName]) {
+          errors.push(`${optionName} selection is required`);
+        }
+      });
+    }
+
+    return {
+      valid: errors.length === 0,
+      errors
+    };
   }
 }
 
