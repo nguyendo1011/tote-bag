@@ -198,14 +198,7 @@ class EmbroideryCustomizer extends Component {
       return;
     }
 
-    // Get current cart state
-    const cartData = await this.getCart();
-    if (!cartData) {
-      throw new Error('Failed to fetch cart');
-    }
-
-    const mainProduct = cartData.items.find(item => item.key === this.lineItemKey);
-    const quantity = mainProduct.quantity;
+    const quantity = parseInt(this.dataset.lineItemQuantity, 10) || 1;
 
     // Prepare cart change request (update main product properties)
     const changeBody = JSON.stringify({
