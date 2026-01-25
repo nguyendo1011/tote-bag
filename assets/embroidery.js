@@ -137,9 +137,13 @@ class EmbroideryCustomizer extends Component {
     // Prevent duplicate operations if already added to cart in drawer
     if (this.addedToCart && this.isDrawer()) return;
 
+    console.log("handleAddButtonClick::", event);
+
     if (event) event.preventDefault();
     this.setLoadingState(true);
+
     const isEnabled = this.els.checkbox?.checked;
+
     try {
       if (!isEnabled) return;
         await this.addEmbroideryToCart();
@@ -155,129 +159,71 @@ class EmbroideryCustomizer extends Component {
   }
 
   /**
-   * Get current cart data from Shopify Cart API
-   * @returns {Promise<Object|null>} Cart data or null on error
-   */
-  async getCart() {
-    try {
-      const response = await fetch(routes.cart_url, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        }
-      });
-
-      if (!response.ok) {
-        throw new Error(`Cart fetch failed: ${response.status} ${response.statusText}`);
-      }
-
-      return await response.json();
-    } catch (error) {
-      console.error('Error fetching cart:', error);
-      return null;
-    }
-  }
-
-  /**
    * Add embroidery customization to cart (drawer context)
    * Updates line item properties and adds embroidery addon items
    */
   async addEmbroideryToCart() {
-    // 1. Build embroidery addons data
+    if (!this.lineItemKey) {
+      console.error('Missing line item key');
+      return;
+    }
+
+    // Rebuild addons to ensure we have the latest data
     this.buildItemsAddons();
 
-    // 2. Check if embroidery addons exist
     if (!window.embroideryAddons) {
       console.error('Missing embroidery addons');
       return;
     }
 
-    console.log('Embroidery addons:', window.embroideryAddons);
-
-    // 3. Fetch current cart to get newest cart items
-    const cart = await this.getCart();
-    if (!cart) {
-      throw new Error('Failed to fetch cart');
-    }
-
-    console.log('Current cart items:', cart.items);
+    const quantity = parseInt(this.dataset.embroideryQuantity, 10) || 1;
     
-    // 4. Find main product by lineItemId in cart items
-    const mainProduct = cart.items.find(item => item.id === Number(this.lineItemId));
-    if (!mainProduct) {
-      throw new Error(`Main product not found in cart (lineItemId: ${this.lineItemId})`);
-    }
-
-    console.log('Main product found:', mainProduct);
-
-    const quantity = mainProduct.quantity;
-
-    // 5. Cart change: Update main product properties
+    // Prepare cart change request (update main product properties)
     const changeBody = JSON.stringify({
-      id: mainProduct.key,
-      quantity: quantity,
+      id: this.lineItemKey,
       properties: window.embroideryAddons.properties || {},
       sections: this.getSectionsToRender(),
       sections_url: window.location.pathname
     });
 
-    console.log('Updating cart with properties:', window.embroideryAddons.properties);
+    // Prepare cart add request (add all embroidery items: base product + options)
+    // Map items to use parent_line_key instead of parent_id for drawer context
+    const addItems = window.embroideryAddons.items?.map(item => ({
+      id: item.id,
+      quantity: quantity,
+      parent_line_key: this.lineItemKey
+    })) || [];
 
-    const changeRes = await fetch(routes.cart_change_url, {
-      ...fetchConfig(),
-      body: changeBody
+    const addBody = JSON.stringify({
+      items: addItems,
+      sections: this.getSectionsToRender(),
+      sections_url: window.location.pathname
     });
 
-    if (!changeRes.ok) {
-      throw new Error(`Cart update failed: ${changeRes.status} ${changeRes.statusText}`);
-    }
+    // Execute both requests in parallel using Promise.all
+    const [changeResponse, addResponse] = await Promise.all([
+      // 1. Cart change: Update main product (tote bag) properties
+      fetch(`${routes.cart_change_url}`, {
+        ...fetchConfig(),
+        body: changeBody
+      }).then(res => res.json()),
 
-    const changeResponse = await changeRes.json();
+      // 2. Cart add: Add all embroidery items (base product + color + font options)
+      addItems.length > 0
+        ? fetch(`${routes.cart_add_url}`, {
+            ...fetchConfig(),
+            body: addBody
+          }).then(res => res.json())
+        : Promise.resolve(null)
+    ]);
 
-    // Check for API errors in cart change response
+    // Check for errors
     if (changeResponse.status || changeResponse.errors) {
       throw new Error(changeResponse.description || changeResponse.errors || 'Failed to update properties');
     }
 
-    console.log('Cart properties updated successfully');
-
-    // 6. Cart add: Add embroidery items (base + options products)
-    let addResponse = null;
-
-    if (window.embroideryAddons.items && window.embroideryAddons.items.length > 0) {
-      // Prepare cart add request using main product key
-      const addItems = window.embroideryAddons.items.map(item => ({
-        id: item.id,
-        quantity: quantity,
-        parent_line_key: mainProduct.key
-      }));
-
-      const addBody = JSON.stringify({
-        items: addItems,
-        sections: this.getSectionsToRender(),
-        sections_url: window.location.pathname
-      });
-
-      console.log('Adding embroidery items to cart:', addItems);
-
-      const addRes = await fetch(routes.cart_add_url, {
-        ...fetchConfig(),
-        body: addBody
-      });
-
-      if (!addRes.ok) {
-        throw new Error(`Cart add failed: ${addRes.status} ${addRes.statusText}`);
-      }
-
-      addResponse = await addRes.json();
-
-      // Check for API errors in cart add response
-      if (addResponse.status || addResponse.errors) {
-        throw new Error(addResponse.description || addResponse.errors || 'Failed to add embroidery items');
-      }
-
-      console.log('Embroidery items added successfully');
+    if (addResponse && (addResponse.status || addResponse.errors)) {
+      throw new Error(addResponse.description || addResponse.errors || 'Failed to add embroidery items');
     }
 
     // Publish cart update event
@@ -559,6 +505,8 @@ class EmbroideryCustomizer extends Component {
   buildItemsAddons() {
     // Prevent changes if already added to cart in drawer
     if (this.addedToCart && this.isDrawer()) return;
+
+    console.log("buildItemsAddons::", this.els.checkbox?.checked, this.isEmbroideryValid());
 
     // Clear addons if embroidery is not enabled or not valid
     if (!this.els.checkbox?.checked || !this.isEmbroideryValid()) {
