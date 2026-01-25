@@ -198,40 +198,44 @@ class EmbroideryCustomizer extends Component {
       sections_url: window.location.pathname
     });
 
-    // Execute both cart operations in parallel
-    const [changeResponse, addResponse] = await Promise.all([
-      // 1. Update main product properties
-      fetch(routes.cart_change_url, {
-        ...fetchConfig(),
-        body: changeBody
-      }).then(res => {
-        if (!res.ok) {
-          throw new Error(`Cart update failed: ${res.status} ${res.statusText}`);
-        }
-        return res.json();
-      }),
+    // Execute cart operations sequentially: change first, then add
 
-      // 2. Add embroidery items (base product + options)
-      addItems.length > 0
-        ? fetch(routes.cart_add_url, {
-            ...fetchConfig(),
-            body: addBody
-          }).then(res => {
-            if (!res.ok) {
-              throw new Error(`Cart add failed: ${res.status} ${res.statusText}`);
-            }
-            return res.json();
-          })
-        : Promise.resolve(null)
-    ]);
+    // 1. Update main product properties first
+    const changeRes = await fetch(routes.cart_change_url, {
+      ...fetchConfig(),
+      body: changeBody
+    });
 
-    // Check for API errors in response
+    if (!changeRes.ok) {
+      throw new Error(`Cart update failed: ${changeRes.status} ${changeRes.statusText}`);
+    }
+
+    const changeResponse = await changeRes.json();
+
+    // Check for API errors in cart change response
     if (changeResponse.status || changeResponse.errors) {
       throw new Error(changeResponse.description || changeResponse.errors || 'Failed to update properties');
     }
 
-    if (addResponse && (addResponse.status || addResponse.errors)) {
-      throw new Error(addResponse.description || addResponse.errors || 'Failed to add embroidery items');
+    // 2. Add embroidery items (base product + options) after cart change succeeds
+    let addResponse = null;
+
+    if (addItems.length > 0) {
+      const addRes = await fetch(routes.cart_add_url, {
+        ...fetchConfig(),
+        body: addBody
+      });
+
+      if (!addRes.ok) {
+        throw new Error(`Cart add failed: ${addRes.status} ${addRes.statusText}`);
+      }
+
+      addResponse = await addRes.json();
+
+      // Check for API errors in cart add response
+      if (addResponse.status || addResponse.errors) {
+        throw new Error(addResponse.description || addResponse.errors || 'Failed to add embroidery items');
+      }
     }
 
     // Publish cart update event
