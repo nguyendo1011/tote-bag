@@ -160,11 +160,8 @@ class CartItems extends HTMLElement {
       sections_url: window.location.pathname,
     });
     this.enableLoading(line);
-    console.log('event.target::', event.target);
 
     const hasEmbroidery = event.target.hasAttribute('data-embroidery');
-    
-    console.log('hasEmbroidery::', hasEmbroidery);
     
     if (hasEmbroidery) {
       const addonsIds = event.target.dataset.addonsIds;
@@ -175,8 +172,6 @@ class CartItems extends HTMLElement {
       const updates = {
         [variantId]: quantity  // Main product line
       };
-      console.log('updates::', updates);
-      console.log('addonsIds::', addonsIds);
 
       addonsIds.split(',').forEach(id => {
         updates[id] = quantity;
@@ -188,7 +183,6 @@ class CartItems extends HTMLElement {
         sections_url: window.location.pathname,
       });
     }
-      console.log('body::', body);
       
     fetch(`${cart_api}`, { ...fetchConfig(), ...{ body } })
       .then((response) => {
