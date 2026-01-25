@@ -162,13 +162,17 @@
                               assign this_line_item_addons = ''
                               for cart_item in cart_items
                                 assign cart_item_parent = cart_item.parent_relationship.parent_key
+                                echo cart_item_parent
+                                echo item.key
+                                echo '<br>'
                                 if cart_item_parent == item.key
                                   assign this_line_item_addons = this_line_item_addons | append: cart_item.id | append: ','
                                 endif
+                                echo '<br>'
                               endfor
                             endif
-
                           %}
+
                           <h1>this_line_item_has_embroidery ::{{ this_line_item_has_embroidery }}</h1>
                           <h1>this_line_item_addons ::{{ this_line_item_addons }}</h1>
                         </td>
