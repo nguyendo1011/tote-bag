@@ -176,7 +176,10 @@ class EmbroideryCustomizer extends Component {
       return;
     }
 
+
+
     const quantity = parseInt(this.dataset.embroideryQuantity, 10) || 1;
+    console.log("this.dataset.quantity::", this);
     console.log("this.dataset.quantity::", this.dataset.embroideryQuantity);
     
 console.log("quantity::", quantity);
