@@ -173,10 +173,16 @@ class EmbroideryCustomizer extends Component {
       return;
     }
 
-    const quantity = parseInt(this.dataset.lineItemQuantity, 10) || 1;
+
+    const res = await fetch(`${routes.cart_url}`);
+    const cartData = await res.json(); 
+
+    const mainProduct = cartData.items.find(item => item.id === this.lineItemKey);
+    const quantity = mainProduct.quantity;
+
     // Prepare cart change request (update main product properties)
     const changeBody = JSON.stringify({
-      id: this.lineItemKey,
+      id: mainProduct.id,
       properties: window.embroideryAddons.properties || {},
       sections: this.getSectionsToRender(),
       sections_url: window.location.pathname
@@ -187,7 +193,7 @@ class EmbroideryCustomizer extends Component {
     const addItems = window.embroideryAddons.items?.map(item => ({
       id: item.id,
       quantity: quantity,
-      parent_line_key: this.lineItemKey
+      parent_line_key: mainProduct.key
     })) || [];
 
     const addBody = JSON.stringify({
