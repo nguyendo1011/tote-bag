@@ -140,7 +140,7 @@
                       %}
 
                       {% comment %} We dont want to render embroidery items in the cart drawer {% endcomment %}
-                      {% comment %} {% if item.product.tags contains 'Embroidery' %} {% continue %} {% endif %} {% endcomment %}
+                      {% if item.product.tags contains 'Embroidery' %} {% continue %} {% endif %}
 
                       <tr
                         id="CartDrawer-Item-{{ item.index | plus: 1 }}"
