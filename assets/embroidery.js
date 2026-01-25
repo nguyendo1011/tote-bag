@@ -134,8 +134,11 @@ class EmbroideryCustomizer extends Component {
    * @param {Event} event - Add button click event
    */
   async handleAddButtonClick(event = null) {
+    // Prevent duplicate operations if already added to cart in drawer
+    if (this.addedToCart && this.isDrawer()) return;
+
     console.log("handleAddButtonClick::", event);
-    
+
     if (event) event.preventDefault();
     this.setLoadingState(true);
 
@@ -254,12 +257,13 @@ console.log("quantity::", quantity);
    * @param {Event} event
    */
   handleNameInput(event) {
+    // Prevent changes if already added to cart in drawer
+    if (this.addedToCart && this.isDrawer()) return;
+
     const value = event.target.value;
 
     this.updateCharacterCount(value.length);
     this.updatePreview();
-
-    this.saveState();
   }
 
   /**
