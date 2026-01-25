@@ -204,7 +204,7 @@ class EmbroideryCustomizer extends Component {
       throw new Error('Failed to fetch cart');
     }
 
-    const mainProduct = cartData.items.find(item => item.id === this.lineItemKey);
+    const mainProduct = cartData.items.find(item => item.key === this.lineItemKey);
     const quantity = mainProduct.quantity;
 
     // Prepare cart change request (update main product properties)
