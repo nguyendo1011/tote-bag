@@ -25,7 +25,7 @@
   assign additional_price = base_product.price | default: 1500
   assign character_limit = product.metafields.custom.embroidery_letter_limit | default: 12
 
-  assign added_to_cart = added_to_cart | default: false
+  assign embroidery_existed_in_cart = embroidery_existed_in_cart | default: false
 %}
 
 {% comment %} Fast return if no embroidery options are available {% endcomment %}
@@ -138,7 +138,7 @@
 <c-embroidery 
   class="embroidery-{{ position }}" 
   data-position="{{ position }}"
-  data-added-to-cart="{{ added_to_cart }}"
+  data-added-to-cart="{{ embroidery_existed_in_cart }}"
   {% if position == 'drawer' and line_item %}
     data-line-item-id="{{ line_item.id }}"
     data-line-item-quantity="{{ line_item.quantity }}"
@@ -149,13 +149,13 @@
   <c-accordion class="tw-flex tw-flex-col tw-text-[#1E1E1E] {% if position == 'drawer' %}tw-p-[1.2rem] tw-text-sm{% else %}tw-p-[1.6rem] tw-gap-[2.4rem] md:tw-gap-[1.6rem] tw-text-sm md:tw-text-base{% endif %}
   tw-rounded tw-bg-[#F5F5F5] tw-leading-[1.6] max-w-[65rem]">
     <!-- Accordion Toggle/Header -->
-    <div class="embroidery-toggle" {% unless added_to_cart %}data-accordion-toggle{% endunless %}> 
-      <label class="tw-flex tw-items-center {% unless added_to_cart %}tw-cursor-pointer{% endunless %}">
+    <div class="embroidery-toggle" {% unless embroidery_existed_in_cart %}data-accordion-toggle{% endunless %}> 
+      <label class="tw-flex tw-items-center {% unless embroidery_existed_in_cart %}tw-cursor-pointer{% endunless %}">
         <input
           id="{{position}}-embroidery-trigger"
           type="checkbox"
-         {% unless added_to_cart %}data-accordion-trigger{% endunless %}
-         {% if added_to_cart %}checked{% endif %}
+         {% unless embroidery_existed_in_cart %}data-accordion-trigger{% endunless %}
+         {% if embroidery_existed_in_cart %}checked{% endif %}
           data-embroidery-checkbox
           class="tw-peer tw-sr-only"
         >
@@ -165,7 +165,7 @@
           width: 20,
           height: 20
         %}
-        {% unless added_to_cart %}
+        {% unless embroidery_existed_in_cart %}
           {% render 'c-icons',
             icon: 'unchecked',
             class: 'peer-checked:tw-hidden tw-block tw-cursor-pointer',
@@ -183,7 +183,7 @@
       </label>
     </div>
   
-  {% unless added_to_cart %}
+  {% unless embroidery_existed_in_cart %}
         <!-- Accordion Body (Collapsible Content) -->
         <div class="embroidery-body" data-accordion-body style="display: none;">
           <div class="tw-flex tw-flex-col tw-gap-6">

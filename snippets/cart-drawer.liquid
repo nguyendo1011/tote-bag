@@ -496,7 +496,7 @@
                         </td>
 
                         <td class="cart-item__embroidery tw-col-span-4 !tw-p-0" role="cell" headers="CartDrawer-ColumnEmbroidery">
-                          {% render 'embroidery', line_item: item, product: item.product, added_to_cart: has_embroidery, position: 'drawer' %}
+                          {% render 'embroidery', line_item: item, product: item.product, embroidery_existed_in_cart: has_embroidery, position: 'drawer' %}
                         </td>
                       </tr>
                     {%- endfor -%}
