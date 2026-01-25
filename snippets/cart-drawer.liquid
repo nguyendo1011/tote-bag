@@ -128,14 +128,14 @@
                         endif
 
                         if this_line_item_has_embroidery
-                          assign this_line_item_addons = ''
+                          assign this_line_item_addons_ids = ''
                           for cart_item in cart_items
                             assign cart_item_parent_key = cart_item.parent_relationship.parent.key
                             if cart_item_parent_key == item.key
-                              assign this_line_item_addons = this_line_item_addons | append: cart_item.id | append: ','
+                              assign this_line_item_addons_ids = this_line_item_addons_ids | append: cart_item.id | append: ','
                             endif
                           endfor
-                          assign this_line_item_addons = this_line_item_addons | replace_last: ',', ''
+                          assign this_line_item_addons_ids = this_line_item_addons_ids | replace_last: ',', ''
                         endif
                       %}
 
@@ -353,7 +353,7 @@
                                     {% endif %}
                                     {% if has_embroidery %}
                                       data-embroidery
-                                      data-addons-ids="{{ this_line_item_addons }}"
+                                      data-addons-ids="{{ this_line_item_addons_ids }}"
                                     {% endif %}
                                   >
                                   <button
