@@ -168,7 +168,10 @@ class CartItems extends HTMLElement {
     
     if (hasEmbroidery) {
       const this_addons = this.querySelector(`#CartDrawer-Item-${line} c-embroidery`);
+      console.log('this_addons::', this_addons);
       this_addons.buildItemsAddons();
+      console.log('window.embroideryAddons::', window.embroideryAddons);
+      
 
       const itemsAddons = window.embroideryAddons.items;
       cart_api = routes.cart_update_url;
