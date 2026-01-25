@@ -155,6 +155,8 @@ class CartItems extends HTMLElement {
     this.enableLoading(line);
 
     const hasEmbroidery = event.target.hasAttribute('data-embroidery');
+    console.log('hasEmbroidery::', hasEmbroidery);
+    
     if (hasEmbroidery) {
       this.querySelector('c-embroidery')?.handleAddButtonClick();
       return;
