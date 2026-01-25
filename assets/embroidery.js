@@ -176,7 +176,7 @@ class EmbroideryCustomizer extends Component {
       return;
     }
 
-    const quantity = parseInt(this.dataset.embroideryQuantity, 10) || 1;
+    const quantity = parseInt(this.lineItemQuantity, 10) || 1;
     
     // Prepare cart change request (update main product properties)
     const changeBody = JSON.stringify({
