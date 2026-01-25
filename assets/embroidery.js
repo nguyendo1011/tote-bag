@@ -139,7 +139,6 @@ class EmbroideryCustomizer extends Component {
 
     if (event) event.preventDefault();
     this.setLoadingState(true);
-return;
     const isEnabled = this.els.checkbox?.checked;
     try {
       if (!isEnabled) return;
