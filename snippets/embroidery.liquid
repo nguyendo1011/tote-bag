@@ -38,10 +38,13 @@
 
     for cart_item in cart.items
       assign cart_item_parent_key = cart_item.parent_relationship.parent.key
+      echo 'cart_item::'
+      echo cart_item_parent_key
+      echo ' === '
+      echo product.key
+      echo '<br>'
       if cart_item_parent_key == product.key
-        echo 'cart_item::'
-        echo cart_item.final_line_price
-        echo '<br>'
+       
         assign additional_price = additional_price | plus: cart_item.final_line_price
       endif
     endfor
