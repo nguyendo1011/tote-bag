@@ -34,11 +34,13 @@
   endif
 
   if this_line_item_has_embroidery
-    assign this_line_item_addons = cart_items | where: 'key', '46393995034755:5a3d4e8ecdb8692da88401e2bb106c4b' 
+    assign map_parent = cart_items | map: 'parent_relationship.parent_key'
+    assign this_line_item_addons = cart_items | where: 'parent_relationship.parent_key', line_item.key 
   endif
 %}
 
 <h1>this_line_item_addons ::{{ this_line_item_addons }}</h1>
+<h1>map_parent ::{{ map_parent }}</h1>
 
 {% comment %} Fast return if no embroidery options are available {% endcomment %}
 {% if store_has_embroidery_opts == false or product_has_embroidery_opts == false %}{% break %}{% endif %}
