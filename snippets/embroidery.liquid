@@ -34,7 +34,7 @@
   endif
 
   if this_line_item_has_embroidery
-    assign map_parent = cart_items | map: 'id' | map: 'parent_relationship' | where: 'parent_key', line_item.key
+    assign map_parent = cart_items | map: 'parent_relationship' | where: 'parent_key', line_item.key
   endif
 %}
 
