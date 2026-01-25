@@ -42,6 +42,9 @@ class EmbroideryCustomizer extends Component {
     this.lineItemId = this.dataset.lineItemId || null;
     this.lineItemKey = this.dataset.lineItemKey || null;
     this.lineItemQuantity = this.dataset.lineItemQuantity || 1;
+
+    // Flag to prevent duplicate operations in drawer
+    this.addedToCart = false;
   }
 
   onDOMReady() {
