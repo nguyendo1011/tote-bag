@@ -143,7 +143,7 @@ class EmbroideryCustomizer extends Component {
     this.setLoadingState(true);
 
     const isEnabled = this.els.checkbox?.checked;
-
+return;
     try {
       if (!isEnabled) return;
         await this.addEmbroideryToCart();
@@ -175,8 +175,6 @@ class EmbroideryCustomizer extends Component {
       console.error('Missing embroidery addons');
       return;
     }
-
-
 
     const quantity = parseInt(this.dataset.lineItemQuantity, 10) || 1;
     // Prepare cart change request (update main product properties)
