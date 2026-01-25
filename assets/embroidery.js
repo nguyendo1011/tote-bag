@@ -188,7 +188,6 @@ class EmbroideryCustomizer extends Component {
     });
 
     // Prepare cart add request (add all embroidery items: base product + options)
-    // Map items to use parent_line_key instead of parent_id for drawer context
     const addItems = window.embroideryAddons.items?.map(item => ({
       id: item.id,
       quantity: quantity,
@@ -203,11 +202,7 @@ class EmbroideryCustomizer extends Component {
 
     // Execute both requests in parallel using Promise.all
     const [changeResponse, addResponse] = await Promise.all([
-      // 1. Cart change: Update main product (tote bag) properties
-      fetch(`${routes.cart_change_url}`, {
-        ...fetchConfig(),
-        body: changeBody
-      }).then(res => res.json()),
+     
 
       // 2. Cart add: Add all embroidery items (base product + color + font options)
       addItems.length > 0
@@ -215,7 +210,15 @@ class EmbroideryCustomizer extends Component {
             ...fetchConfig(),
             body: addBody
           }).then(res => res.json())
-        : Promise.resolve(null)
+        : Promise.resolve(null),
+
+       // 1. Cart change: Update main product (tote bag) properties
+       setTimeout(() => {
+        fetch(`${routes.cart_change_url}`, {
+          ...fetchConfig(),
+          body: changeBody
+        }).then(res => res.json())
+       }, 200)
     ]);
 
     // Check for errors
