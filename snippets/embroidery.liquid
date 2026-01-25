@@ -33,7 +33,7 @@
   assign base_product = settings.embroidery_base_product
   assign additional_price = base_product.price | default: 1500
 
-  if position == 'drawer'
+  if position == 'drawer' and embroidery_existed_in_cart
     assign additional_price = 0
 
     for cart_item in cart.items
