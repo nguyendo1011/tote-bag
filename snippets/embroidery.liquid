@@ -1,72 +1,86 @@
 {% comment %}
   Embroidery Customization Component
   Usage: {% render 'embroidery', product: product, position: 'pdp' %}
+
+  Parameters:
+  - product: Product object
+  - position: 'pdp' or 'drawer'
+  - line_item: Cart line item (drawer only)
+  - embroidery_existed_in_cart: Boolean (drawer only)
 {% endcomment %}
 
 {% liquid
+  # Initialize variables
   assign position = position | default: 'pdp'
-  assign store_has_embroidery_opts = false
-  assign product_has_embroidery_opts = false
+  assign embroidery_existed_in_cart = embroidery_existed_in_cart | default: false
+  assign embroidery_options = line_item.properties['Embroidery Name'] | default: ''
 
-  # Check if setup collection embroidery and has products
+  # Check store settings
   assign embroidery_products = settings.embroidery_products
+  assign store_has_embroidery_opts = false
   if embroidery_products.size > 0
     assign store_has_embroidery_opts = true
   endif
 
-  # Check if product has embroidery options
+  # Check product metafields
   assign product_embroidery_mtf = product.metafields.custom.embroidery_options.value
+  assign product_has_embroidery_opts = false
   if product_embroidery_mtf.size > 0
     assign product_has_embroidery_opts = true
   endif
 
-  # Get other information
+  # Get configuration
   assign base_product = settings.embroidery_base_product
   assign additional_price = base_product.price | default: 1500
   assign character_limit = product.metafields.custom.embroidery_letter_limit | default: 12
-
-  assign embroidery_existed_in_cart = embroidery_existed_in_cart | default: false
-  assign embroidery_options = line_item.properties['Embroidery Name'] | default: ''
 %}
 
-{% comment %} Fast return if no embroidery options are available {% endcomment %}
-{% if store_has_embroidery_opts == false or product_has_embroidery_opts == false %}{% break %}{% endif %}
+{% comment %} Early return if no embroidery options available {% endcomment %}
+{% if store_has_embroidery_opts == false or product_has_embroidery_opts == false %}
+  {% break %}
+{% endif %}
 
-{% capture options %}
-  {% assign skip_options = '' %}
+{% comment %} ============================================
+  CAPTURE: Name Input Field
+============================================ {% endcomment %}
+{% capture name_input_field %}
+  <div class="tw-flex tw-flex-col tw-gap-2">
+    <p class="tw-flex tw-items-center">
+      {{ "products.product.embroidery.settings.add_character_limit" | t: character_limit: character_limit }}
+      <span class="tw-inline-block tw-text-gray-500 tw-font-normal tw-ml-auto tw-text-sm">
+        (<span data-name-length>0</span>/<span data-name-max>{{ character_limit }}</span>)
+      </span>
+    </p>
+    <input
+      type="text"
+      id="{{ position }}-embroidery-name"
+      data-embroidery-name
+      data-option-price="{{ base_product.price }}"
+      data-variant-id="{{ base_product.selected_or_first_available_variant.id }}"
+      maxlength="{{ character_limit }}"
+      placeholder="{{ 'products.product.embroidery.settings.example_name' | t }}"
+      class="tw-w-full tw-px-4 tw-py-2 tw-text-base tw-border tw-border-gray-400 tw-rounded-[4px]"
+    >
+  </div>
+{% endcapture %}
+
+{% comment %} ============================================
+  CAPTURE: Embroidery Options (Color, Font, etc.)
+============================================ {% endcomment %}
+{% capture embroidery_options_html %}
+  {% assign processed_options = '' %}
+
   {% for embroidery_product in product_embroidery_mtf %}
-
-    {% comment %} Capture the heading text {% endcomment %}
-    {% if forloop.first and skip_options == '' %}
-      {% capture heading_text %}
-        <div class="tw-flex tw-flex-col tw-gap-2">
-          <p class="tw-flex tw-items-center">{{ "products.product.embroidery.settings.add_character_limit" | t: character_limit: character_limit }}
-            <span class="tw-inline-block tw-text-gray-500 tw-font-normal tw-ml-auto tw-text-sm">
-            (<span data-name-length>0</span>/<span data-name-max>12</span>)
-          </span></p>
-          <input
-            type="text"
-            id="embroidery-name"
-            data-embroidery-name
-            data-option-price="{{ base_product.price }}"
-            data-variant-id="{{ base_product.selected_or_first_available_variant.id }}"
-            maxlength="{{ character_limit }}"
-            placeholder="{{ "products.product.embroidery.settings.example_name" | t }}"
-            class="tw-w-full tw-px-4 tw-py-2 tw-text-base tw-border tw-border-gray-400 tw-rounded-[4px]"
-          >
-           
-        </div>
-      {% endcapture %}
-    {% endif %}
-
     {% for option in embroidery_product.product.options_with_values %}
-      {% if skip_options contains option.name %}
+      {% comment %} Skip if already processed {% endcomment %}
+      {% if processed_options contains option.name %}
         {% continue %}
       {% endif %}
+      {% assign processed_options = processed_options | append: option.name | append: ',' %}
 
-      {% assign skip_options = skip_options | append: option.name | append: ',' %}
-
+      {% comment %} Mark color swatch for extraction {% endcomment %}
       {% if option.name contains 'Color' %}<!-- Color Swatch Start -->{% endif %}
+
       <fieldset class="c-swatch" data-option-name="{{ option.name | handleize }}" data-product-id="{{ product.id }}">
         <legend class="c-swatch__legend">
           {{ "products.product.embroidery.settings.choose_name" | t: name: option.name }}
@@ -74,9 +88,10 @@
 
         <div class="c-swatch__item">
           {% for value in option.values %}
+            {% comment %} Find matching variant and price {% endcomment %}
             {% assign current_variant = blank %}
-            {% comment %} Find variant price for this option value {% endcomment %}
             {% assign variant_price = 0 %}
+
             {% for variant in embroidery_product.product.variants %}
               {% if variant.option1 == value or variant.option2 == value or variant.option3 == value %}
                 {% assign current_variant = variant %}
@@ -85,15 +100,20 @@
               {% endif %}
             {% endfor %}
 
+            {% comment %} Generate unique IDs {% endcomment %}
+            {% assign option_id = position | append: '-embroidery-' | append: product.id | append: '-' | append: option.name | handleize | append: '-' | append: value | handleize %}
+            {% assign option_name_attr = position | append: '-embroidery-' | append: product.id | append: '-' | append: option.name | handleize %}
+
+            {% comment %} Render Color Swatch {% endcomment %}
             {% if option.name == 'Color' %}
               {% assign color_pattern = value | handleize %}
               {% assign color_value = shop.metaobjects['shopify--color-pattern'][color_pattern].color %}
 
-              <label for="{{position}}-embroidery-{{ product.id }}-{{ option.name | handleize }}-{{ value | handleize }}" class="c-swatch__label c-swatch__label--color">
+              <label for="{{ option_id }}" class="c-swatch__label c-swatch__label--color">
                 <input
                   type="radio"
-                  id="{{position}}-embroidery-{{ product.id }}-{{ option.name | handleize }}-{{ value | handleize }}"
-                  name="{{position}}-embroidery-{{ product.id }}-{{ option.name | handleize }}"
+                  id="{{ option_id }}"
+                  name="{{ option_name_attr }}"
                   value="{{ value }}"
                   data-option-name="{{ option.name | handleize }}"
                   data-option-value="{{ color_value }}"
@@ -105,26 +125,28 @@
                 <span class="text">{{ value }}</span>
               </label>
 
+            {% comment %} Render Font or Other Options {% endcomment %}
             {% else %}
-
-              <label for="{{position}}-embroidery-{{ product.id }}-{{ option.name | handleize }}-{{ value | handleize }}" class="c-swatch__label">
+              <label for="{{ option_id }}" class="c-swatch__label">
                 <input
                   type="radio"
-                  id="{{position}}-embroidery-{{ product.id }}-{{ option.name | handleize }}-{{ value | handleize }}"
-                  name="{{position}}-embroidery-{{ product.id }}-{{ option.name | handleize }}"
+                  id="{{ option_id }}"
+                  name="{{ option_name_attr }}"
                   value="{{ value }}"
                   data-option-name="{{ option.name | handleize }}"
                   data-option-value="{{ value }}"
                   data-option-price="{{ variant_price }}"
                   data-variant-id="{{ current_variant.id }}"
                   class="tw-sr-only peer"
-
-                  
                 >
-                <span class="text" 
-                {% if option.name contains 'font' or option.name contains 'Font' %}
-                  style="font-family: {{ value }};"
-                {% endif %}>{{ value }}</span>
+                <span
+                  class="text"
+                  {% if option.name contains 'font' or option.name contains 'Font' %}
+                    style="font-family: {{ value }};"
+                  {% endif %}
+                >
+                  {{ value }}
+                </span>
               </label>
             {% endif %}
           {% endfor %}
@@ -136,36 +158,59 @@
   {% endfor %}
 {% endcapture %}
 
-<c-embroidery 
-  class="embroidery-{{ position }}" 
+{% comment %} ============================================
+  EXTRACT: Organize options (Color first, then others)
+============================================ {% endcomment %}
+{% assign color_swatch = embroidery_options_html | split: '<!-- Color Swatch Start -->' | last | split: '<!-- Color Swatch End -->' | first %}
+{% assign other_options_before = embroidery_options_html | split: '<!-- Color Swatch Start -->' | first %}
+{% assign other_options_after = embroidery_options_html | split: '<!-- Color Swatch End -->' | last %}
+
+{% comment %} ============================================
+  MAIN COMPONENT
+============================================ {% endcomment %}
+<c-embroidery
+  class="embroidery-{{ position }}"
   data-position="{{ position }}"
   data-added-to-cart="{{ embroidery_existed_in_cart }}"
+  data-variant-id="{{ product.selected_or_first_available_variant.id }}"
   {% if position == 'drawer' and line_item %}
     data-line-item-id="{{ line_item.id }}"
     data-line-item-quantity="{{ line_item.quantity }}"
     data-line-item-key="{{ line_item.key }}"
   {% endif %}
-    
-  data-variant-id="{{ product.selected_or_first_available_variant.id }}">
-  <c-accordion class="tw-flex tw-flex-col tw-text-[#1E1E1E] {% if position == 'drawer' %}tw-p-[1.2rem] tw-text-sm{% else %}tw-p-[1.6rem] tw-gap-[2.4rem] md:tw-gap-[1.6rem] tw-text-sm md:tw-text-base{% endif %}
-  tw-rounded tw-bg-[#F5F5F5] tw-leading-[1.6] max-w-[65rem]">
-    <!-- Accordion Toggle/Header -->
-    <div class="embroidery-toggle" {% unless embroidery_existed_in_cart %}data-accordion-toggle{% endunless %}> 
+>
+  <c-accordion
+    class="tw-flex tw-flex-col tw-text-[#1E1E1E] tw-rounded tw-bg-[#F5F5F5] tw-leading-[1.6] max-w-[65rem]
+    {% if position == 'drawer' %}
+      tw-p-[1.2rem] tw-text-sm
+    {% else %}
+      tw-p-[1.6rem] tw-gap-[2.4rem] md:tw-gap-[1.6rem] tw-text-sm md:tw-text-base
+    {% endif %}"
+  >
+    {% comment %} ========== Accordion Header ========== {% endcomment %}
+    <div
+      class="embroidery-toggle"
+      {% unless embroidery_existed_in_cart %}data-accordion-toggle{% endunless %}
+    >
       <label class="tw-flex tw-items-center {% if embroidery_existed_in_cart %}tw-pointer-events-none{% else %}tw-cursor-pointer{% endif %}">
         <input
-          id="{{position}}-embroidery-trigger"
+          id="{{ position }}-embroidery-trigger"
           type="checkbox"
-         {% unless embroidery_existed_in_cart %}data-accordion-trigger{% endunless %}
-         {% if embroidery_existed_in_cart %}checked{% endif %}
           data-embroidery-checkbox
+          {% unless embroidery_existed_in_cart %}data-accordion-trigger{% endunless %}
+          {% if embroidery_existed_in_cart %}checked{% endif %}
           class="tw-peer tw-sr-only"
         >
+
+        {% comment %} Checked Icon {% endcomment %}
         {% render 'c-icons',
           icon: 'checked',
           class: 'peer-checked:tw-block tw-hidden tw-cursor-pointer',
           width: 20,
           height: 20
         %}
+
+        {% comment %} Unchecked Icon (only if not in cart) {% endcomment %}
         {% unless embroidery_existed_in_cart %}
           {% render 'c-icons',
             icon: 'unchecked',
@@ -174,77 +219,69 @@
             height: 20
           %}
         {% endunless %}
-  
+
         <span class="tw-ml-[0.8rem] tw-flex-1 tw-text-xs md:tw-text-base">
           {{ 'products.product.embroidery.settings.add_heading' | t }}
         </span>
+
         <span class="tw-text-sm" data-embroidery-price data-additional-price="{{ additional_price }}">
           +{{ additional_price | money }}
         </span>
       </label>
 
+      {% comment %} Show embroidery details if already in cart {% endcomment %}
       {% if embroidery_existed_in_cart and embroidery_options != blank %}
-        <span class="tw-text-[1.2rem] tw-leading-[1.9rem] tw-mt-[0.8rem]">
+        <span class="tw-text-xs tw-mt-[0.8rem]">
           Embroidered Name: {{ embroidery_options }}
         </span>
       {% endif %}
     </div>
-  
-  {% unless embroidery_existed_in_cart %}
-        <!-- Accordion Body (Collapsible Content) -->
-        <div class="embroidery-body" data-accordion-body style="display: none;">
-          <div class="tw-flex tw-flex-col tw-gap-6">
-            <div class="tw-flex tw-gap-[4rem] tw-flex-wrap tw-justify-between">
-              <div class="tw-flex tw-flex-col tw-gap-[2.4rem] tw-flex-[1_1_35rem]">
-                {{ heading_text }}
-      
-                {% comment %} Extract color swatch (between Color Swatch Start and End markers) {% endcomment %}
-                {% assign color_swatch = options | split: '<!-- Color Swatch Start -->' | last | split: '<!-- Color Swatch End -->' | first %}
-      
-                {% comment %} Extract options before color swatch {% endcomment %}
-                {% assign before_color = options | split: '<!-- Color Swatch Start -->' | first %}
-      
-                {% comment %} Extract options after color swatch {% endcomment %}
-                {% assign after_color = options | split: '<!-- Color Swatch End -->' | last %}
-      
-                {% comment %} Render in order: Color swatch first, then other options {% endcomment %}
-                {{ color_swatch }}
-                {{ before_color }}
-                {{ after_color }}
-      
-              </div>
-              <div class="tw-relative tw-max-w-[22.8rem] tw-h-fit">
-                {% render 'c-image', image: product.featured_media, loading: 'lazy', fetch_priority: 'low' %}
-                <p
-                  class="tw-text-[66.66%] tw-font-medium tw-text-center tw-absolute tw-left-1/2 tw-top-1/2 tw-transform -tw-translate-x-1/2 tw-translate-y-1/2"
-                  data-preview-text
-                ></p>
-              </div>
+
+    {% comment %} ========== Accordion Body ========== {% endcomment %}
+    {% unless embroidery_existed_in_cart %}
+      <div class="embroidery-body" data-accordion-body style="display: none;">
+        <div class="tw-flex tw-flex-col tw-gap-6">
+          <div class="tw-flex tw-gap-[4rem] tw-flex-wrap tw-justify-between">
+            {% comment %} Left Column: Form Inputs {% endcomment %}
+            <div class="tw-flex tw-flex-col tw-gap-[2.4rem] tw-flex-[1_1_35rem]">
+              {{ name_input_field }}
+              {{ color_swatch }}
+              {{ other_options_before }}
+              {{ other_options_after }}
             </div>
-            <span class="tw-text-sm">{{ "products.product.embroidery.settings.warning" | t }}</span>
-    
-            {% if position == 'drawer' %}
-              <button
-                id="{{position}}-embroidery-submit-button"
-                type="submit"
-                name="add"
-                class="button button--full-width button--primary"
-              >
-                <span>
-                    {{ 'products.product.update' | t }}
-                </span>
-                {%- render 'loading-spinner' -%}
-              </button>
-            {% endif %}
-            
+
+            {% comment %} Right Column: Preview {% endcomment %}
+            <div class="tw-relative tw-max-w-[22.8rem] tw-h-fit">
+              {% render 'c-image', image: product.featured_media, loading: 'lazy', fetch_priority: 'low' %}
+              <p
+                class="tw-text-[66.66%] tw-font-medium tw-text-center tw-absolute tw-left-1/2 tw-top-1/2 tw-transform -tw-translate-x-1/2 tw-translate-y-1/2"
+                data-preview-text
+              ></p>
+            </div>
           </div>
+
+          {% comment %} Warning Text {% endcomment %}
+          <span class="tw-text-sm">
+            {{ "products.product.embroidery.settings.warning" | t }}
+          </span>
+
+          {% comment %} Drawer: Update Button {% endcomment %}
+          {% if position == 'drawer' %}
+            <button
+              id="{{ position }}-embroidery-submit-button"
+              type="submit"
+              name="add"
+              class="button button--full-width button--primary"
+            >
+              <span>{{ 'products.product.update' | t }}</span>
+              {% render 'loading-spinner' %}
+            </button>
+          {% endif %}
         </div>
+      </div>
     {% endunless %}
   </c-accordion>
 </c-embroidery>
 
-
 <script src="{{ 'accordion.js' | asset_url }}" defer></script>
 <script src="{{ 'embroidery.js' | asset_url }}" defer></script>
-
-
