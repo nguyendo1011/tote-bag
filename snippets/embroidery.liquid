@@ -40,7 +40,7 @@
 %}
 
 <h1>this_line_item_addons ::{{ this_line_item_addons }}</h1>
-<h1>map_parent ::{{ map_parent }}</h1>
+<h1>map_parent ::{{ map_parent | json }}</h1>
 
 {% comment %} Fast return if no embroidery options are available {% endcomment %}
 {% if store_has_embroidery_opts == false or product_has_embroidery_opts == false %}{% break %}{% endif %}
