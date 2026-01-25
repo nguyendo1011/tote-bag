@@ -229,24 +229,34 @@ class EmbroideryCustomizer extends Component {
       sections_url: window.location.pathname
     });
 
-    // Execute both requests in parallel using Promise.all
+    // Execute both cart operations in parallel
     const [changeResponse, addResponse] = await Promise.all([
-      // 1. Cart change: Update main product (tote bag) properties
-      fetch(`${routes.cart_change_url}`, {
+      // 1. Update main product properties
+      fetch(routes.cart_change_url, {
         ...fetchConfig(),
         body: changeBody
-      }).then(res => res.json()),
+      }).then(res => {
+        if (!res.ok) {
+          throw new Error(`Cart update failed: ${res.status} ${res.statusText}`);
+        }
+        return res.json();
+      }),
 
-      // 2. Cart add: Add all embroidery items (base product + color + font options)
+      // 2. Add embroidery items (base product + options)
       addItems.length > 0
-        ? fetch(`${routes.cart_add_url}`, {
+        ? fetch(routes.cart_add_url, {
             ...fetchConfig(),
             body: addBody
-          }).then(res => res.json())
+          }).then(res => {
+            if (!res.ok) {
+              throw new Error(`Cart add failed: ${res.status} ${res.statusText}`);
+            }
+            return res.json();
+          })
         : Promise.resolve(null)
     ]);
 
-    // Check for errors
+    // Check for API errors in response
     if (changeResponse.status || changeResponse.errors) {
       throw new Error(changeResponse.description || changeResponse.errors || 'Failed to update properties');
     }
