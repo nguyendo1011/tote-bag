@@ -233,6 +233,11 @@ console.log("quantity::", quantity);
       cartData: addResponse || changeResponse
     });
 
+    // Mark as added to cart (drawer context only)
+    if (this.isDrawer()) {
+      this.addedToCart = true;
+    }
+
     // Clean up embroidery addons after successful add
     delete window.embroideryAddons;
   }
