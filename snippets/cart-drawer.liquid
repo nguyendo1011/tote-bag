@@ -132,7 +132,8 @@
                           for cart_item in cart_items
                             assign cart_item_parent_key = cart_item.parent_relationship.parent.key
                             if cart_item_parent_key == item.key
-                              assign this_line_item_addons = this_line_item_addons | append: cart_item.id | append: ','
+                              assign addon_line_index = cart_item.index | plus: 1
+                              assign this_line_item_addons = this_line_item_addons | append: addon_line_index | append: ','
                             endif
                           endfor
                           assign this_line_item_addons = this_line_item_addons | replace_last: ',', ''
