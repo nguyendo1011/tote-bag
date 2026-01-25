@@ -399,6 +399,9 @@ console.log("quantity::", quantity);
    * Update preview display with current selections
    */
   updatePreview() {
+    // Prevent changes if already added to cart in drawer
+    if (this.addedToCart && this.isDrawer()) return;
+
     if (!this.els.previewText) return;
 
     const name = this.els.nameInput?.value || '';
