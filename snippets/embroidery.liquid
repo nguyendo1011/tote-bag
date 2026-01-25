@@ -151,7 +151,7 @@
   tw-rounded tw-bg-[#F5F5F5] tw-leading-[1.6] max-w-[65rem]">
     <!-- Accordion Toggle/Header -->
     <div class="embroidery-toggle" {% unless embroidery_existed_in_cart %}data-accordion-toggle{% endunless %}> 
-      <label class="tw-flex tw-items-center {% unless embroidery_existed_in_cart %}tw-cursor-pointer{% endunless %}">
+      <label class="tw-flex tw-items-center {% if embroidery_existed_in_cart %}tw-pointer-events-none{% else %}tw-cursor-pointer{% endif %}">
         <input
           id="{{position}}-embroidery-trigger"
           type="checkbox"
