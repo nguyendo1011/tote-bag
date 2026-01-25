@@ -26,6 +26,7 @@
   assign character_limit = product.metafields.custom.embroidery_letter_limit | default: 12
 
   assign embroidery_existed_in_cart = embroidery_existed_in_cart | default: false
+  assign embroidery_options = line_item.properties['Embroidery Options'] | default: ''
 %}
 
 {% comment %} Fast return if no embroidery options are available {% endcomment %}
@@ -181,6 +182,12 @@
           +{{ additional_price | money }}
         </span>
       </label>
+
+      {% if embroidery_existed_in_cart and embroidery_options != blank %}
+        <span class="tw-text-[1.2rem] tw-leading-[1.9rem] tw-mt-[0.8rem]">
+          {{ embroidery_options }}
+        </span>
+      {% endif %}
     </div>
   
   {% unless embroidery_existed_in_cart %}
