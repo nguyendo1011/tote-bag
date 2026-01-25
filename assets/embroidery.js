@@ -178,12 +178,7 @@ class EmbroideryCustomizer extends Component {
 
 
 
-    const quantity = parseInt(this.dataset.embroideryQuantity, 10) || 1;
-    console.log("this.dataset.quantity::", this);
-    console.log("this.dataset.quantity::", this.dataset.embroideryQuantity);
-    
-console.log("quantity::", quantity);
-
+    const quantity = parseInt(this.dataset.lineItemQuantity, 10) || 1;
     // Prepare cart change request (update main product properties)
     const changeBody = JSON.stringify({
       id: this.lineItemKey,
