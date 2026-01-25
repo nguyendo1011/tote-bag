@@ -153,6 +153,7 @@ class CartItems extends HTMLElement {
     const cartPerformanceUpdateMarker = CartPerformance.createStartingMarker(`${eventTarget}:user-action`);
 
     this.enableLoading(line);
+    console.log('event.target::', event.target);
 
     const hasEmbroidery = event.target.hasAttribute('data-embroidery');
     console.log('hasEmbroidery::', hasEmbroidery);
