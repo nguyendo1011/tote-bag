@@ -139,7 +139,7 @@ class EmbroideryCustomizer extends Component {
 
     if (event) event.preventDefault();
     this.setLoadingState(true);
-
+return;
     const isEnabled = this.els.checkbox?.checked;
     try {
       if (!isEnabled) return;
@@ -152,31 +152,6 @@ class EmbroideryCustomizer extends Component {
       });
     } finally {
       this.setLoadingState(false);
-    }
-  }
-
-  /**
-   * Get current cart data from Shopify Cart API
-   * @returns {Promise<Object|null>} Cart data or null on error
-   */
-  async getCart() {
-    try {
-      const response = await fetch(routes.cart_url, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        }
-      });
-
-      if (!response.ok) {
-        throw new Error(`Cart fetch failed: ${response.status} ${response.statusText}`);
-      }
-
-      return await response.json();
-    } catch (error) {
-      console.error('Error fetching cart:', error);
-      return null;
     }
   }
 
