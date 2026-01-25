@@ -137,13 +137,10 @@ class EmbroideryCustomizer extends Component {
     // Prevent duplicate operations if already added to cart in drawer
     if (this.addedToCart && this.isDrawer()) return;
 
-    console.log("handleAddButtonClick::", event);
-
     if (event) event.preventDefault();
     this.setLoadingState(true);
 
     const isEnabled = this.els.checkbox?.checked;
-return;
     try {
       if (!isEnabled) return;
         await this.addEmbroideryToCart();
