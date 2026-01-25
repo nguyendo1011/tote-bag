@@ -161,7 +161,7 @@
                             if this_line_item_has_embroidery
                               assign this_line_item_addons = ''
                               for cart_item in cart_items
-                                assign cart_item_parent = cart_item.parent_relationship.parent_key
+                                assign cart_item_parent = cart_item.parent_relationship['parent_key']
                                 echo 'start::'
 
                                 echo cart_item.title
