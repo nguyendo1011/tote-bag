@@ -48,7 +48,7 @@ class EmbroideryCustomizer extends Component {
   }
 
   onDOMReady() {
-    this.cacheElements();
+    this.getElements();
     this.setupEventListeners();
   }
 
@@ -57,7 +57,7 @@ class EmbroideryCustomizer extends Component {
   /**
    * Cache all required DOM elements
    */
-  cacheElements() {
+  getElements() {
     const { SELECTORS } = EmbroideryCustomizer;
 
     const accordion = this.querySelector(SELECTORS.ACCORDION);
