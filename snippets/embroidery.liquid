@@ -255,7 +255,14 @@
         <div class="tw-flex tw-flex-col tw-gap-6">
           <div class="tw-flex tw-gap-[4rem] tw-flex-wrap tw-justify-between">
             {% comment %} Left Column: Form Inputs {% endcomment %}
-            <div class="tw-flex tw-flex-col tw-gap-[2.4rem] tw-flex-[1_1_35rem]">
+            <div class="
+              tw-flex tw-flex-col tw-gap-[2.4rem] tw-flex-[1_1_35rem]
+              {% if position == 'drawer' %}
+                tw-gap-[1.6rem]
+              {% else %}
+                tw-gap-[2.4rem]
+              {% endif %}
+            ">
               {{ name_input_field }}
               {{ color_swatch }}
               {{ other_options_before }}
