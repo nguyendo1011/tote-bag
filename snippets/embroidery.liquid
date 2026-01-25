@@ -44,6 +44,11 @@
     endfor
   endif
 
+  # Case block in drawer but not has embroidery in cart
+  if position == 'drawer' and embroidery_existed_in_cart == false
+    assign additional_price = line_item.quantity | times: base_product.price
+  endif
+
   assign character_limit = product.metafields.custom.embroidery_letter_limit | default: 12
 %}
 
