@@ -164,12 +164,14 @@
           width: 20,
           height: 20
         %}
-        {% render 'c-icons',
-          icon: 'unchecked',
-          class: 'peer-checked:tw-hidden tw-block tw-cursor-pointer',
-          width: 20,
-          height: 20
-        %}
+        {% unless added_to_cart %}
+          {% render 'c-icons',
+            icon: 'unchecked',
+            class: 'peer-checked:tw-hidden tw-block tw-cursor-pointer',
+            width: 20,
+            height: 20
+          %}
+        {% endunless %}
   
         <span class="tw-ml-[0.8rem] tw-flex-1">
           {{ 'products.product.embroidery.settings.add_heading' | t }}
