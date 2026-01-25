@@ -119,6 +119,25 @@
                   <tbody role="rowgroup">
                     {%- for item in cart.items -%}
 
+                      {% liquid
+                        # Check if line item has embroidery options
+                        assign cart_items = cart.items
+                        assign this_line_item_has_embroidery = false
+                        if item.properties['Embroidery Name'] != blank
+                          assign this_line_item_has_embroidery = true
+                        endif
+
+                        if this_line_item_has_embroidery
+                          assign this_line_item_addons = ''
+                          for cart_item in cart_items
+                            assign cart_item_parent_key = cart_item.parent_relationship.parent.key
+                            if cart_item_parent_key == item.key
+                              assign this_line_item_addons = this_line_item_addons | append: cart_item.id | append: ','
+                            endif
+                          endfor
+                        endif
+                      %}
+
                       {% comment %} We dont want to render embroidery items in the cart drawer {% endcomment %}
                       {% if item.product.tags contains 'Embroidery' %} {% continue %} {% endif %}
 
@@ -149,34 +168,7 @@
                           {% endif %}
                         </td>
 
-                        <td>
-                          {% liquid
-                            # Check if line item has embroidery options
-                            assign cart_items = cart.items
-                            assign this_line_item_has_embroidery = false
-                            if item.properties['Embroidery Name'] != blank
-                              assign this_line_item_has_embroidery = true
-                            endif
-
-                            if this_line_item_has_embroidery
-                              assign this_line_item_addons = ''
-                              for cart_item in cart_items
-                                assign cart_item_parent_key = cart_item.parent_relationship.parent.key
-                                echo 'start::'
-                                echo cart_item_parent_key
-                                echo item.key
-                                echo '<br>'
-                                if cart_item_parent_key == item.key
-                                  assign this_line_item_addons = this_line_item_addons | append: cart_item.id | append: ','
-                                endif
-                                echo '<br>'
-                              endfor
-                            endif
-                          %}
-
-                          <h1>this_line_item_has_embroidery ::{{ this_line_item_has_embroidery }}</h1>
-                          <h1>this_line_item_addons ::{{ this_line_item_addons }}</h1>
-                        </td>
+                         
 
                         <td class="cart-item__details" role="cell" headers="CartDrawer-ColumnProduct">
                           {%- if settings.show_vendor -%}
