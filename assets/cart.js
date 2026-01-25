@@ -176,7 +176,7 @@ class CartItems extends HTMLElement {
           id: line,
           quantity,
         },
-        ...addonsIds.map(_id => ({
+        ...Array.from(addonsIds.split(',')).map(_id => ({
           id: _id,
           quantity: quantity,
         }))],
