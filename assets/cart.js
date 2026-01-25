@@ -152,25 +152,43 @@ class CartItems extends HTMLElement {
     const eventTarget = event.currentTarget instanceof CartRemoveButton ? 'clear' : 'change';
     const cartPerformanceUpdateMarker = CartPerformance.createStartingMarker(`${eventTarget}:user-action`);
 
-    this.enableLoading(line);
-    console.log('event.target::', event.target);
-
-    const hasEmbroidery = event.target.hasAttribute('data-embroidery');
-    console.log('hasEmbroidery::', hasEmbroidery);
-    
-    if (hasEmbroidery) {
-      this.querySelector('c-embroidery')?.handleAddButtonClick();
-      return;
-    }
-
-    const body = JSON.stringify({
+    let cart_api = routes.cart_change_url;
+    let body = JSON.stringify({
       line,
       quantity,
       sections: this.getSectionsToRender().map((section) => section.section),
       sections_url: window.location.pathname,
     });
+    this.enableLoading(line);
+    console.log('event.target::', event.target);
 
-    fetch(`${routes.cart_change_url}`, { ...fetchConfig(), ...{ body } })
+    const hasEmbroidery = event.target.hasAttribute('data-embroidery');
+    
+    console.log('hasEmbroidery::', hasEmbroidery);
+    
+    if (hasEmbroidery) {
+      const this_addons = this.querySelector(`#CartDrawer-Item-${line} c-embroidery`);
+      this_addons.buildItemsAddons();
+
+      const itemsAddons = window.embroideryAddons.items;
+      cart_api = routes.cart_update_url;
+      body = JSON.stringify({
+        items: [{
+          id: line,
+          quantity,
+        },
+        ...itemsAddons.map(item => ({
+          id: item.id,
+          quantity: quantity,
+        }))],
+     
+        sections: this.getSectionsToRender().map((section) => section.section),
+        sections_url: window.location.pathname,
+        });
+      }
+      console.log('body::', body);
+      
+    fetch(`${cart_api}`, { ...fetchConfig(), ...{ body } })
       .then((response) => {
         return response.text();
       })
