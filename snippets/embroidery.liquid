@@ -242,7 +242,7 @@
         </span>
 
         <span class="tw-text-sm" data-embroidery-price data-additional-price="{{ additional_price }}">
-          +{{ additional_price | money }}
+          +{{ additional_price | money_without_trailing_zeros }}
         </span>
       </label>
 
