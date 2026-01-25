@@ -36,15 +36,25 @@
   if position == 'drawer'
     assign additional_price = 0
 
+    assign this_line_item_addons_ids = ''
     for cart_item in cart_items
       assign cart_item_parent_key = cart_item.parent_relationship.parent.key
       if cart_item_parent_key == item.key
-        assign additional_price = additional_price | plus: item.final_line_price
+        assign this_line_item_addons_ids = this_line_item_addons_ids | append: cart_item.id | append: ','
       endif
     endfor
   endif
+  assign character_limit = product.metafields.custom.embroidery_letter_limit | default: 12
 %}
 
+{% comment %} Early return if no embroidery options available {% endcomment %}
+{% if store_has_embroidery_opts == false or product_has_embroidery_opts == false %}
+  {% break %}
+{% endif %}
+
+{% comment %} ============================================
+  CAPTURE: Name Input Field
+============================================ {% endcomment %}
 {% capture name_input_field %}
   <div class="tw-flex tw-flex-col tw-gap-2">
     <p class="tw-flex tw-items-center">
