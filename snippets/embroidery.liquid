@@ -283,5 +283,7 @@
   </c-accordion>
 </c-embroidery>
 
-<script src="{{ 'accordion.js' | asset_url }}" defer></script>
+{% unless embroidery_existed_in_cart %}
+  <script src="{{ 'accordion.js' | asset_url }}" defer></script>
+{% endunless %}
 <script src="{{ 'embroidery.js' | asset_url }}" defer></script>
