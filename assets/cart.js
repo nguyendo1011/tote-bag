@@ -167,21 +167,17 @@ class CartItems extends HTMLElement {
     console.log('hasEmbroidery::', hasEmbroidery);
     
     if (hasEmbroidery) {
-      const this_addons = this.querySelector(`#CartDrawer-Item-${line} c-embroidery`);
-      console.log('this_addons::', this_addons);
-      this_addons.buildItemsAddons();
-      console.log('window.embroideryAddons::', window.embroideryAddons);
-      
+      const addonsIds = event.target.dataset.addonsIds;
+      if (!addonsIds || addonsIds === '') return;
 
-      const itemsAddons = window.embroideryAddons.items;
       cart_api = routes.cart_update_url;
       body = JSON.stringify({
         items: [{
           id: line,
           quantity,
         },
-        ...itemsAddons.map(item => ({
-          id: item.id,
+        ...addonsIds.map(_id => ({
+          id: _id,
           quantity: quantity,
         }))],
      
