@@ -175,6 +175,8 @@ class CartItems extends HTMLElement {
       const updates = {
         [variantId]: quantity  // Main product line
       };
+      console.log('updates::', updates);
+      console.log('addonsIds::', addonsIds);
 
       addonsIds.split(',').forEach(id => {
         updates[id] = quantity;
