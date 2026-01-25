@@ -180,7 +180,7 @@ class EmbroideryCustomizer extends Component {
     
     // Prepare cart change request (update main product properties)
     const changeBody = JSON.stringify({
-      id: this.lineItemKey,
+      id: this.lineItemId,
       properties: window.embroideryAddons.properties || {},
       sections: this.getSectionsToRender(),
       sections_url: window.location.pathname
