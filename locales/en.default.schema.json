@@ -322,11 +322,11 @@
       "name": "Embroidery",
       "settings": {
         "embroidery_products": {
-          "label": "Embroidery products"
+          "label": "Products can be embroidered"
         },
         "embroidery_base_product": {
-          "label": "Embroidery base product",
-          "info": "The base product for optional embroidered products"
+          "label": "Base product",
+          "info": "The base product for optional embroidered products. This product will be added to the cart as an addon."
         },
         "embroidery_font_families": {
           "label": "Embroidery font families links",
