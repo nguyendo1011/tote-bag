@@ -545,8 +545,6 @@ class EmbroideryCustomizer extends Component {
     // Prevent changes if already added to cart in drawer
     if (this.addedToCart && this.isDrawer()) return;
 
-    console.log("buildItemsAddons::", this.els.checkbox?.checked, this.isEmbroideryValid());
-
     // Clear addons if embroidery is not enabled or not valid
     if (!this.els.checkbox?.checked || !this.isEmbroideryValid()) {
       delete window.embroideryAddons;
