@@ -35,11 +35,16 @@
 
   if position == 'drawer'
     assign additional_price = 0
+    assign main_product_key = cart.items | where: 'id', product.id | first | map: 'key'
 
     for cart_item in cart.items
       assign cart_item_parent_key = cart_item.parent_relationship.parent.key
-      assign main_product_key = cart.items | where: 'id', product.id | first 
-      if cart_item_parent_key == main_product_key.key
+      echo 'cart_item::'
+      echo cart_item_parent_key
+      echo ' === '
+      echo main_product_key
+      echo '<br>'
+      if cart_item_parent_key == main_product_key
        
         assign additional_price = additional_price | plus: cart_item.final_line_price
       endif
