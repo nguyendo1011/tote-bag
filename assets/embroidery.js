@@ -184,34 +184,46 @@ class EmbroideryCustomizer extends Component {
    * Updates line item properties and adds embroidery addon items
    */
   async addEmbroideryToCart() {
-    if (!this.lineItemKey) {
-      console.error('Missing line item key');
-      return;
-    }
-
-    // Rebuild addons to ensure we have the latest data
+    // 1. Build embroidery addons data
     this.buildItemsAddons();
 
+    // 2. Check if embroidery addons exist
     if (!window.embroideryAddons) {
       console.error('Missing embroidery addons');
       return;
     }
 
-    const quantity = parseInt(this.dataset.lineItemQuantity, 10) || 1;
-    console.log("quantity::", quantity);
+    console.log('Embroidery addons:', window.embroideryAddons);
 
-    // Prepare cart change request (update main product properties)
+    // 3. Fetch current cart to get newest cart items
+    const cart = await this.getCart();
+    if (!cart) {
+      throw new Error('Failed to fetch cart');
+    }
+
+    console.log('Current cart items:', cart.items);
+
+    // 4. Find main product by lineItemId in cart items
+    const mainProduct = cart.items.find(item => item.id === this.lineItemId);
+    if (!mainProduct) {
+      throw new Error(`Main product not found in cart (lineItemId: ${this.lineItemId})`);
+    }
+
+    console.log('Main product found:', mainProduct);
+
+    const quantity = mainProduct.quantity;
+
+    // 5. Cart change: Update main product properties
     const changeBody = JSON.stringify({
-      id: this.lineItemKey,
+      id: mainProduct.key,
       quantity: quantity,
       properties: window.embroideryAddons.properties || {},
       sections: this.getSectionsToRender(),
       sections_url: window.location.pathname
     });
 
-    // Execute cart operations sequentially: change first, then add
+    console.log('Updating cart with properties:', window.embroideryAddons.properties);
 
-    // 1. Update main product properties first
     const changeRes = await fetch(routes.cart_change_url, {
       ...fetchConfig(),
       body: changeBody
@@ -228,28 +240,17 @@ class EmbroideryCustomizer extends Component {
       throw new Error(changeResponse.description || changeResponse.errors || 'Failed to update properties');
     }
 
-    // Get updated cart to find the line item key after properties update
-    const updatedCart = await this.getCart();
-    if (!updatedCart) {
-      throw new Error('Failed to fetch updated cart');
-    }
-console.log("updatedCart::", updatedCart.items);
-    const updatedLineItem = updatedCart.items.find(item => item.id === this.lineItemId);
-    if (!updatedLineItem) {
-      throw new Error('Updated line item not found in cart');
-    }
+    console.log('Cart properties updated successfully');
 
-    console.log("Updated line item key:", updatedLineItem.key);
-
-    // 2. Add embroidery items (base product + options) after cart change succeeds
+    // 6. Cart add: Add embroidery items (base + options products)
     let addResponse = null;
 
     if (window.embroideryAddons.items && window.embroideryAddons.items.length > 0) {
-      // Prepare cart add request using the updated line item key
+      // Prepare cart add request using main product key
       const addItems = window.embroideryAddons.items.map(item => ({
         id: item.id,
         quantity: quantity,
-        parent_line_key: updatedLineItem.key
+        parent_line_key: mainProduct.key
       }));
 
       const addBody = JSON.stringify({
@@ -258,7 +259,7 @@ console.log("updatedCart::", updatedCart.items);
         sections_url: window.location.pathname
       });
 
-      console.log("Adding items to cart:", addItems);
+      console.log('Adding embroidery items to cart:', addItems);
 
       const addRes = await fetch(routes.cart_add_url, {
         ...fetchConfig(),
@@ -275,6 +276,8 @@ console.log("updatedCart::", updatedCart.items);
       if (addResponse.status || addResponse.errors) {
         throw new Error(addResponse.description || addResponse.errors || 'Failed to add embroidery items');
       }
+
+      console.log('Embroidery items added successfully');
     }
 
     // Publish cart update event
