@@ -184,20 +184,6 @@ class EmbroideryCustomizer extends Component {
       sections_url: window.location.pathname
     });
 
-    // Prepare cart add request (add all embroidery items: base product + options)
-    // Map items to use parent_line_key instead of parent_id for drawer context
-    const addItems = window.embroideryAddons.items?.map(item => ({
-      id: item.id,
-      quantity: quantity,
-      parent_line_key: this.lineItemKey
-    })) || [];
-
-    const addBody = JSON.stringify({
-      items: addItems,
-      sections: this.getSectionsToRender(),
-      sections_url: window.location.pathname
-    });
-
     // Execute cart operations sequentially: change first, then add
 
     // 1. Update main product properties first
@@ -217,10 +203,38 @@ class EmbroideryCustomizer extends Component {
       throw new Error(changeResponse.description || changeResponse.errors || 'Failed to update properties');
     }
 
+    // Get updated cart to find the line item key after properties update
+    const updatedCart = await this.getCart();
+    if (!updatedCart) {
+      throw new Error('Failed to fetch updated cart');
+    }
+
+    const updatedLineItem = updatedCart.items.find(item => item.id === this.lineItemKey);
+    if (!updatedLineItem) {
+      throw new Error('Updated line item not found in cart');
+    }
+
+    console.log("Updated line item key:", updatedLineItem.key);
+
     // 2. Add embroidery items (base product + options) after cart change succeeds
     let addResponse = null;
 
-    if (addItems.length > 0) {
+    if (window.embroideryAddons.items && window.embroideryAddons.items.length > 0) {
+      // Prepare cart add request using the updated line item key
+      const addItems = window.embroideryAddons.items.map(item => ({
+        id: item.id,
+        quantity: quantity,
+        parent_line_key: updatedLineItem.key
+      }));
+
+      const addBody = JSON.stringify({
+        items: addItems,
+        sections: this.getSectionsToRender(),
+        sections_url: window.location.pathname
+      });
+
+      console.log("Adding items to cart:", addItems);
+
       const addRes = await fetch(routes.cart_add_url, {
         ...fetchConfig(),
         body: addBody
