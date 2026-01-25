@@ -171,20 +171,24 @@ class CartItems extends HTMLElement {
       if (!addonsIds || addonsIds === '') return;
 
       cart_api = routes.cart_update_url;
+
+      // Build updates object for cart_update_url
+      // Format: { "1": quantity, "2": quantity, "3": quantity }
+      const updates = {
+        [line]: quantity  // Main product line
+      };
+
+      // Add all addon line items
+      addonsIds.split(',').forEach(lineIndex => {
+        updates[lineIndex] = quantity;
+      });
+
       body = JSON.stringify({
-        items: [{
-          id: line,
-          quantity,
-        },
-        ...Array.from(addonsIds.split(',')).map(_id => ({
-          id: _id,
-          quantity: quantity,
-        }))],
-     
+        updates: updates,
         sections: this.getSectionsToRender().map((section) => section.section),
         sections_url: window.location.pathname,
-        });
-      }
+      });
+    }
       console.log('body::', body);
       
     fetch(`${cart_api}`, { ...fetchConfig(), ...{ body } })
