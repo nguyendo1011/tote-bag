@@ -202,7 +202,7 @@ class EmbroideryCustomizer extends Component {
 
     // Prepare cart change request (update main product properties)
     const changeBody = JSON.stringify({
-      id: mainProduct.id,
+      id: this.lineItemKey,
       properties: window.embroideryAddons.properties || {},
       sections: this.getSectionsToRender(),
       sections_url: window.location.pathname
@@ -213,7 +213,7 @@ class EmbroideryCustomizer extends Component {
     const addItems = window.embroideryAddons.items?.map(item => ({
       id: item.id,
       quantity: quantity,
-      parent_line_key: mainProduct.key
+      parent_line_key: this.lineItemKey
     })) || [];
 
     const addBody = JSON.stringify({
