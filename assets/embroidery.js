@@ -202,9 +202,9 @@ class EmbroideryCustomizer extends Component {
     }
 
     console.log('Current cart items:', cart.items);
-
+    
     // 4. Find main product by lineItemId in cart items
-    const mainProduct = cart.items.find(item => item.id === this.lineItemId);
+    const mainProduct = cart.items.find(item => item.id === Number(this.lineItemId));
     if (!mainProduct) {
       throw new Error(`Main product not found in cart (lineItemId: ${this.lineItemId})`);
     }
