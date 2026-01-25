@@ -172,15 +172,12 @@ class CartItems extends HTMLElement {
 
       cart_api = routes.cart_update_url;
 
-      // Build updates object for cart_update_url
-      // Format: { "1": quantity, "2": quantity, "3": quantity }
       const updates = {
-        [line]: quantity  // Main product line
+        [variantId]: quantity  // Main product line
       };
 
-      // Add all addon line items
-      addonsIds.split(',').forEach(lineIndex => {
-        updates[lineIndex] = quantity;
+      addonsIds.split(',').forEach(id => {
+        updates[id] = quantity;
       });
 
       body = JSON.stringify({
