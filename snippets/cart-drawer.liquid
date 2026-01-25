@@ -138,6 +138,7 @@
                         endif
 
                       %}
+                      <h1>this_line_item_has_embroidery ::{{ this_line_item_has_embroidery }}</h1>
                       <h1>this_line_item_addons ::{{ this_line_item_addons }}</h1>
                       {% comment %} We dont want to render embroidery items in the cart drawer {% endcomment %}
                       {% if item.product.tags contains 'Embroidery' %} {% continue %} {% endif %}
