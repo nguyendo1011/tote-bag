@@ -36,11 +36,10 @@
   if position == 'drawer'
     assign additional_price = 0
 
-    assign this_line_item_addons_ids = ''
-    for cart_item in cart_items
+    for cart_item in cart.items
       assign cart_item_parent_key = cart_item.parent_relationship.parent.key
       if cart_item_parent_key == item.key
-        assign this_line_item_addons_ids = this_line_item_addons_ids | append: cart_item.id | append: ','
+        assign additional_price = additional_price | plus: cart_item.final_line_price
       endif
     endfor
   endif
