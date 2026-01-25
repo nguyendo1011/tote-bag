@@ -135,6 +135,7 @@
                               assign this_line_item_addons = this_line_item_addons | append: cart_item.id | append: ','
                             endif
                           endfor
+                          assign this_line_item_addons = this_line_item_addons | replace_last: ',', ''
                         endif
                       %}
 
