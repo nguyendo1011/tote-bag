@@ -138,6 +138,7 @@
 <c-embroidery 
   class="embroidery-{{ position }}" 
   data-position="{{ position }}"
+  data-added-to-cart="{{ added_to_cart }}"
   {% if position == 'drawer' and line_item %}
     data-line-item-id="{{ line_item.id }}"
     data-line-item-quantity="{{ line_item.quantity }}"
