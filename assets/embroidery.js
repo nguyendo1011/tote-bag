@@ -306,6 +306,9 @@ console.log("quantity::", quantity);
    * @param {Event} event
    */
   handleOptionChange(event) {
+    // Prevent changes if already added to cart in drawer
+    if (this.addedToCart && this.isDrawer()) return;
+
     const fieldset = event.currentTarget;
     const optionName = fieldset.dataset.optionName;
     const selectedInput = fieldset.querySelector(EmbroideryCustomizer.SELECTORS.CHECKED_RADIO);
@@ -493,8 +496,11 @@ console.log("quantity::", quantity);
    * This will be used by product-form to add embroidery products to cart
    */
   buildItemsAddons() {
+    // Prevent changes if already added to cart in drawer
+    if (this.addedToCart && this.isDrawer()) return;
+
     console.log("buildItemsAddons::", this.els.checkbox?.checked, this.isEmbroideryValid());
-    
+
     // Clear addons if embroidery is not enabled or not valid
     if (!this.els.checkbox?.checked || !this.isEmbroideryValid()) {
       delete window.embroideryAddons;
