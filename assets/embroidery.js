@@ -271,6 +271,9 @@ console.log("quantity::", quantity);
    * @param {CustomEvent} event - Accordion toggle event
    */
   handleAccordionToggle(event) {
+    // Prevent changes if already added to cart in drawer
+    if (this.addedToCart && this.isDrawer()) return;
+
     const isOpen = event.detail.isOpen;
 
     if (this.els.checkbox) {
@@ -286,6 +289,9 @@ console.log("quantity::", quantity);
    * Handle checkbox state changes (fallback if accordion doesn't handle it)
    */
   handleCheckboxChange(event) {
+    // Prevent changes if already added to cart in drawer
+    if (this.addedToCart && this.isDrawer()) return;
+
     // Stop propagation to prevent double handling
     event.stopPropagation();
 
