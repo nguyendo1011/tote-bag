@@ -234,7 +234,7 @@ class EmbroideryCustomizer extends Component {
       throw new Error('Failed to fetch updated cart');
     }
 
-    const updatedLineItem = updatedCart.items.find(item => item.key === this.lineItemKey);
+    const updatedLineItem = updatedCart.items.find(item => item.id === this.lineItemId);
     if (!updatedLineItem) {
       throw new Error('Updated line item not found in cart');
     }
