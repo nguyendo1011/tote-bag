@@ -38,7 +38,7 @@
 
     for cart_item in cart.items
       assign cart_item_parent_key = cart_item.parent_relationship.parent.key
-      if cart_item_parent_key == item.key
+      if cart_item_parent_key == product.key
         assign additional_price = additional_price | plus: cart_item.final_line_price
       endif
     endfor
