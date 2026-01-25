@@ -297,11 +297,10 @@
                           endif
 
                           assign has_embroidery = false
-                          if item.product.tags contains 'Embroidery'
+                          if item.product.properties['Embroidery Name']
                             assign has_embroidery = true
                           endif
                         -%}
-                        <h1>item.product.tags :: {{item.product.tags}}</h1>
                         <td
                           class="cart-item__quantity {% if has_qty_rules or has_vol_pricing %} cart-item__quantity--info{% endif %}"
                           role="cell"
