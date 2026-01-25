@@ -480,7 +480,7 @@ console.log("quantity::", quantity);
    * This will be used by product-form to add embroidery products to cart
    */
   buildItemsAddons() {
-    console.log("buildItemsAddons::");
+    console.log("buildItemsAddons::", this.els.checkbox?.checked, this.isEmbroideryValid());
     
     // Clear addons if embroidery is not enabled or not valid
     if (!this.els.checkbox?.checked || !this.isEmbroideryValid()) {
