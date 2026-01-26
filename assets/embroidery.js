@@ -230,19 +230,30 @@ class EmbroideryCustomizer extends Component {
       throw new Error(addResponse.description || addResponse.errors || 'Failed to add embroidery items');
     }
 
-    // Publish cart update event
-    await publish(PUB_SUB_EVENTS.cartUpdate, {
-      source: 'embroidery',
-      cartData: addResponse || changeResponse
-    });
+    const cartData = await fetch(`${routes.cart_url}?section_id=cart-drawer`)
+      .then((response) => response.text())
+      .then((responseText) => {
+        const html = new DOMParser().parseFromString(responseText, 'text/html');
+        const selectors = ['cart-drawer-items', '.cart-drawer__footer'];
+        for (const selector of selectors) {
+          const targetElement = document.querySelector(selector);
+          const sourceElement = html.querySelector(selector);
+          if (targetElement && sourceElement) {
+            targetElement.replaceWith(sourceElement);
+          }
+        }
 
-    // Mark as added to cart (drawer context only)
-    if (this.isDrawer()) {
-      this.addedToCart = true;
-    }
+        // Mark as added to cart (drawer context only)
+        if (this.isDrawer()) {
+          this.addedToCart = true;
+        }
 
-    // Clean up embroidery addons after successful add
-    delete window.embroideryAddons;
+        // Clean up embroidery addons after successful add
+        delete window.embroideryAddons;
+          })
+      .catch((e) => {
+        console.error(e);
+      });
   }
 
   /**
