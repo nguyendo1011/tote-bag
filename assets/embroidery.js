@@ -229,7 +229,7 @@ if (!customElements.get('c-embroidery')) {
         throw new Error(addResponse.description || addResponse.errors || 'Failed to add embroidery items');
       }
 
-      const cartData = await fetch(`${routes.cart_url}?section_id=cart-drawer`)
+      await fetch(`${routes.cart_url}?section_id=cart-drawer`)
         .then((response) => response.text())
         .then((responseText) => {
           const html = new DOMParser().parseFromString(responseText, 'text/html');
