@@ -252,6 +252,11 @@ if (!customElements.get('c-embroidery')) {
         })
         .catch((e) => {
           console.error(e);
+          publish(PUB_SUB_EVENTS.cartError, {
+            source: 'embroidery',
+            error: e.message
+          });
+          window.location.reload();
         });
     }
 
